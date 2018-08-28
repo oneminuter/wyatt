@@ -1,0 +1,22 @@
+[mysql]
+host = "127.0.0.1"
+port = 3306
+user = "xiaolin"
+pass = "admin@forlty"
+dbName   = "wyatt"
+charset = "utf8mb4"
+pool = 100
+
+[redis]
+host = "127.0.0.1"
+port = 6379
+pass = ""
+pool = 20
+dbName = 1
+
+[mongo]
+host = "127.0.0.1"
+port = 27017
+user = ""
+pass = ""
+pool = 50
