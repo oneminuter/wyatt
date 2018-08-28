@@ -9,10 +9,15 @@ import (
 )
 
 type TomlConfig struct {
-	MGO   mongoInfo
-	Redis redisInfo
-	Mysql mysqlInfo
-	Debug bool
+	Server server
+	MGO    mongoInfo
+	Redis  redisInfo
+	Mysql  mysqlInfo
+	Debug  bool
+}
+
+type server struct {
+	Port int
 }
 
 type mysqlInfo struct {
