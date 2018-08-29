@@ -26,7 +26,6 @@ type User struct {
 
 func (u *User) Add() error {
 	mdb := db.GetMysqlDB()
-	defer mdb.Close()
 	tx := mdb.Begin()
 	err := tx.Model(u).Create(u).Error
 	if err != nil {
@@ -34,12 +33,12 @@ func (u *User) Add() error {
 		util.LoggerError(err)
 	}
 	tx.Commit()
+
 	return err
 }
 
 func (u *User) Update(update, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	defer mdb.Close()
 	tx := mdb.Begin()
 	err := tx.Model(u).Where(where, args...).Updates(update).Error
 	if err != nil {
@@ -47,26 +46,27 @@ func (u *User) Update(update, where interface{}, args ...interface{}) error {
 		util.LoggerError(err)
 	}
 	tx.Commit()
+
 	return err
 }
 
 func (u *User) QueryList(field string, where interface{}, args ...interface{}) (list []User, err error) {
 	mdb := db.GetMysqlDB()
-	defer mdb.Close()
 	err = mdb.Model(u).Select(field).Where(where, args...).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]User, 0), err
 	}
+
 	return list, nil
 }
 
 func (u *User) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	defer mdb.Close()
 	err := mdb.Model(u).Select(field).Where(where, args).Last(u).Error
 	if err != nil {
 		util.LoggerError(err)
 	}
+
 	return err
 }

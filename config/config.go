@@ -1,8 +1,9 @@
 package config
 
 import (
-	"log"
 	"os"
+
+	"wyatt/util"
 
 	"f.in/v/utils"
 	"github.com/BurntSushi/toml"
@@ -53,7 +54,7 @@ func GetConfig() TomlConfig {
 	var config TomlConfig
 	config.Debug = debug
 	if _, err := toml.DecodeFile(utils.SelfDir()+"/config/"+tomlFile+".toml", &config); err != nil {
-		log.Println(err)
+		util.LoggerError(err)
 		return config
 	}
 	return config

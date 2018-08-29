@@ -7,6 +7,7 @@ const (
 	AccountExpire  = 602 //账号过期
 	IllegalRequest = 603 //非法请求
 	IllegalAccount = 604 //非法账号
+	QueryErr       = 605 //查询用户信息失败
 )
 
 var ErrMap = map[int]string{
@@ -16,4 +17,5 @@ var ErrMap = map[int]string{
 	AccountExpire:  "账号过期",
 	IllegalRequest: "非法请求",
 	IllegalAccount: "非法账号",
+	QueryErr:       "查询失败",
 }

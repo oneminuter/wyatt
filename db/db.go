@@ -10,6 +10,8 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 	"gopkg.in/mgo.v2"
+
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 const (
@@ -19,9 +21,10 @@ const (
 )
 
 var (
-	once     sync.Once
-	instance *singleton
-	conf     = config.GetConfig()
+	once      sync.Once
+	onceMysql sync.Once
+	instance  *singleton
+	conf      = config.GetConfig()
 )
 
 type (
@@ -54,7 +57,7 @@ func newInstance(driver Driver) interface{} {
 	var r interface{}
 	switch driver {
 	case REDIS:
-		r, _ = s.getOrSetMap(REDIS, newRidis())
+		r, _ = s.getOrSetMap(REDIS, newRedis())
 	case MYSQL:
 		r, _ = s.getOrSetMap(MYSQL, newMysql())
 	case MGO:
@@ -69,7 +72,7 @@ func getInstance() *singleton {
 		once.Do(func() {
 			instance = &singleton{services: &sync.Map{}}
 		})
-		instance.getOrSetMap(REDIS, newRidis())
+		instance.getOrSetMap(REDIS, newRedis())
 	}
 	return instance
 }
@@ -78,9 +81,9 @@ func (s *singleton) getOrSetMap(name Driver, service interface{}) (interface{}, 
 	return s.services.LoadOrStore(name, service)
 }
 
-func newRidis() *redis.Client {
+func newRedis() *redis.Client {
 	client := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", conf.Redis.Host, conf.Redis.Port),
+		Addr:     fmt.Sprintf("%s:%d", conf.Redis.Host, conf.Redis.Port),
 		Password: conf.Redis.Pass,
 		DB:       utils.On(conf.Debug, 1, 0).(int),
 		PoolSize: conf.Redis.Pool,
@@ -90,20 +93,28 @@ func newRidis() *redis.Client {
 }
 
 func newMysql() *gorm.DB {
-	mysql, err := gorm.Open("mysql",
-		fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
-			conf.Mysql.User,
-			conf.Mysql.Pass,
-			conf.Mysql.Host,
-			conf.Mysql.Port,
-			conf.Mysql.DbName,
-			conf.Mysql.Charset))
+	link := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
+		conf.Mysql.User,
+		conf.Mysql.Pass,
+		conf.Mysql.Host,
+		conf.Mysql.Port,
+		conf.Mysql.DbName,
+		conf.Mysql.Charset)
 
+	var mysql *gorm.DB
+	var err error
+	onceMysql.Do(func() {
+		mysql, err = gorm.Open("mysql", link)
+		if err != nil {
+			util.LoggerError(err)
+		}
+		mysql.DB().SetMaxIdleConns(2)
+		mysql.DB().SetMaxOpenConns(conf.Mysql.Pool)
+	})
 	if err != nil {
-		util.LoggerError(err)
+		panic("mysql database connect error")
 	}
-	mysql.DB().SetMaxIdleConns(2)
-	mysql.DB().SetMaxOpenConns(conf.Mysql.Pool)
+
 	return mysql
 }
 
@@ -112,9 +123,9 @@ func newMGO() *mgo.Session {
 	var err error
 
 	if conf.Debug {
-		session, err = mgo.Dial(fmt.Sprintf("%s:%s", conf.MGO.Host, conf.MGO.Port))
+		session, err = mgo.Dial(fmt.Sprintf("%s:%d", conf.MGO.Host, conf.MGO.Port))
 	} else {
-		session, err = mgo.Dial(fmt.Sprintf("%s:%s@%s:%s",
+		session, err = mgo.Dial(fmt.Sprintf("%s:%s@%s:%d",
 			conf.MGO.User,
 			conf.MGO.Pass,
 			conf.MGO.Host,

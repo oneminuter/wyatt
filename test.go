@@ -3,14 +3,13 @@ package main
 import (
 	"log"
 	"strings"
-	"time"
 	"wyatt/api/constant"
 	"wyatt/util"
 )
 
 func main() {
-	//getToken()
-	modelTest()
+	getToken()
+	//modelTest()
 }
 
 func modelTest() {
@@ -18,10 +17,11 @@ func modelTest() {
 }
 
 func getToken() {
-	token := util.NewToken(456, 2, "1232465aasdf")
-	util.Logger(token)
+	//token := util.NewToken(456, 2, "1232465aasdf")
+	//util.Logger(token)
 
-	time.Sleep(time.Second * 5)
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJkYzBlZjdlNDkyZGJlMjA2Nzc5MDI4NzMxOGU3MzI5ZCIsImV4cCI6MTUzODE1MjgxNSwianRpIjoiMjgifQ.RTzUWq77BKPHmt19c5vKwadcBBwTKWnMA-R8HZP5-w8"
+
 	t, err := util.ParseToken(token)
 	if err != nil {
 		if strings.Contains(err.Error(), constant.TokenExpired) {

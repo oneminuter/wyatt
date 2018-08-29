@@ -1,11 +1,12 @@
 package util
 
 import (
-	"log"
 	"strconv"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"errors"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 var (
@@ -29,7 +30,7 @@ func NewToken(userId, status int64, uuid string) string {
 	withClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	s, err := withClaims.SignedString([]byte(signingKey))
 	if err != nil {
-		log.Println(err)
+		LoggerError(err)
 		return ""
 	}
 	return s
@@ -40,11 +41,16 @@ func ParseToken(tokenString string) (t *Token, err error) {
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(signingKey), nil
 	})
+	if err != nil {
+		LoggerError(err)
+		return new(Token), err
+	}
 
-	if claims, ok := token.Claims.(*jwt.StandardClaims); ok && token.Valid {
+	claims, ok := token.Claims.(*jwt.StandardClaims)
+	if ok && token.Valid {
 		return generateToken(claims), nil
 	} else {
-		return new(Token), err
+		return new(Token), errors.New("token parse error")
 	}
 }
 

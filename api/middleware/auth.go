@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"wyatt/api/constant"
-	//"wyatt/api/logic"
+	"wyatt/api/logic"
 	"wyatt/api/view"
 	"wyatt/util"
 
@@ -16,14 +16,14 @@ var Auth = func(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
 	if "" == strings.TrimSpace(token) && "" == strings.TrimSpace(uuid) {
-		//var u logic.User
-		//ip := ctx.ClientIP()
-		//userId, err := u.AddTempUser(ip)
-		//if err != nil {
-		//	util.LoggerError(err)
-		//	ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.CreateUserErr))
-		//}
-		//ctx.Set("userId", userId)
+		var u logic.User
+		ip := ctx.ClientIP()
+		userId, err := u.AddTempUser(ip)
+		if err != nil {
+			util.LoggerError(err)
+			ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.CreateUserErr))
+		}
+		ctx.Set("userId", userId)
 		return
 	}
 

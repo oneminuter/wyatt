@@ -16,14 +16,14 @@ func (*User) Info(userId int64) interface{} {
 	err := mUser.QueryOne("*", "id = ?", userId)
 	if err != nil {
 		util.LoggerError(err)
-		return view.SetErr(constant.CreateUserErr)
+		return view.SetErr(constant.QueryErr)
 	}
 
 	//返回数据
-	var vUser view.User
+	var vUser = new(view.User)
 	vUser.RenderUserInfo(&mUser)
 
-	return view.SetRespData(vUser)
+	return view.SetRespData(&vUser)
 }
 
 //新增临时用户

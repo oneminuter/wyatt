@@ -4,8 +4,8 @@ port = 8081
 [mysql]
 host = "127.0.0.1"
 port = 3306
-user = "xiaolin"
-pass = "admin@forlty"
+user = "root"
+pass = "ADMIN@forlty1314"
 dbName   = "wyatt"
 charset = "utf8mb4"
 pool = 100
