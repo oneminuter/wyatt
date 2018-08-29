@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"wyatt/api/middleware"
 	"wyatt/config"
 
 	"wyatt/api/router"
@@ -26,6 +27,10 @@ func main() {
 
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	server.Use(gin.Recovery())
+
+	server.Use(middleware.Auth)
+
+	server.Use(middleware.MustLogin)
 
 	router.Router(server)
 

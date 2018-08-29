@@ -8,16 +8,10 @@ import (
 )
 
 type TableModel struct {
-	ID        int64 `gorm:"primary_key"`
+	ID        int64 `json:"-" gorm:"primary_key"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`
-}
-
-type Model interface {
-	Add() error
-	QueryOne(field string, where interface{}, args ...interface{}) (Model, error)
-	QueryList(field string, where interface{}, args ...interface{}) ([]Model, error)
 }
 
 func init() {

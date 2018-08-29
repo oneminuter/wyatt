@@ -39,6 +39,6 @@ func GetRandomString(length int, rtype string) string {
 /*
 当前纳秒 + 10位随机字符串 的MD5值
 */
-func GetToken() string {
+func GetUUID() string {
 	return MD5(strconv.FormatInt(time.Now().UnixNano(), 10) + GetRandomString(10, constant.STRING))
 }

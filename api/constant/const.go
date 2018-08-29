@@ -1,6 +1,7 @@
 package constant
 
 const (
-	STRING = "string"
-	NUMBER = "number"
+	STRING       = "string"
+	NUMBER       = "number"
+	TokenExpired = "token is expired"
 )

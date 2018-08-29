@@ -2,22 +2,14 @@ package handler
 
 import (
 	"net/http"
-
-	"strings"
-	"wyatt/util"
+	"wyatt/api/logic"
 
 	"github.com/gin-gonic/gin"
 )
 
 var UserInfo = func(ctx *gin.Context) {
-	var token = ctx.Query("token")
-	if strings.TrimSpace(token) == "" {
-		token = util.GetToken()
-	}
+	userId := ctx.GetInt64("userId")
 
-	ctx.JSON(http.StatusOK, struct {
-		Token string
-	}{
-		Token: token,
-	})
+	var u logic.User
+	ctx.JSON(http.StatusOK, u.Info(userId))
 }
