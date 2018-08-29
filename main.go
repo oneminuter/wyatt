@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"wyatt/api/middleware"
 	"wyatt/config"
 
+	"wyatt/api/middleware"
 	"wyatt/api/router"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,6 @@ func main() {
 	server.Use(gin.Recovery())
 
 	server.Use(middleware.Auth)
-
 	server.Use(middleware.MustLogin)
 
 	router.Router(server)

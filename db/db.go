@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 	"wyatt/config"
+	"wyatt/util"
 
-	"f.in/v/logs"
 	"f.in/v/utils"
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
@@ -100,7 +100,7 @@ func newMysql() *gorm.DB {
 			conf.Mysql.Charset))
 
 	if err != nil {
-		logs.Error(err)
+		util.LoggerError(err)
 	}
 	mysql.DB().SetMaxIdleConns(2)
 	mysql.DB().SetMaxOpenConns(conf.Mysql.Pool)
@@ -121,7 +121,7 @@ func newMGO() *mgo.Session {
 			conf.MGO.Port))
 
 		if err != nil {
-			logs.Panic(err)
+			util.LoggerError(err)
 		}
 	}
 	session.SetMode(mgo.Monotonic, true)

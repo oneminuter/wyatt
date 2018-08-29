@@ -29,7 +29,8 @@ func (*User) Info(userId int64) interface{} {
 //新增临时用户
 func (u *User) AddTempUser(ip string) (userId int64, err error) {
 	//构建一个用户
-	mUser := service.User{}.GenerateUser("", ip, 0)
+	var sUser service.User
+	mUser := sUser.GenerateUser("", ip, 0)
 
 	//存入数据库
 	err = mUser.Add()
