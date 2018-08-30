@@ -8,21 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var whiteUrlList = []string{
-	"/ping",
-}
 var MustLogin = func(ctx *gin.Context) {
 	url := ctx.Request.URL.Path
-
-	var isExit bool
-	for _, v := range whiteUrlList {
-		if v == url {
-			isExit = true
-			break
-		}
-	}
-
-	if isExit {
+	if isExitWhite(url) {
 		return
 	}
 

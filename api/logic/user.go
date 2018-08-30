@@ -10,6 +10,15 @@ import (
 
 type User struct{}
 
+//注册参数，account,phone,email 三个参数，必须有一个
+type UserRegister struct {
+	Account  string `json:"account"`                                     //账号
+	Phone    string `json:"phone"`                                       //手机号
+	Email    string `json:"email"`                                       //邮箱
+	Password string `json:"password" form:"password" binding:"required"` //密码
+	NickName string `json:"nickName"`                                    //昵称
+}
+
 func (*User) Info(userId int64) interface{} {
 	//获取用户信息
 	var mUser model.User
@@ -20,14 +29,14 @@ func (*User) Info(userId int64) interface{} {
 	}
 
 	//返回数据
-	var vUser = new(view.User)
+	var vUser view.User
 	vUser.RenderUserInfo(&mUser)
 
 	return view.SetRespData(&vUser)
 }
 
 //新增临时用户
-func (u *User) AddTempUser(ip string) (userId int64, err error) {
+func (*User) AddTempUser(ip string) (userId int64, err error) {
 	//构建一个用户
 	var sUser service.User
 	mUser := sUser.GenerateUser("", ip, 0)

@@ -12,6 +12,11 @@ import (
 )
 
 var Auth = func(ctx *gin.Context) {
+	url := ctx.Request.URL.Path
+	if isExitWhite(url) {
+		return
+	}
+
 	uuid := ctx.GetHeader("uuid")
 	token := ctx.GetHeader("token")
 

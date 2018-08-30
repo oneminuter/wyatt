@@ -10,11 +10,13 @@ type User struct {
 	TableModel
 
 	Account        string `json:"account" gorm:"unique"` //账号
+	Password       string `json:"password"`              //密码
 	Phone          string `json:"phone"`                 //手机号
 	UUID           string `json:"uuid"`                  //用户标识
 	NickName       string `json:"nickName"`              //昵称
-	Sex            int    `json:"sex"`                   //性别
+	Sex            int    `json:"sex"`                   //性别 0 未知，1 男， 2 女
 	Name           string `json:"name"`                  //姓名
+	Email          string `json:"email"`                 //邮箱
 	AvatarUrl      string `json:"avatarUrl"`             //头像
 	Country        string `json:"country"`               //国家
 	Province       string `json:"province"`              //省份

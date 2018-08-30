@@ -93,7 +93,7 @@ func newRedis() *redis.Client {
 }
 
 func newMysql() *gorm.DB {
-	link := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
+	link := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?allowNativePasswords=true&charset=%s&parseTime=True&loc=Local",
 		conf.Mysql.User,
 		conf.Mysql.Pass,
 		conf.Mysql.Host,
