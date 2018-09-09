@@ -11,6 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+检测请求头部是否含有
+	uuid ：Md5字符串
+	token: jwt
+如果两个值都为空，则创建一个临时账号
+两个值，要么同时存在，要么都不存在
+如果通过验证，则将 userId 的值 set 到 ctx 中
+*/
 var Auth = func(ctx *gin.Context) {
 	url := ctx.Request.URL.Path
 	if isExitWhite(url) {

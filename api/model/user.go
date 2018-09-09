@@ -9,10 +9,11 @@ import (
 type User struct {
 	TableModel
 
-	Account        string `json:"account" gorm:"unique"` //账号
+	Account        string `json:"account" gorm:"unique"` //账号, 临时账号为 10 位随机字符串
 	Password       string `json:"password"`              //密码
+	RandomStr      string `json:"-"`                     //密码加密随机字符串
 	Phone          string `json:"phone"`                 //手机号
-	UUID           string `json:"uuid"`                  //用户标识
+	UUID           string `json:"uuid"`                  //用户标识, MD5随机字符串
 	NickName       string `json:"nickName"`              //昵称
 	Sex            int    `json:"sex"`                   //性别 0 未知，1 男， 2 女
 	Name           string `json:"name"`                  //姓名
