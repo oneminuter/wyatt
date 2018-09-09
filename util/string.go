@@ -58,7 +58,7 @@ func IsChineseChar(str string) bool {
 }
 
 /*
-验证手机号是否hefa
+验证手机号是否合法
 */
 func IsPhoneNumber(str string) bool {
 	reg := regexp.MustCompile(`^(1[358][0-9]|14[57]|17[0678]|197)\d{8}$`)
