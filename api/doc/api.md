@@ -1,5 +1,5 @@
 ## 获取个人信息
-** Get: /user/info **
+**Get: /user/info**
 
 ### 请求参数
 ```
@@ -31,7 +31,7 @@
 ***
 
 ## 注册
-** Post: /user/register **
+**Post: /user/register**
 
 ### 请求参数
 ```
@@ -64,7 +64,7 @@
 ***
 
 ## 登录
-** Post: /user/login **
+**Post: /user/login**
 
 ### 请求参数
 ```
