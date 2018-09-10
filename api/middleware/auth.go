@@ -12,6 +12,7 @@ import (
 )
 
 /*
+权限验证
 检测请求头部是否含有
 	uuid ：Md5字符串
 	token: jwt
@@ -21,6 +22,7 @@ import (
 */
 var Auth = func(ctx *gin.Context) {
 	url := ctx.Request.URL.Path
+	//白名单
 	if isExitWhite(url) {
 		return
 	}
@@ -42,6 +44,7 @@ var Auth = func(ctx *gin.Context) {
 
 	jwtToken, err := util.ParseToken(token)
 	if err != nil && strings.Contains(err.Error(), constant.TokenExpired) {
+		//token 过期
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.AccountExpire))
 		return
 	}
@@ -50,6 +53,13 @@ var Auth = func(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.IllegalAccount))
 		return
 	}
+
+	//用户状态
+	if -1 == jwtToken.Status {
+		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.AccountForbid))
+		return
+	}
+
 	if "" == strings.TrimSpace(uuid) || uuid != jwtToken.UUID {
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.IllegalRequest))
 		return

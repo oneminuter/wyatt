@@ -2,6 +2,7 @@ package view
 
 import (
 	"net/http"
+	"strings"
 	"wyatt/api/constant"
 )
 
@@ -24,4 +25,14 @@ func SetRespData(data interface{}) Response {
 		ErrMsg:  constant.ErrMap[constant.Success],
 		Data:    data,
 	}
+}
+
+//mysql查询错误检测
+func CheckMysqlErr(err error) interface{} {
+	if err != nil && strings.Contains(err.Error(), constant.MysqlNotHaveData) {
+		return SetErr(constant.QueryDBEmptyErr)
+	}
+
+	//其他非空错误
+	return SetErr(constant.QueryDBErr)
 }

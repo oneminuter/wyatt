@@ -16,5 +16,6 @@ type TableModel struct {
 
 func init() {
 	mdb := db.GetMysqlDB()
-	mdb.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&Comment{}, &Community{}, &JoinedCommunity{}, &Message{}, &Topic{}, &Zan{}, &User{})
+	mdb.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
+		&Comment{}, &Community{}, &JoinedCommunity{}, &Message{}, &Topic{}, &Zan{}, &User{})
 }

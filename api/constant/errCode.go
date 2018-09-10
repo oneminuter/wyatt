@@ -7,11 +7,14 @@ const (
 	AccountExpire                      = 602 //账号过期
 	IllegalRequest                     = 603 //非法请求
 	IllegalAccount                     = 604 //非法账号
-	QueryErr                           = 605 //查询用户信息失败
+	QueryDBEmptyErr                    = 605 //数据不存在
 	ParamsErr                          = 606 //参数错误
 	AccountOrPasswordIncludeChinessErr = 607 //账号或者密码不能包含中文字符
 	PasswordIsEmptyErr                 = 608 //密码不能为空
 	LoginErr                           = 609 //账号或则密码错误
+	AccountIsExisted                   = 610 //账号已存在
+	AccountForbid                      = 611 //账号已被封禁
+	QueryDBErr                         = 612 //查询数据出错
 )
 
 var ErrMap = map[int]string{
@@ -21,9 +24,12 @@ var ErrMap = map[int]string{
 	AccountExpire:                      "账号过期",
 	IllegalRequest:                     "非法请求",
 	IllegalAccount:                     "非法账号",
-	QueryErr:                           "查询失败",
+	QueryDBEmptyErr:                    "数据不存在",
 	ParamsErr:                          "参数错误",
 	AccountOrPasswordIncludeChinessErr: "账号或者密码不能包含中文字符",
 	PasswordIsEmptyErr:                 "密码不能为空",
 	LoginErr:                           "账号或则密码错误",
+	AccountIsExisted:                   "账号已存在",
+	AccountForbid:                      "账号已被封禁",
+	QueryDBErr:                         "查询数据出错",
 }

@@ -94,3 +94,19 @@ func (u *User) ValidateLogin(field, value, pass string) (model.User, error) {
 	}
 	return mUser, nil
 }
+
+/*
+判断账号是否存在
+*/
+func (*User) IsExitAccount(account string) bool {
+	var mUser model.User
+	count, err := mUser.QueryCount("account = ?", account)
+	if err != nil {
+		util.LoggerError(err)
+		return false
+	}
+	if count > 0 {
+		return true
+	}
+	return false
+}

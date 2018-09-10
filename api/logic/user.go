@@ -32,7 +32,7 @@ func (*User) Info(userId int64) interface{} {
 	err := mUser.QueryOne("*", "id = ?", userId)
 	if err != nil {
 		util.LoggerError(err)
-		return view.SetErr(constant.QueryErr)
+		return view.CheckMysqlErr(err)
 	}
 
 	//返回数据
@@ -61,6 +61,12 @@ func (*User) AddTempUser(ip string) (userId int64, err error) {
 */
 func (u *UserRegister) Register() interface{} {
 	var sUser service.User
+
+	//判断账号是否存在
+	if sUser.IsExitAccount(u.Account) {
+		return view.SetErr(constant.AccountIsExisted)
+	}
+
 	//构造一个新用户
 	mUser := sUser.NewUser(u.Account, u.Password, u.Ip)
 
@@ -75,6 +81,10 @@ func (u *UserRegister) Register() interface{} {
 	vUser.RenderUserInfo(&mUser)
 	return view.SetRespData(&vUser)
 }
+
+/*
+登录
+*/
 func (u *UserLogin) Login() interface{} {
 	var (
 		sUser   service.User
@@ -94,7 +104,7 @@ func (u *UserLogin) Login() interface{} {
 
 	//判断手机号是否为空
 	if "" != strings.TrimSpace(u.Phone) && !isRight {
-		//验证手机号格式是否错误 todo
+		//验证手机号格式是否错误
 		if util.IsPhoneNumber(u.Phone) {
 			//用户手机号登录
 			mUser, err = sUser.ValidateLogin("phone", u.Phone, u.Password)
