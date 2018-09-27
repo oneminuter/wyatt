@@ -9,6 +9,8 @@ import (
 type Community struct {
 	TableModel
 
+	CId       int64  `json:"cId"`       //社区号，创建时的时间戳(s)
+	Logo      string `json:"logo"`      //社区logo
 	Name      string `json:"name"`      //社区名
 	Desc      string `json:"desc"`      //社区描述
 	CreatorId int64  `json:"creatorId"` //创建者id

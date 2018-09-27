@@ -96,3 +96,29 @@
     }
 }
 ```
+
+***
+
+## 所有社区列表
+**Get /community/list/all**
+
+### 无请求参数
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "createdAt": 1538035982, //创建时间
+            "cId": 1234567890, //社区号
+            "logo": "http://oneminuter.com/favicon.ico", //社区logo
+            "name": "一分钟社区", //社区名
+            "desc": "一分钟社区", //社区介绍
+            "joinNum": 0, //加入人数
+            "articleNum": 0 //文章话题数
+        }
+    ]
+}
+```

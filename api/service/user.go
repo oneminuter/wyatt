@@ -82,15 +82,27 @@ func (*User) ValidatePassword(randomStr, pass, password string) bool {
 参数： 验证域，域的值，密码
 */
 func (u *User) ValidateLogin(field, value, pass string) (model.User, error) {
-	var mUser model.User
-	err := mUser.QueryOne("*", "? = ?", field, value)
+	var (
+		mUser model.User
+		err   error
+	)
+	switch field {
+	case "account":
+		err = mUser.QueryOne("*", "account = ?", value)
+	case "phone":
+		err = mUser.QueryOne("*", "phone = ?", value)
+	case "email":
+		err = mUser.QueryOne("*", "email = ?", value)
+	default:
+		return model.User{}, errors.New("Illegal field")
+	}
 	if err != nil {
 		util.LoggerError(err)
 		return model.User{}, err
 	}
 
 	if !u.ValidatePassword(mUser.RandomStr, pass, mUser.Password) {
-		return model.User{}, errors.New("Password ncorrect")
+		return model.User{}, errors.New("Password incorrect")
 	}
 	return mUser, nil
 }

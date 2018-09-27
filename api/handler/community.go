@@ -1,10 +1,16 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+	"wyatt/api/logic"
+
+	"github.com/gin-gonic/gin"
+)
 
 //全部社区列表
 var CommunityListAll = func(ctx *gin.Context) {
-
+	var lc logic.Community
+	ctx.JSON(http.StatusOK, lc.ListAll())
 }
 
 //我加入的社区列表

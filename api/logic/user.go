@@ -96,7 +96,7 @@ func (u *UserLogin) Login() interface{} {
 	//判断账号是否为空
 	if "" != strings.TrimSpace(u.Account) {
 		//用账号登录
-		mUser, err = sUser.ValidateLogin("account", u.Account, u.Password)
+		mUser, err = sUser.ValidateLogin(`account`, u.Account, u.Password)
 		if err == nil {
 			isRight = true
 		}

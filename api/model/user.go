@@ -66,7 +66,7 @@ func (u *User) QueryList(field string, where interface{}, args ...interface{}) (
 
 func (u *User) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	err := mdb.Model(u).Select(field).Where(where, args).Last(u).Error
+	err := mdb.Model(u).Select(field).Where(where, args...).Last(u).Error
 	if err != nil {
 		util.LoggerError(err)
 	}

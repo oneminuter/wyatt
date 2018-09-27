@@ -28,8 +28,9 @@ var UserInfo = func(ctx *gin.Context) {
 var UserRegister = func(ctx *gin.Context) {
 	var params logic.UserRegister
 
-	err := ctx.ShouldBindWith(&params, binding.FormPost)
+	err := ctx.ShouldBindWith(&params, binding.Form)
 	if err != nil {
+		util.LoggerError(err)
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
 		return
 	}
@@ -54,7 +55,7 @@ var UserLogin = func(ctx *gin.Context) {
 	var params logic.UserLogin
 
 	//可用 账号，手机号，邮箱进行登录
-	err := ctx.ShouldBindWith(&params, binding.FormPost)
+	err := ctx.ShouldBindWith(&params, binding.Form)
 	if err != nil {
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
 		return
