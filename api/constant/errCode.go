@@ -15,6 +15,11 @@ const (
 	AccountIsExisted                   = 610 //账号已存在
 	AccountForbid                      = 611 //账号已被封禁
 	QueryDBErr                         = 612 //查询数据出错
+	CommunityProhibition               = 613 //社区已封禁
+	CommunityExamining                 = 614 //社区还在申请中
+	CommunityDissolution               = 615 //社区已解散
+	CommunityJoinErr                   = 616 //加入社区失败
+
 )
 
 var ErrMap = map[int]string{
@@ -32,4 +37,8 @@ var ErrMap = map[int]string{
 	AccountIsExisted:                   "账号已存在",
 	AccountForbid:                      "账号已被封禁",
 	QueryDBErr:                         "查询数据出错",
+	CommunityProhibition:               "社区已封禁",
+	CommunityExamining:                 "社区还在申请中",
+	CommunityDissolution:               "社区已解散",
+	CommunityJoinErr:                   "加入社区失败",
 }

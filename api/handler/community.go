@@ -4,7 +4,12 @@ import (
 	"net/http"
 	"wyatt/api/logic"
 
+	"wyatt/api/constant"
+	"wyatt/api/view"
+	"wyatt/util"
+
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 //全部社区列表
@@ -15,12 +20,25 @@ var CommunityListAll = func(ctx *gin.Context) {
 
 //我加入的社区列表
 var CommunityListMy = func(ctx *gin.Context) {
+	userId := ctx.GetInt64("userId")
 
+	var ljc logic.JoinedCommunity
+	ctx.JSON(http.StatusOK, ljc.MyList(userId))
 }
 
 //加入社区
 var Join = func(ctx *gin.Context) {
+	userId := ctx.GetInt64("userId")
+	//获取社区号，创建社区的的时间戳(秒)
+	var jc logic.JoinedCommunity
+	err := ctx.ShouldBindWith(&jc, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
 
+	ctx.JSON(http.StatusOK, jc.Join(userId, jc.CId))
 }
 
 //创建社区

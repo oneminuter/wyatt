@@ -2,14 +2,14 @@
 **Get: /user/info**
 
 ### 请求参数
-```
+```shell
 {
     "uId":"xxxx" //用标识
 }
 ```
 
 ### 返回参数
-```
+```shell
 {
     "errCode": 200,
     "errMsg": "",
@@ -34,7 +34,7 @@
 **Post: /user/register**
 
 ### 请求参数
-```
+```shell
 {
     "account":"xxxx", //账号
     "password": "xxx" //密码
@@ -42,7 +42,7 @@
 ```
 
 ### 返回参数
-```
+```shell
 {
     "errCode": 200,
     "errMsg": "",
@@ -67,7 +67,7 @@
 **Post: /user/login**
 
 ### 请求参数
-```
+```shell
 {
     "account":"xxxx", //账号
     "phone":"138xxxx", //手机号
@@ -78,7 +78,7 @@
 请求参数 account，phone，email 必须有其一
 
 ### 返回参数
-```
+```shell
 {
     "errCode": 200,
     "errMsg": "",
@@ -118,6 +118,54 @@
             "desc": "一分钟社区", //社区介绍
             "joinNum": 0, //加入人数
             "articleNum": 0 //文章话题数
+        }
+    ]
+}
+```
+
+***
+
+## 加入社区
+**Post /community/join**
+
+### 请求参数
+```shell
+{
+    cId: xxx //社区号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 加入的社区列表
+
+**Get /community/list/my**
+
+### 无请求参数
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "createdAt": 1538035982, //创建时间
+            "cId": 1234567890, //社区号
+            "logo": "http://oneminuter.com/favicon.ico", //logo
+            "name": "一分钟社区", //社区名
+            "desc": "一分钟社区", //简介
+            "joinNum": 1, //加入人数
+            "articleNum": 0 //文章数
         }
     ]
 }

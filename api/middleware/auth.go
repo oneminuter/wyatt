@@ -60,6 +60,7 @@ var Auth = func(ctx *gin.Context) {
 		return
 	}
 
+	// uuid 不存在
 	if "" == strings.TrimSpace(uuid) || uuid != jwtToken.UUID {
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.IllegalRequest))
 		return

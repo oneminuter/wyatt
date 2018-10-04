@@ -1,0 +1,102 @@
+package logic
+
+import (
+	"wyatt/api/constant"
+	"wyatt/api/model"
+	"wyatt/api/service"
+	"wyatt/api/view"
+	"wyatt/util"
+)
+
+type JoinedCommunity struct {
+	CId int64 `json:"cId" form:"cId" binding:"required"`
+}
+
+//我加入的社区列表
+func (c *JoinedCommunity) MyList(userId int64) interface{} {
+	//已加入的社区列表
+	var mjc model.JoinedCommunity
+	jlist, err := mjc.QueryList("*", "user_id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	//获得社区id数组
+	var sjc service.JoinedCommunity
+	joinedIdArr := sjc.GetJoinedIdArr(jlist)
+
+	//获取社区信息
+	var mc model.Community
+	communities, err := mc.QueryList("*", "status = 1 AND id in (?)", joinedIdArr)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	//已加入的社区并且status=1的社区id 数组
+	var sc service.Community
+	communityIdArr := sc.GetCommunityIdArr(communities)
+
+	//获取各社区的加入人数
+	joinList, err := mjc.QueryGrounp("community_id, count(*) count", "community_id", "community_id in (?)", communityIdArr)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	// 转换为社区id:加入人数map
+	joinNumMap := sc.GetCommunityJoinNumMap(joinList)
+
+	//获取社区文章数
+	var t model.Topic
+	topicList, err := t.QueryGrounp("community_id, count(*) count", "community_id", "community_id in (?)", communityIdArr)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+	//装换为社区id:文章数map
+	topicNumMap := sc.GetCommunityTopicNumMap(topicList)
+
+	var vc view.Community
+	resp := vc.RenderListAll(communities, joinNumMap, topicNumMap)
+	return view.SetRespData(resp)
+
+}
+
+/*加入社区
+参数：
+	userId: 用户id
+	cId: 社区号
+*/
+func (JoinedCommunity) Join(userId int64, cId interface{}) interface{} {
+	var mc model.Community
+	err := mc.QueryOne("*", "c_id = ?", cId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	// 判断社区状态
+	//-1 封禁下架, 0 申请中, 1 正常, 2 解散删除
+	switch mc.Status {
+	case -1:
+		return view.SetErr(constant.CommunityProhibition)
+	case 0:
+		return view.SetErr(constant.CommunityExamining)
+	case 2:
+		return view.SetErr(constant.CommunityDissolution)
+	default:
+	}
+
+	var jc model.JoinedCommunity
+	jc.CommunityId = mc.ID
+	jc.UserId = userId
+	err = jc.Add()
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.CommunityJoinErr)
+	}
+
+	return view.SetErr(constant.Success)
+}

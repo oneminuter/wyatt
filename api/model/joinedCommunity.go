@@ -25,3 +25,27 @@ func (jc *JoinedCommunity) QueryGrounp(field string, group string, where interfa
 	}
 	return list, nil
 }
+
+//查询列表
+func (jc *JoinedCommunity) QueryList(field string, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
+	mdb := db.GetMysqlDB()
+	var list []JoinedCommunity
+	err := mdb.Model(jc).Select(field).Where(where, args...).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]JoinedCommunity, 0), err
+	}
+	return list, nil
+}
+
+func (jc *JoinedCommunity) Add() error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	err := tx.Create(jc).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+	}
+	tx.Commit()
+	return err
+}
