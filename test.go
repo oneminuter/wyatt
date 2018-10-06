@@ -1,19 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"wyatt/api/constant"
 	"wyatt/util"
 )
 
 func main() {
-	getToken()
-	//modelTest()
-}
-
-func modelTest() {
-	util.GetIpInfo("49.4.136.242")
+	//getToken()
+	getCurrentPath()
 }
 
 func getToken() {
@@ -34,4 +33,12 @@ func getToken() {
 	log.Println("uuid: ", t.UUID)
 	log.Println("userId: ", t.UserId)
 	log.Println("status: ", t.Status)
+}
+
+func getCurrentPath() {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
 }

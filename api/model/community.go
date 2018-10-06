@@ -9,12 +9,12 @@ import (
 type Community struct {
 	TableModel
 
-	CId       int64  `json:"cId"`       //社区号，创建时的时间戳(s)
-	Logo      string `json:"logo"`      //社区logo
-	Name      string `json:"name"`      //社区名
-	Desc      string `json:"desc"`      //社区描述
-	CreatorId int64  `json:"creatorId"` //创建者id
-	Status    int    `json:"status"`    //社区状态: -1 封禁下架, 0 申请中, 1 正常, 2 解散删除
+	CId       int64  `json:"cId"`                //社区号，创建时的时间戳(s)
+	Logo      string `json:"logo"`               //社区logo
+	Name      string `json:"name" gorm:"unique"` //社区名
+	Desc      string `json:"desc"`               //社区描述
+	CreatorId int64  `json:"creatorId"`          //创建者id
+	Status    int    `json:"status"`             //社区状态: -1 封禁下架, 0 申请中, 1 正常, 2 解散删除
 }
 
 func (c *Community) QueryOne(field string, where interface{}, args ...interface{}) error {
@@ -36,4 +36,47 @@ func (c *Community) QueryList(field string, where interface{}, args ...interface
 		return make([]Community, 0), err
 	}
 	return list, nil
+}
+
+func (c *Community) Add() error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+
+	err := tx.Create(c).Error
+	if err != nil {
+		tx.Rollback()
+		util.LoggerError(err)
+		return err
+	}
+	return nil
+}
+
+/*
+更新
+update: 可以是结构体 或者是 map
+*/
+func (c *Community) Update(update interface{}, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+
+	err := tx.Model(c).Where(where, args...).Updates(update).Error
+	if err != nil {
+		tx.Rollback()
+		util.LoggerError(err)
+		return err
+	}
+	return nil
+}
+
+func (c *Community) QueryCount(where interface{}, args ...interface{}) int {
+	mdb := db.GetMysqlDB()
+	var count int
+	err := mdb.Model(c).Where(where, args...).Count(&count).Error
+	if err != nil {
+		util.LoggerError(err)
+		return 0
+	}
+	return count
 }

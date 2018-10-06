@@ -41,11 +41,13 @@ func (jc *JoinedCommunity) QueryList(field string, where interface{}, args ...in
 func (jc *JoinedCommunity) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
+	defer tx.Commit()
+
 	err := tx.Create(jc).Error
 	if err != nil {
 		util.LoggerError(err)
 		tx.Rollback()
+		return err
 	}
-	tx.Commit()
-	return err
+	return nil
 }

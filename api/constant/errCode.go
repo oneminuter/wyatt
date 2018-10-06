@@ -19,7 +19,11 @@ const (
 	CommunityExamining                 = 614 //社区还在申请中
 	CommunityDissolution               = 615 //社区已解散
 	CommunityJoinErr                   = 616 //加入社区失败
-
+	CommunityCreateErr                 = 617 //创建社区失败
+	NoModify                           = 618 //没有修改
+	ModifyErr                          = 619 //修改失败
+	CommunityIsExist                   = 620 //社区已存在
+	NoAuth                             = 621 //没有权限
 )
 
 var ErrMap = map[int]string{
@@ -41,4 +45,8 @@ var ErrMap = map[int]string{
 	CommunityExamining:                 "社区还在申请中",
 	CommunityDissolution:               "社区已解散",
 	CommunityJoinErr:                   "加入社区失败",
+	CommunityCreateErr:                 "创建社区失败",
+	NoModify:                           "没有修改",
+	CommunityIsExist:                   "社区已存在",
+	NoAuth:                             "没有权限",
 }

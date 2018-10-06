@@ -30,27 +30,29 @@ type User struct {
 func (u *User) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
+	defer tx.Commit()
+
 	err := tx.Model(u).Create(u).Error
 	if err != nil {
 		tx.Rollback()
 		util.LoggerError(err)
+		return err
 	}
-	tx.Commit()
-
-	return err
+	return nil
 }
 
 func (u *User) Update(update, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
+	defer tx.Commit()
+
 	err := tx.Model(u).Where(where, args...).Updates(update).Error
 	if err != nil {
 		tx.Rollback()
 		util.LoggerError(err)
+		return err
 	}
-	tx.Commit()
-
-	return err
+	return nil
 }
 
 func (u *User) QueryList(field string, where interface{}, args ...interface{}) (list []User, err error) {

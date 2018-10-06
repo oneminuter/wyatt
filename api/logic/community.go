@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"time"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -9,6 +10,16 @@ import (
 )
 
 type Community struct{}
+type CommunityCreate struct {
+	Name string `json:"name" form:"name" binding:"required"`
+	Desc string `json:"desc" form:"desc" binding:"required"`
+}
+type CommunityModify struct {
+	CId  int64  `json:"cId" form:"cId"`   //社区号
+	Name string `json:"name" form:"name"` //社区名
+	Desc string `json:"desc" form:"desc"` //简介
+	Logo string `json:"logo" form:"logo"` //logo
+}
 
 //查询所有状态为 1 的社区
 func (c *Community) ListAll() interface{} {
@@ -48,4 +59,67 @@ func (c *Community) ListAll() interface{} {
 	var vc view.Community
 	resp := vc.RenderListAll(list, joinNumMap, topicNumMap)
 	return view.SetRespData(resp)
+}
+
+//创建社区
+func (cc *CommunityCreate) Create(userId int64) interface{} {
+	var c model.Community
+	count := c.QueryCount("name = ?", cc.Name)
+	if count > 0 {
+		return view.SetErr(constant.CommunityIsExist)
+	}
+
+	c = model.Community{
+		CId:       time.Now().Unix(),
+		Logo:      "",
+		Name:      cc.Name,
+		Desc:      cc.Desc,
+		CreatorId: userId,
+		Status:    0,
+	}
+	err := c.Add()
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.CommunityCreateErr)
+	}
+	return view.SetErr(constant.Success)
+}
+
+//修改社区信息
+func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
+	var (
+		c     model.Community
+		sc    service.Community
+		value string
+	)
+
+	//判断权限
+	isManager := sc.IsManager(cm.CId, userId)
+	if !isManager {
+		return view.SetErr(constant.NoAuth)
+	}
+
+	switch field {
+	case constant.ModifyLogo:
+		path, err := sc.SaveLogo(cm.Logo)
+		if err != nil {
+			util.LoggerError(err)
+			return view.SetErr(constant.ModifyErr)
+		}
+		value = path
+	case constant.ModifyName:
+		value = cm.Name
+	case constant.ModifyDesc:
+		value = cm.Desc
+	default:
+		util.Logger("修改选项错误")
+		return view.SetErr(constant.ModifyErr)
+	}
+
+	err := c.Update(map[string]string{field: value}, "c_id = ?", cm.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
 }

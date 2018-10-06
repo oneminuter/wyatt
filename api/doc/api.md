@@ -170,3 +170,52 @@
     ]
 }
 ```
+
+***
+
+## 创建社区
+
+** Post /community/create**
+
+### 请求参数
+```shell
+{
+    name: "xxxx", // 社区名
+    desc: "xxx"   // 社区简介
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 修改社区
+
+** Post /community/modify**
+
+### 请求参数
+请求参数为单个字段修改，同时传多个值的话，会自动判断是否为空，哪个有值，就改哪个，优先级：logo > name > desc
+
+```shell
+{
+    logo: "xxx"   // 社区logo
+    name: "xxxx", // 社区名
+    desc: "xxx"   // 社区简介
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```

@@ -8,6 +8,8 @@ import (
 	"wyatt/api/view"
 	"wyatt/util"
 
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
@@ -43,12 +45,52 @@ var Join = func(ctx *gin.Context) {
 
 //创建社区
 var CommunityCreate = func(ctx *gin.Context) {
-
+	var param logic.CommunityCreate
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Create(userId))
 }
 
 //修改社区
 var CommunityModify = func(ctx *gin.Context) {
+	var param logic.CommunityModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
 
+	if 0 == param.CId {
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	//修改logo
+	if "" != strings.TrimSpace(param.Logo) {
+		ctx.JSON(http.StatusOK, param.Modify(userId, constant.ModifyLogo))
+		return
+	}
+
+	//修改名字
+	if "" != strings.TrimSpace(param.Name) {
+		ctx.JSON(http.StatusOK, param.Modify(userId, constant.ModifyName))
+		return
+	}
+
+	//修改简介
+	if "" != strings.TrimSpace(param.Desc) {
+		ctx.JSON(http.StatusOK, param.Modify(userId, constant.ModifyDesc))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, view.SetErr(constant.NoModify))
 }
 
 //删除社区

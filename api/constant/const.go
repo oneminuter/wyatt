@@ -8,4 +8,9 @@ const (
 	//数据为空
 	RedisNotHaveData = "redis: nil"
 	MysqlNotHaveData = "record not found"
+
+	//社区修改 - 字段
+	ModifyLogo = "logo" //标题
+	ModifyName = "name" //名字
+	ModifyDesc = "desc" //简介
 )
