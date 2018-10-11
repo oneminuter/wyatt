@@ -20,6 +20,9 @@ type CommunityModify struct {
 	Desc string `json:"desc" form:"desc"` //简介
 	Logo string `json:"logo" form:"logo"` //logo
 }
+type CommunityDelete struct {
+	CId int64 `json:"cId" form:"cId" binding:"required"` //社区号
+}
 
 //查询所有状态为 1 的社区
 func (c *Community) ListAll() interface{} {
@@ -120,6 +123,24 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
+}
+
+//删除社区
+func (cd *CommunityDelete) Delete(userId int64) interface{} {
+	//判断权限
+	var sc service.Community
+	if !sc.IsAdmin(cd.CId, userId) {
+		return view.SetErr(constant.NoAuth)
+	}
+
+	//修改社区的状态为 2
+	var mc model.Community
+	err := mc.Update(map[string]int{"status": 2}, "c_id = ?", cd.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.DeleteErr)
 	}
 	return view.SetErr(constant.Success)
 }

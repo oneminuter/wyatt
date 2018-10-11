@@ -69,9 +69,9 @@ func (c *JoinedCommunity) MyList(userId int64) interface{} {
 	userId: 用户id
 	cId: 社区号
 */
-func (JoinedCommunity) Join(userId int64, cId interface{}) interface{} {
+func (jc *JoinedCommunity) Join(userId int64) interface{} {
 	var mc model.Community
-	err := mc.QueryOne("*", "c_id = ?", cId)
+	err := mc.QueryOne("*", "c_id = ?", jc.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -89,14 +89,32 @@ func (JoinedCommunity) Join(userId int64, cId interface{}) interface{} {
 	default:
 	}
 
-	var jc model.JoinedCommunity
-	jc.CommunityId = mc.ID
-	jc.UserId = userId
-	err = jc.Add()
+	var mjc model.JoinedCommunity
+	mjc.CommunityId = mc.ID
+	mjc.UserId = userId
+	err = mjc.Add()
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.CommunityJoinErr)
 	}
 
+	return view.SetErr(constant.Success)
+}
+
+//退出社区
+func (jc *JoinedCommunity) Exit(userId int64) interface{} {
+	var mc model.Community
+	err := mc.QueryOne("*", "c_id = ?", jc.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	var mjc model.JoinedCommunity
+	err = mjc.Delete("community_id = ? AND user_id = ?", mc.ID, userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.CommunityExitErr)
+	}
 	return view.SetErr(constant.Success)
 }

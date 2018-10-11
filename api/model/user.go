@@ -23,8 +23,9 @@ type User struct {
 	Province       string `json:"province"`              //省份
 	City           string `json:"city"`                  //城市
 	RegisterIp     string `json:"registerIp"`            //注册ip
-	Status         int64  `json:"status" gorm:"size:4"`  //用户状态: -1 封禁用户, 0 临时用户
+	Status         int64  `json:"status" gorm:"size:4"`  //用户状态: -1 封禁用户, 0 临时用户 1或空位正常用户
 	IsSetedAccount bool   `json:"-"`                     //是否设置过account, 每人只能设置一次
+	Signature      string `json:"signature"`             //个性签名
 }
 
 func (u *User) Add() error {
@@ -71,9 +72,10 @@ func (u *User) QueryOne(field string, where interface{}, args ...interface{}) er
 	err := mdb.Model(u).Select(field).Where(where, args...).Last(u).Error
 	if err != nil {
 		util.LoggerError(err)
+		return err
 	}
 
-	return err
+	return nil
 }
 
 func (u *User) QueryCount(where interface{}, args ...interface{}) (int, error) {

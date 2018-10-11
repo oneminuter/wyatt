@@ -24,6 +24,10 @@ const (
 	ModifyErr                          = 619 //修改失败
 	CommunityIsExist                   = 620 //社区已存在
 	NoAuth                             = 621 //没有权限
+	DeleteErr                          = 622 //删除失败
+	AddErr                             = 623 //添加失败
+	UserNotExist                       = 624 //用户不存在
+	CommunityExitErr                   = 625 //退出社区失败
 )
 
 var ErrMap = map[int]string{
@@ -49,4 +53,8 @@ var ErrMap = map[int]string{
 	NoModify:                           "没有修改",
 	CommunityIsExist:                   "社区已存在",
 	NoAuth:                             "没有权限",
+	DeleteErr:                          "删除失败",
+	AddErr:                             "添加失败",
+	UserNotExist:                       "用户不存在",
+	CommunityExitErr:                   "退出社区失败",
 }

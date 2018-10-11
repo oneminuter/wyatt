@@ -12,21 +12,23 @@ func Router(server *gin.Engine) {
 	//用户
 	userGroup := server.Group("/user")
 	userGroup.GET("/info", handler.UserInfo)
+	userGroup.POST("/info/modify")
 	userGroup.POST("/register", handler.UserRegister)
 	userGroup.POST("/login", handler.UserLogin)
+	userGroup.POST("/password/modify")
+	userGroup.POST("/password/reset")
 
 	//社区
 	communityGroup := server.Group("/community")
 	communityGroup.GET("/list/all", handler.CommunityListAll)
 	communityGroup.GET("/list/my", handler.CommunityListMy)
 	communityGroup.POST("/join", handler.Join)
+	communityGroup.POST("/exit", handler.CommunityExit)
 	communityGroup.POST("/create", handler.CommunityCreate)
 	communityGroup.POST("/modify", handler.CommunityModify)
 	communityGroup.POST("/delete", handler.CommunityDelete)
 	communityGroup.POST("/manager/add", handler.CommunityManagerAdd)
 	communityGroup.POST("/manager/remove", handler.CommunityManagerRemove)
-	communityGroup.POST("/follow/add", handler.CommunityFollowAdd)
-	communityGroup.POST("/follow/remove", handler.CommunityFollowRemove)
 
 	//话题
 	topicGroup := server.Group("/topic")

@@ -51,3 +51,17 @@ func (jc *JoinedCommunity) Add() error {
 	}
 	return nil
 }
+
+func (jc *JoinedCommunity) Delete(where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+
+	err := tx.Where(where, args...).Delete(jc).Error
+	if err != nil {
+		tx.Rollback()
+		util.LoggerError(err)
+		return err
+	}
+	return nil
+}

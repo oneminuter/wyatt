@@ -40,7 +40,20 @@ var Join = func(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, jc.Join(userId, jc.CId))
+	ctx.JSON(http.StatusOK, jc.Join(userId))
+}
+
+//退出社区
+var CommunityExit = func(ctx *gin.Context) {
+	var param logic.JoinedCommunity
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Exit(userId))
 }
 
 //创建社区
@@ -95,25 +108,43 @@ var CommunityModify = func(ctx *gin.Context) {
 
 //删除社区
 var CommunityDelete = func(ctx *gin.Context) {
+	var param logic.CommunityDelete
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
 
+	userId := ctx.GetInt64("userId")
+
+	ctx.JSON(http.StatusOK, param.Delete(userId))
 }
 
 //增加管理员
 var CommunityManagerAdd = func(ctx *gin.Context) {
+	var param logic.CommunityManager
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	creatorId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Add(creatorId))
 
 }
 
 //删除管理员
 var CommunityManagerRemove = func(ctx *gin.Context) {
-
-}
-
-//关注社区
-var CommunityFollowAdd = func(ctx *gin.Context) {
-
-}
-
-//取消关注社区
-var CommunityFollowRemove = func(ctx *gin.Context) {
-
+	var param logic.CommunityManager
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	creatorId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Delete(creatorId))
 }

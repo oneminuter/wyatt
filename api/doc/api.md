@@ -146,6 +146,27 @@
 
 ***
 
+## 退出社区
+**Post /community/exit**
+
+### 请求参数
+```shell
+{
+    cId: xxx //社区号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
 ## 加入的社区列表
 
 **Get /community/list/my**
@@ -181,7 +202,7 @@
 ```shell
 {
     name: "xxxx", // 社区名
-    desc: "xxx"   // 社区简介
+    desc: "xxx" // 社区简介
 }
 ```
 
@@ -205,9 +226,78 @@
 
 ```shell
 {
-    logo: "xxx"   // 社区logo
+    logo: "xxx", // 社区logo
     name: "xxxx", // 社区名
-    desc: "xxx"   // 社区简介
+    desc: "xxx" // 社区简介
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 删除社区
+删除为软删除，改变社区的状态
+
+** Post /community/delete**
+
+### 请求参数
+```shell
+{
+    cId: 1538754033 // 社区id
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 添加社区管理员
+
+** Post /community/manager/add**
+
+### 请求参数
+```shell
+{
+    cId: 1538754033, //社区id
+    account: oneminuter //被添加目标用户的账号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 删除社区管理员
+
+** Post /community/manager/add**
+
+### 请求参数
+```shell
+{
+    cId: 1538754033, //社区id
+    account: oneminuter //被删除目标用户的账号
 }
 ```
 

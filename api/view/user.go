@@ -14,6 +14,7 @@ type User struct {
 	Sex       int    `json:"sex"`       //性别
 	Name      string `json:"name"`      //姓名
 	AvatarUrl string `json:"avatarUrl"` //头像
+	Signature string `json:"signature"` //个性签名
 	Country   string `json:"country"`   //国家
 	Province  string `json:"province"`  //省份
 	City      string `json:"city"`      //城市
@@ -28,6 +29,7 @@ func (u *User) RenderUserInfo(mUser *model.User) {
 	u.Sex = mUser.Sex
 	u.Name = mUser.Name
 	u.AvatarUrl = mUser.AvatarUrl
+	u.Signature = mUser.Signature
 	u.Country = mUser.Country
 	u.Province = mUser.Province
 	u.City = mUser.City

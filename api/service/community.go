@@ -83,3 +83,12 @@ func (Community) IsManager(cId int64, userId int64) bool {
 	}
 	return isTrue
 }
+
+/*
+判断是否是创建者 - 删除社区，管理管理员
+*/
+func (Community) IsAdmin(cId int64, userId int64) bool {
+	var mc model.Community
+	count := mc.QueryCount("c_id = ? AND creator_id = ?", cId, userId)
+	return count > 0
+}

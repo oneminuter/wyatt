@@ -36,3 +36,17 @@ func (cm *CommunityManager) QueryList(field string, where interface{}, args ...i
 	}
 	return list, nil
 }
+
+func (cm *CommunityManager) Delete(where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+
+	err := tx.Model(cm).Where(where, args...).Delete(cm).Error
+	if err != nil {
+		tx.Rollback()
+		util.LoggerError(err)
+		return err
+	}
+	return nil
+}
