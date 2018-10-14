@@ -60,7 +60,7 @@ func (c *Community) ListAll() interface{} {
 	topicNumMap := sc.GetCommunityTopicNumMap(topicList)
 
 	var vc view.Community
-	resp := vc.RenderListAll(list, joinNumMap, topicNumMap)
+	resp := vc.HandlerRespListAll(list, joinNumMap, topicNumMap)
 	return view.SetRespData(resp)
 }
 

@@ -20,7 +20,7 @@ type User struct {
 	City      string `json:"city"`      //城市
 }
 
-func (u *User) RenderUserInfo(mUser *model.User) {
+func (u *User) HandlerRespUserInfo(mUser *model.User) {
 	u.Token = util.NewToken(mUser.ID, mUser.Status, mUser.UUID)
 	u.Account = mUser.Account
 	u.UUID = mUser.UUID

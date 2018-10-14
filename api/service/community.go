@@ -29,6 +29,7 @@ func (Community) GetCommunityJoinNumMap(list []model.JoinedCommunity) map[int64]
 	return m
 }
 
+//话题列表转 社区id:话题数 map
 func (Community) GetCommunityTopicNumMap(list []model.Topic) map[int64]int {
 	m := make(map[int64]int)
 	for _, v := range list {

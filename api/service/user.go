@@ -122,3 +122,12 @@ func (*User) IsExitAccount(account string) bool {
 	}
 	return false
 }
+
+//将用户信息列表转为 id:User 的map
+func (*User) TransformToMap(muList []model.User) map[int64]model.User {
+	var m = make(map[int64]model.User)
+	for _, v := range muList {
+		m[v.ID] = v
+	}
+	return m
+}

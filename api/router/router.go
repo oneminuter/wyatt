@@ -32,8 +32,8 @@ func Router(server *gin.Engine) {
 
 	//话题
 	topicGroup := server.Group("/topic")
-	topicGroup.GET("/list")
-	topicGroup.POST("/add")
+	topicGroup.GET("/list", handler.TopicList)
+	topicGroup.POST("/add", handler.TopicAdd)
 	topicGroup.POST("/delete")
 	topicGroup.POST("/modify")
 	topicGroup.GET("/detail")

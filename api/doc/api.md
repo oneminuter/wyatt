@@ -4,7 +4,7 @@
 ### 请求参数
 ```shell
 {
-    "uId":"xxxx" //用标识
+    "uId":"int64" //用标识
 }
 ```
 
@@ -36,8 +36,8 @@
 ### 请求参数
 ```shell
 {
-    "account":"xxxx", //账号
-    "password": "xxx" //密码
+    "account":"string", //账号
+    "password": "string" //密码
 }
 ```
 
@@ -69,10 +69,10 @@
 ### 请求参数
 ```shell
 {
-    "account":"xxxx", //账号
-    "phone":"138xxxx", //手机号
-    "email":"10500@qq.com", //邮箱
-    "password": "xxx" //密码（必须）
+    "account":"string", //账号
+    "phone": "string", //手机号
+    "email":"string", //邮箱
+    "password": "string" //密码（必须）
 }
 ```
 请求参数 account，phone，email 必须有其一
@@ -131,7 +131,7 @@
 ### 请求参数
 ```shell
 {
-    cId: xxx //社区号
+    "cId":"int64" //社区号
 }
 ```
 
@@ -152,7 +152,7 @@
 ### 请求参数
 ```shell
 {
-    cId: xxx //社区号
+    "cId": "int64" //社区号
 }
 ```
 
@@ -196,13 +196,13 @@
 
 ## 创建社区
 
-** Post /community/create**
+**Post /community/create**
 
 ### 请求参数
 ```shell
 {
-    name: "xxxx", // 社区名
-    desc: "xxx" // 社区简介
+    "name": "string", // 社区名
+    "desc": "string" // 社区简介
 }
 ```
 
@@ -219,16 +219,16 @@
 
 ## 修改社区
 
-** Post /community/modify**
+**Post /community/modify**
 
 ### 请求参数
 请求参数为单个字段修改，同时传多个值的话，会自动判断是否为空，哪个有值，就改哪个，优先级：logo > name > desc
 
 ```shell
 {
-    logo: "xxx", // 社区logo
-    name: "xxxx", // 社区名
-    desc: "xxx" // 社区简介
+    "logo": "string", // 社区logo
+    "name": "string", // 社区名
+    "desc": "string" // 社区简介
 }
 ```
 
@@ -246,12 +246,12 @@
 ## 删除社区
 删除为软删除，改变社区的状态
 
-** Post /community/delete**
+**Post /community/delete**
 
 ### 请求参数
 ```shell
 {
-    cId: 1538754033 // 社区id
+    "cId": "int64" // 社区id
 }
 ```
 
@@ -268,13 +268,13 @@
 
 ## 添加社区管理员
 
-** Post /community/manager/add**
+**Post /community/manager/add**
 
 ### 请求参数
 ```shell
 {
-    cId: 1538754033, //社区id
-    account: oneminuter //被添加目标用户的账号
+    "cId": "int64", //社区id
+    "account": "string" //被添加目标用户的账号
 }
 ```
 
@@ -291,13 +291,13 @@
 
 ## 删除社区管理员
 
-** Post /community/manager/add**
+**Post /community/manager/add**
 
 ### 请求参数
 ```shell
 {
-    cId: 1538754033, //社区id
-    account: oneminuter //被删除目标用户的账号
+    "cId": "int64", //社区id
+    "account": "string" //被删除目标用户的账号
 }
 ```
 
@@ -307,5 +307,64 @@
     "errCode": 200,
     "errMsg": "",
     "data": null
+}
+```
+
+***
+
+## 添加话题
+
+**Post /topic/add**
+
+### 请求参数
+```shell
+{
+    "cId": "int64" //社区id
+    "title": "string" //标题
+    "desc": "string" //简介或者内容
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 话题列表
+
+**Get /topic/list**
+
+### 请求参数
+```shell
+{
+    "cId": "int64" //社区id
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "tId": 1539533494, //话题id
+            "title": "这是话题标题", //标题
+            "desc": "这是话题内容", //内容或简介
+            "cId": 1538754033, //所属社区id
+            "creatorAccount": "1234", //发布者账号
+            "creatorAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //发布者头像
+            "createTime": 1539533494, //创建时间
+            "viewedNum": 0, //浏览量
+            "zanNum": 0, //点赞数
+            "commentNum": 0 //评论数
+        }
+    ]
 }
 ```

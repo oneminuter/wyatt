@@ -5,6 +5,7 @@ import (
 	"wyatt/util"
 )
 
+//社区人员管理
 type CommunityManager struct {
 	TableModel
 

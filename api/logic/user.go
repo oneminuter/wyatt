@@ -37,7 +37,7 @@ func (*User) Info(userId int64) interface{} {
 
 	//返回数据
 	var vUser view.User
-	vUser.RenderUserInfo(&mUser)
+	vUser.HandlerRespUserInfo(&mUser)
 	return view.SetRespData(&vUser)
 }
 
@@ -78,7 +78,7 @@ func (u *UserRegister) Register() interface{} {
 
 	//返回数据
 	var vUser view.User
-	vUser.RenderUserInfo(&mUser)
+	vUser.HandlerRespUserInfo(&mUser)
 	return view.SetRespData(&vUser)
 }
 
@@ -133,6 +133,6 @@ func (u *UserLogin) Login() interface{} {
 
 	//返回数据
 	var vUser view.User
-	vUser.RenderUserInfo(&mUser)
+	vUser.HandlerRespUserInfo(&mUser)
 	return view.SetRespData(&vUser)
 }

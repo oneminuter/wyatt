@@ -59,7 +59,7 @@ func (c *JoinedCommunity) MyList(userId int64) interface{} {
 	topicNumMap := sc.GetCommunityTopicNumMap(topicList)
 
 	var vc view.Community
-	resp := vc.RenderListAll(communities, joinNumMap, topicNumMap)
+	resp := vc.HandlerRespListAll(communities, joinNumMap, topicNumMap)
 	return view.SetRespData(resp)
 
 }

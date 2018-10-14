@@ -12,7 +12,7 @@ type Community struct {
 	TopicNum  int    `json:"articleNum"` //文章数
 }
 
-func (c *Community) RenderListAll(mlist []model.Community, joinNumMap, topicNumMap map[int64]int) []Community {
+func (c *Community) HandlerRespListAll(mlist []model.Community, joinNumMap, topicNumMap map[int64]int) []Community {
 	list := make([]Community, 0)
 	for _, v := range mlist {
 		c := Community{

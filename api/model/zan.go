@@ -1,5 +1,6 @@
 package model
 
+//赞记录
 type Zan struct {
 	TableModel
 	UserId  int64  `json:"userId"`  //触发者用户id
