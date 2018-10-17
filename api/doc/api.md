@@ -368,3 +368,81 @@
     ]
 }
 ```
+***
+
+## 修改话题
+
+**Post /topic/modify**
+
+### 请求参数
+```shell
+{
+    "tId": "int64", //话题id
+    "title": "string", //标题
+    "desc": "string" //内容或简介
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 话题详情
+
+**Get /topic/detail**
+
+### 请求参数
+```shell
+{
+    "tId": "int64" //话题id
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": {
+        "tId": 1539792891, //话题id
+        "title": "标题标题标题标题", //标题
+        "desc": "修改后的内容1", //内容
+        "cId": 1538754033, //所属社区id
+        "creatorAccount": "1234", //发布者账号
+        "creatorAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //发布者头像
+        "createTime": 1539792891, //发布时间
+        "viewedNum": 0, //浏览量
+        "zanNum": 0, //点赞数
+        "commentNum": 0 //评论数量
+    }
+}
+```
+
+***
+
+## 删除话题
+
+**Post /topic/delete**
+
+### 请求参数
+```shell
+{
+    "tId": "int64" //话题id
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```

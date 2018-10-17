@@ -16,14 +16,14 @@ type Topic struct {
 }
 
 //渲染话题列表
-func (*Topic) HandlerRespList(mtList []model.Topic, CId int64, uMap map[int64]model.User) []Topic {
+func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]model.User) []Topic {
 	var list = make([]Topic, 0, len(mtList))
 	for _, v := range mtList {
 		t := Topic{
 			TId:              v.TId,
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              CId,
+			CId:              cId,
 			CreatorAccount:   uMap[v.CreatorId].Account,
 			CreatorAvatarUrl: uMap[v.CreatorId].AvatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),
@@ -34,4 +34,17 @@ func (*Topic) HandlerRespList(mtList []model.Topic, CId int64, uMap map[int64]mo
 		list = append(list, t)
 	}
 	return list
+}
+
+func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
+	t.TId = mt.TId
+	t.Title = mt.Title
+	t.Desc = mt.Desc
+	t.CId = cId
+	t.CreatorAccount = u.Account
+	t.CreatorAvatarUrl = u.AvatarUrl
+	t.CreateTime = mt.CreatedAt.Unix()
+	t.ViewedNum = mt.ViewedNum
+	t.ZanNum = mt.ZanNum
+	t.CommentNum = mt.CommentNum
 }

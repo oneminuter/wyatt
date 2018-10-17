@@ -66,3 +66,29 @@ func (t *Topic) QueryList(field string, where interface{}, args ...interface{}) 
 	}
 	return list, nil
 }
+
+func (t *Topic) Delete(where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Where(where, args...).Delete(t).Error
+	if err != nil {
+		tx.Rollback()
+		util.LoggerError(err)
+		return err
+	}
+	return nil
+}
+
+func (t *Topic) Update(update interface{}, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(t).Where(where, args...).Updates(update).Error
+	if err != nil {
+		tx.Rollback()
+		util.LoggerError(err)
+		return err
+	}
+	return nil
+}

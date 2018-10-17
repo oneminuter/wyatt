@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"strings"
 	"time"
 	"wyatt/api/constant"
 	"wyatt/api/model"
@@ -16,6 +17,14 @@ type TopicAdd struct {
 	CId   int64  `json:"cId" form:"cId" binding:"required"`
 	Title string `json:"title" form:"title" binding:"required"` //话题标题
 	Desc  string `json:"desc" form:"desc" binding:"required"`   //话题内容
+}
+type TopicDelete struct {
+	Tid int64 `json:"tid" form:"tId" binding:"required"` //话题id
+}
+type TopicModify struct {
+	Tid   int64  `json:"tid" form:"tId" binding:"required"` //话题id
+	Title string `json:"title" form:"title"`                //话题标题
+	Desc  string `json:"desc" form:"desc"`                  //话题内容
 }
 
 //获取社区下的话题列表
@@ -88,4 +97,99 @@ func (ta *TopicAdd) Add(creatorId int64) interface{} {
 		return view.SetErr(constant.AddErr)
 	}
 	return view.SetErr(constant.Success)
+}
+
+//删除话题
+func (td *TopicDelete) Delete(userId int64) interface{} {
+	var mt model.Topic
+	err := mt.QueryOne("*", "t_id = ?", td.Tid)
+	if err != nil {
+		util.LoggerError(err)
+		view.CheckMysqlErr(err)
+	}
+
+	//判断是否是话题的创建者
+	if userId != mt.CreatorId {
+		return view.SetErr(constant.NoAuth)
+	}
+	err = mt.Delete("t_id = ?", td.Tid)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.DeleteErr)
+	}
+	return view.SetErr(constant.Success)
+}
+
+//修改话题
+func (tm *TopicModify) Modify(userId int64) interface{} {
+	var mt model.Topic
+	err := mt.QueryOne("*", "t_id = ?", tm.Tid)
+	if err != nil {
+		util.LoggerError(err)
+		view.CheckMysqlErr(err)
+	}
+	//判断是否是话题的创建者
+	if userId != mt.CreatorId {
+		return view.SetErr(constant.NoAuth)
+	}
+
+	var (
+		m        = make(map[string]string)
+		isModify = false
+	)
+
+	//判断title是否为空
+	if "" != strings.TrimSpace(tm.Title) {
+		m["title"] = tm.Title
+		isModify = true
+	}
+	//判断内容是否为空
+	if "" != strings.TrimSpace(tm.Desc) {
+		m["desc"] = tm.Desc
+		isModify = true
+	}
+
+	if !isModify {
+		return view.SetErr(constant.NoModify)
+	}
+
+	err = mt.Update(m, "t_id = ?", tm.Tid)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+
+	return view.SetErr(constant.Success)
+}
+
+//查看话题详情
+func (Topic) Detail(tId int64) interface{} {
+	var mt model.Topic
+	err := mt.QueryOne("*", "t_id = ?", tId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//查询话题所属社区号
+	var mc model.Community
+	err = mc.QueryOne("c_id", "id = ?", mt.CommunityId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	//查询创建者信息
+	var mu model.User
+	err = mu.QueryOne("*", "id = ?", mt.CreatorId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	//返回视图
+	var vt view.Topic
+	vt.HandlerRespDetail(mt, mc.CId, mu)
+
+	return view.SetRespData(vt)
 }

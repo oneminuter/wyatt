@@ -34,7 +34,7 @@ var TopicList = func(ctx *gin.Context) {
 
 var TopicAdd = func(ctx *gin.Context) {
 	var param logic.TopicAdd
-	err := ctx.MustBindWith(&param, binding.Form)
+	err := ctx.ShouldBindWith(&param, binding.Form)
 	if err != nil {
 		util.LoggerError(err)
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
@@ -42,4 +42,43 @@ var TopicAdd = func(ctx *gin.Context) {
 	}
 	creatorId := ctx.GetInt64("userId")
 	ctx.JSON(http.StatusOK, param.Add(creatorId))
+}
+
+var TopicDelete = func(ctx *gin.Context) {
+	var param logic.TopicDelete
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Delete(userId))
+}
+
+var TopicModify = func(ctx *gin.Context) {
+	var param logic.TopicModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Modify(userId))
+}
+
+var TopicDetail = func(ctx *gin.Context) {
+	var t logic.Topic
+	tId := ctx.Query("tId")
+	topicId, err := strconv.ParseInt(tId, 10, 64)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	ctx.JSON(http.StatusOK, t.Detail(topicId))
+	return
 }
