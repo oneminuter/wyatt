@@ -93,3 +93,12 @@ func (Community) IsAdmin(cId int64, userId int64) bool {
 	count := mc.QueryCount("c_id = ? AND creator_id = ?", cId, userId)
 	return count > 0
 }
+
+//提取 社区主键id:社区号 map
+func (c *Community) GetCIDMap(list []model.Community) map[int64]int64 {
+	var m = make(map[int64]int64)
+	for _, v := range list {
+		m[v.ID] = v.CId
+	}
+	return m
+}

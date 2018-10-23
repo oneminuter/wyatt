@@ -82,3 +82,34 @@ var TopicDetail = func(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, t.Detail(topicId))
 	return
 }
+
+var TopicCollectAdd = func(ctx *gin.Context) {
+	var param logic.TopicCollect
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Add(userId))
+}
+
+var TopicCollectCancel = func(ctx *gin.Context) {
+	var param logic.TopicCollect
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Cancel(userId))
+}
+
+var TopicCollectList = func(ctx *gin.Context) {
+	userId := ctx.GetInt64("userId")
+	var param logic.TopicCollect
+	ctx.JSON(http.StatusOK, param.List(userId))
+}

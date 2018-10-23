@@ -36,6 +36,7 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]mo
 	return list
 }
 
+//话题详情
 func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
 	t.TId = mt.TId
 	t.Title = mt.Title
@@ -47,4 +48,46 @@ func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
 	t.ViewedNum = mt.ViewedNum
 	t.ZanNum = mt.ZanNum
 	t.CommentNum = mt.CommentNum
+}
+
+//收藏话题列表
+func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]int64, uMap map[int64]model.User) []Topic {
+	var (
+		ok        bool
+		cId       int64 //社区id - 10为数字
+		u         model.User
+		avatarUrl string
+		account   string
+		list      = make([]Topic, 0, len(mtList))
+	)
+	for _, v := range mtList {
+		cId, ok = cIDMap[v.CommunityId]
+		if !ok {
+			cId = 0
+		}
+
+		u, ok = uMap[v.CreatorId]
+		if ok {
+			avatarUrl = u.AvatarUrl
+			account = u.Account
+		} else {
+			avatarUrl = ""
+			account = ""
+		}
+
+		t := Topic{
+			TId:              v.TId,
+			Title:            v.Title,
+			Desc:             v.Desc,
+			CId:              cId,
+			CreatorAccount:   account,
+			CreatorAvatarUrl: avatarUrl,
+			CreateTime:       v.CreatedAt.Unix(),
+			ViewedNum:        v.ViewedNum,
+			ZanNum:           v.ZanNum,
+			CommentNum:       v.CommentNum,
+		}
+		list = append(list, t)
+	}
+	return list
 }

@@ -28,6 +28,7 @@ const (
 	AddErr                             = 623 //添加失败
 	UserNotExist                       = 624 //用户不存在
 	CommunityExitErr                   = 625 //退出社区失败
+	NoCollect                          = 626 //没有收藏
 )
 
 var ErrMap = map[int]string{
@@ -57,4 +58,5 @@ var ErrMap = map[int]string{
 	AddErr:                             "添加失败",
 	UserNotExist:                       "用户不存在",
 	CommunityExitErr:                   "退出社区失败",
+	NoCollect:                          "没有收藏",
 }

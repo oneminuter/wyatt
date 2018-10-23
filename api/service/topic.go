@@ -12,3 +12,12 @@ func (Topic) GetCreatorIdList(tList []model.Topic) []int64 {
 	}
 	return list
 }
+
+//从话题列表中提取社区id列表
+func (Topic) GetCommunityIdList(tList []model.Topic) []int64 {
+	var list = make([]int64, 0, len(tList))
+	for _, v := range tList {
+		list = append(list, v.CommunityId)
+	}
+	return list
+}

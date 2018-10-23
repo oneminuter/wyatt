@@ -37,8 +37,9 @@ func Router(server *gin.Engine) {
 	topicGroup.POST("/delete", handler.TopicDelete)
 	topicGroup.POST("/modify", handler.TopicModify)
 	topicGroup.GET("/detail", handler.TopicDetail)
-	topicGroup.POST("/collect/add")
-	topicGroup.POST("/collect/cancel")
+	topicGroup.POST("/collect/add", handler.TopicCollectAdd)
+	topicGroup.POST("/collect/cancel", handler.TopicCollectCancel)
+	topicGroup.GET("/collect/list", handler.TopicCollectList)
 
 	//评论
 	commentGroup := server.Group("/comment")
