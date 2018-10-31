@@ -6,10 +6,10 @@ import (
 )
 
 type Topic struct {
-	TId              string `json:"tId"`                   //话题id，表别名+创建的时间戳
+	TId              string `json:"tId"`                   //话题id，流水号
 	Title            string `json:"title"`                 //标题
 	Desc             string `json:"desc" gorm:"type:text"` //简介，详情，或者内容
-	CId              string `json:"cId"`                   //所属社区id，表别名+10位数字
+	CId              string `json:"cId"`                   //所属社区id，流水号
 	CreatorAccount   string `json:"creatorAccount"`        //创建者账号
 	CreatorAvatarUrl string `json:"creatorAvatarUrl"`      //创建者头像
 	CreateTime       int64  `json:"createTime"`            //创建时间戳

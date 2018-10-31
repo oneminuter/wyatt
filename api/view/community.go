@@ -7,7 +7,7 @@ import (
 
 type Community struct {
 	CreatedAt int64  `json:"createdAt"`  //创建时间
-	CId       string `json:"cId"`        //社区号，表别名+创建时的时间戳(s)
+	CId       string `json:"cId"`        //社区号，流水号
 	Logo      string `json:"logo"`       //社区logo
 	Name      string `json:"name"`       //社区名
 	Desc      string `json:"desc"`       //社区描述

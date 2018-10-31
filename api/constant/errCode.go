@@ -33,6 +33,7 @@ const (
 	CommunityIdErr                     = 628 //社区号错误
 	TopicIdErr                         = 629 //话题号错误
 	CommentIdErr                       = 630 //评论编号错误
+	QueryCommentListErr                = 631 //查询评论列表错误
 )
 
 var ErrMap = map[int]string{
@@ -67,4 +68,5 @@ var ErrMap = map[int]string{
 	CommunityIdErr:                     "社区号错误",
 	TopicIdErr:                         "话题号错误",
 	CommentIdErr:                       "评论编号错误",
+	QueryCommentListErr:                "查询评论列表错误",
 }

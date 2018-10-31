@@ -14,7 +14,7 @@ type Comment struct {
 	Content   string `json:"content" gorm:"type:varchar(5000)"` //评论内容
 	Classify  string `json:"classify"`                          //分类：社区话题 还是其他的评论，和表关联
 	AritcleId int64  `json:"aritcleId"`                         //文章id, 这条评论属于哪个文章或者哪个话题的id
-	ReplyCID  int64  `json:"replyCid"`                          //回复评论id，主键，为空则不是回复
+	ReplyCId  string `json:"replyCid"`                          //回复评论id，流水号//todo
 }
 
 func (c *Comment) Add() error {
