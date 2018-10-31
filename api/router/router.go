@@ -43,7 +43,7 @@ func Router(server *gin.Engine) {
 
 	//评论
 	commentGroup := server.Group("/comment")
-	commentGroup.GET("/list")
+	commentGroup.GET("/list", handler.CommentList)
 	commentGroup.POST("/add")
 	commentGroup.POST("/delete")
 
@@ -64,4 +64,7 @@ func Router(server *gin.Engine) {
 	messageGroup.GET("/list")
 	messageGroup.GET("/detail")
 	messageGroup.GET("/delete")
+
+	//接口不存在
+	server.NoRoute(handler.Page404)
 }

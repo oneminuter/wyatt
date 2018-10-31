@@ -15,20 +15,27 @@ import (
 var TopicList = func(ctx *gin.Context) {
 	var (
 		param logic.Topic
-		err   error
 	)
 
-	cId := ctx.Query("cId")
-	if "" == cId {
-		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
-		return
-	}
-	param.CId, err = strconv.ParseInt(cId, 10, 64)
+	err := ctx.ShouldBindQuery(&param)
 	if err != nil {
 		util.LoggerError(err)
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
 		return
 	}
+	if "" == param.CId {
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	//判断参数是否合法
+	if 0 > param.Page || 0 > param.Limit {
+		ctx.JSON(http.StatusOK, view.SetErr(constant.QueryPageOrLimit))
+		return
+	}
+	if constant.MAX_QUERY_COUNT < param.Limit {
+		param.Limit = constant.MAX_QUERY_COUNT
+	}
+
 	ctx.JSON(http.StatusOK, param.List())
 }
 

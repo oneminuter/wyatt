@@ -29,6 +29,10 @@ const (
 	UserNotExist                       = 624 //用户不存在
 	CommunityExitErr                   = 625 //退出社区失败
 	NoCollect                          = 626 //没有收藏
+	QueryPageOrLimit                   = 627 //查询页码或者查询条数错误
+	CommunityIdErr                     = 628 //社区号错误
+	TopicIdErr                         = 629 //话题号错误
+	CommentIdErr                       = 630 //评论编号错误
 )
 
 var ErrMap = map[int]string{
@@ -59,4 +63,8 @@ var ErrMap = map[int]string{
 	UserNotExist:                       "用户不存在",
 	CommunityExitErr:                   "退出社区失败",
 	NoCollect:                          "没有收藏",
+	QueryPageOrLimit:                   "查询页码或者查询条数错误",
+	CommunityIdErr:                     "社区号错误",
+	TopicIdErr:                         "话题号错误",
+	CommentIdErr:                       "评论编号错误",
 }

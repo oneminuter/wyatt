@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"strconv"
 	"strings"
 	"time"
 	"wyatt/api/constant"
@@ -11,7 +12,9 @@ import (
 )
 
 type Topic struct {
-	CId int64 `json:"cId"` //10位数字的社区id
+	CId   string `json:"cId"`                //表别名+10位数字的社区id
+	Page  int    `json:"page" form:"page"`   //页码，默认从0开始
+	Limit int    `json:"limit" form:"limit"` //查询条数, 最大查询 constant.MAX_QUERY_COUNT
 }
 type TopicAdd struct {
 	CId   int64  `json:"cId" form:"cId" binding:"required"`
@@ -37,14 +40,20 @@ func (t *Topic) List() interface{} {
 		mu model.User
 		su service.User
 	)
+	//社区号
+	splits := strings.Split(t.CId, ".")
+	if 2 > len(splits) {
+		return view.SetErr(constant.CommunityIdErr)
+	}
+	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 	//查询社区信息
-	err := mc.QueryOne("*", "c_id = ?", t.CId)
+	err := mc.QueryOne("*", "c_id = ?", cId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
 	}
 	//查询社区下的话题列表
-	topics, err := mt.QueryList("*", "community_id = ?", mc.ID)
+	topics, err := mt.QueryList("*", t.Page, t.Limit, "community_id = ?", mc.ID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
@@ -64,7 +73,7 @@ func (t *Topic) List() interface{} {
 	uMap := su.TransformToMap(ulist)
 
 	//返回
-	list := vt.HandlerRespList(topics, t.CId, uMap)
+	list := vt.HandlerRespList(topics, cId, uMap)
 	return view.SetRespData(list)
 }
 

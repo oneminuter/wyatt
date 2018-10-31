@@ -1,6 +1,7 @@
 package model
 
 import (
+	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -56,10 +57,17 @@ func (t *Topic) QueryOne(field string, where interface{}, args ...interface{}) e
 	return nil
 }
 
-func (t *Topic) QueryList(field string, where interface{}, args ...interface{}) ([]Topic, error) {
+func (t *Topic) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]Topic, error) {
+	if 0 > page {
+		page = 0
+	}
+	if 0 > limit || constant.MAX_QUERY_COUNT < limit {
+		limit = constant.MAX_QUERY_COUNT
+	}
+
 	mdb := db.GetMysqlDB()
 	var list []Topic
-	err := mdb.Model(t).Select(field).Where(where, args...).Find(&list).Error
+	err := mdb.Model(t).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]Topic, 0), err

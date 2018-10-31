@@ -13,4 +13,7 @@ const (
 	ModifyLogo = "logo" //标题
 	ModifyName = "name" //名字
 	ModifyDesc = "desc" //简介
+
+	//最大查询条数
+	MAX_QUERY_COUNT = 30
 )

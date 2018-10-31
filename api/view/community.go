@@ -1,10 +1,13 @@
 package view
 
-import "wyatt/api/model"
+import (
+	"fmt"
+	"wyatt/api/model"
+)
 
 type Community struct {
 	CreatedAt int64  `json:"createdAt"`  //创建时间
-	CId       int64  `json:"cId"`        //社区号，创建时的时间戳(s)
+	CId       string `json:"cId"`        //社区号，表别名+创建时的时间戳(s)
 	Logo      string `json:"logo"`       //社区logo
 	Name      string `json:"name"`       //社区名
 	Desc      string `json:"desc"`       //社区描述
@@ -17,7 +20,7 @@ func (c *Community) HandlerRespListAll(mlist []model.Community, joinNumMap, topi
 	for _, v := range mlist {
 		c := Community{
 			CreatedAt: v.CreatedAt.Unix(),
-			CId:       v.CId,
+			CId:       fmt.Sprintf("%s.%d", model.CM),
 			Logo:      v.Logo,
 			Name:      v.Name,
 			Desc:      v.Desc,

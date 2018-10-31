@@ -1,12 +1,15 @@
 package view
 
-import "wyatt/api/model"
+import (
+	"fmt"
+	"wyatt/api/model"
+)
 
 type Topic struct {
-	TId              int64  `json:"tId"`                   //话题id，创建的时间戳
+	TId              string `json:"tId"`                   //话题id，表别名+创建的时间戳
 	Title            string `json:"title"`                 //标题
 	Desc             string `json:"desc" gorm:"type:text"` //简介，详情，或者内容
-	CId              int64  `json:"cId"`                   //所属社区id，10位数字
+	CId              string `json:"cId"`                   //所属社区id，表别名+10位数字
 	CreatorAccount   string `json:"creatorAccount"`        //创建者账号
 	CreatorAvatarUrl string `json:"creatorAvatarUrl"`      //创建者头像
 	CreateTime       int64  `json:"createTime"`            //创建时间戳
@@ -20,10 +23,10 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]mo
 	var list = make([]Topic, 0, len(mtList))
 	for _, v := range mtList {
 		t := Topic{
-			TId:              v.TId,
+			TId:              fmt.Sprintf("%s.%d", model.TP, v.TId),
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              cId,
+			CId:              fmt.Sprintf("%s.%d", model.CMT, cId),
 			CreatorAccount:   uMap[v.CreatorId].Account,
 			CreatorAvatarUrl: uMap[v.CreatorId].AvatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),
@@ -38,10 +41,10 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]mo
 
 //话题详情
 func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
-	t.TId = mt.TId
+	t.TId = fmt.Sprintf("%s.%d", model.TP, mt.TId)
 	t.Title = mt.Title
 	t.Desc = mt.Desc
-	t.CId = cId
+	t.CId = fmt.Sprintf("%s.%d", model.CMT, cId)
 	t.CreatorAccount = u.Account
 	t.CreatorAvatarUrl = u.AvatarUrl
 	t.CreateTime = mt.CreatedAt.Unix()
@@ -76,10 +79,10 @@ func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]int6
 		}
 
 		t := Topic{
-			TId:              v.TId,
+			TId:              fmt.Sprintf("%s.%d", model.TP, v.TId),
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              cId,
+			CId:              fmt.Sprintf("%s.%d", model.CMT, cId),
 			CreatorAccount:   account,
 			CreatorAvatarUrl: avatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),

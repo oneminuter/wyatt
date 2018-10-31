@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"strconv"
+	"strings"
 	"time"
 	"wyatt/api/constant"
 	"wyatt/api/model"
@@ -9,26 +11,30 @@ import (
 	"wyatt/util"
 )
 
-type Community struct{}
+type Community struct {
+	Page  int `json:"page" form:"page"`   //页码，默认从0开始
+	Limit int `json:"limit" form:"limit"` //查询条数, 最大查询 constant.MAX_QUERY_COUNT
+}
 type CommunityCreate struct {
 	Name string `json:"name" form:"name" binding:"required"`
 	Desc string `json:"desc" form:"desc" binding:"required"`
 }
 type CommunityModify struct {
-	CId  int64  `json:"cId" form:"cId"`   //社区号
-	Name string `json:"name" form:"name"` //社区名
-	Desc string `json:"desc" form:"desc"` //简介
-	Logo string `json:"logo" form:"logo"` //logo
+	CId  string `json:"cId" form:"cId" binding:"required"` //表别名+(社区号)创建的时间戳
+	Name string `json:"name" form:"name"`                  //社区名
+	Desc string `json:"desc" form:"desc"`                  //简介
+	Logo string `json:"logo" form:"logo"`                  //logo
 }
 type CommunityDelete struct {
-	CId int64 `json:"cId" form:"cId" binding:"required"` //社区号
+	CId string `json:"cId" form:"cId" binding:"required"` //表别名+社区号(创建时的时间戳)
 }
 
 //查询所有状态为 1 的社区
 func (c *Community) ListAll() interface{} {
+
 	var m model.Community
 	//获取状态=1(正常)的所有社区
-	list, err := m.QueryList("*", "status = 1")
+	list, err := m.QueryList("*", c.Page, c.Limit, "status = 1")
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -96,8 +102,14 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 		value string
 	)
 
+	splits := strings.Split(cm.CId, ".")
+	if 2 > len(splits) {
+		return view.SetErr(constant.CommunityIdErr)
+	}
+	cId, _ := strconv.ParseInt(splits[1], 10, 64)
+
 	//判断权限
-	isManager := sc.IsManager(cm.CId, userId)
+	isManager := sc.IsManager(cId, userId)
 	if !isManager {
 		return view.SetErr(constant.NoAuth)
 	}
@@ -129,9 +141,14 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 
 //删除社区
 func (cd *CommunityDelete) Delete(userId int64) interface{} {
+	splits := strings.Split(cd.CId, ".")
+	if 2 > len(splits) {
+		return view.SetErr(constant.CommunityIdErr)
+	}
+	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 	//判断权限
 	var sc service.Community
-	if !sc.IsAdmin(cd.CId, userId) {
+	if !sc.IsAdmin(cId, userId) {
 		return view.SetErr(constant.NoAuth)
 	}
 

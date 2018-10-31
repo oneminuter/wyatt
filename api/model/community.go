@@ -1,6 +1,7 @@
 package model
 
 import (
+	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -27,10 +28,17 @@ func (c *Community) QueryOne(field string, where interface{}, args ...interface{
 	return nil
 }
 
-func (c *Community) QueryList(field string, where interface{}, args ...interface{}) ([]Community, error) {
+func (c *Community) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]Community, error) {
+	if 0 > page {
+		page = 0
+	}
+	if 0 > limit || constant.MAX_QUERY_COUNT < limit {
+		limit = constant.MAX_QUERY_COUNT
+	}
+
 	mdb := db.GetMysqlDB()
 	var list []Community
-	err := mdb.Model(c).Select(field).Where(where, args...).Find(&list).Error
+	err := mdb.Model(c).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]Community, 0), err

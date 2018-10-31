@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"strconv"
 	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
@@ -10,15 +11,20 @@ import (
 )
 
 type CommunityManager struct {
-	CId     int64 `json:"cId" form:"cId" binding:"required"`        //社区号
-	Account int64 `json:"userId" form:"account" binding:"required"` //用户ID
+	CId     string `json:"cId" form:"cId" binding:"required"`        //社区号, 表别名+创建时的时间戳
+	Account int64  `json:"userId" form:"account" binding:"required"` //用户ID
 }
 
 //添加管理员
 func (cm *CommunityManager) Add(creatorId int64) interface{} {
+	splits := strings.Split(cm.CId, ".")
+	if 2 > len(splits) {
+		return view.SetErr(constant.CommunityIdErr)
+	}
+	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 	//判断权限
 	var sc service.Community
-	if !sc.IsAdmin(cm.CId, creatorId) {
+	if !sc.IsAdmin(cId, creatorId) {
 		return view.SetErr(constant.NoAuth)
 	}
 
@@ -38,9 +44,16 @@ func (cm *CommunityManager) Add(creatorId int64) interface{} {
 		return view.SetErr(constant.AccountForbid)
 	}
 
+	var mc model.Community
+	err = mc.QueryOne("*", "c_id = ?", cId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
 	//添加
 	mcm := model.CommunityManager{
-		CommunityId: cm.CId,
+		CommunityId: mc.ID,
 		UserId:      mu.ID,
 		Role:        1,
 	}
@@ -54,9 +67,15 @@ func (cm *CommunityManager) Add(creatorId int64) interface{} {
 
 //删除管理员
 func (cm *CommunityManager) Delete(creatorId int64) interface{} {
+	splits := strings.Split(cm.CId, ".")
+	if 2 > len(splits) {
+		return view.SetErr(constant.CommunityIdErr)
+	}
+	cId, _ := strconv.ParseInt(splits[1], 10, 64)
+
 	//判断权限
 	var sc service.Community
-	if !sc.IsAdmin(cm.CId, creatorId) {
+	if !sc.IsAdmin(cId, creatorId) {
 		return view.SetErr(constant.NoAuth)
 	}
 
