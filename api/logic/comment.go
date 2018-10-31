@@ -10,7 +10,7 @@ import (
 )
 
 type Comment struct {
-	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 表名+创建时的时间戳
+	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 流水号
 	Page      int    `json:"page" form:"page"`                              //页码，从0开始，默认为0
 	Limit     int    `json:"limit" form:"limit"`                            //查询条数, 最大查询20条
 }
