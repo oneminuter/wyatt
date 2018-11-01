@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -10,6 +11,11 @@ type TopicCollect struct {
 
 	TopicId int64 `json:"tid"`    //话题id, 主键id
 	UserId  int64 `json:"userId"` //用户id
+}
+
+func (bc *TopicCollect) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 func (tc *TopicCollect) Add() error {

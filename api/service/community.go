@@ -98,7 +98,7 @@ func (Community) IsAdmin(cId int64, userId int64) bool {
 func (c *Community) GetCIDMap(list []model.Community) map[int64]int64 {
 	var m = make(map[int64]int64)
 	for _, v := range list {
-		m[v.ID] = v.CId
+		m[v.ID] = v.FlowId
 	}
 	return m
 }

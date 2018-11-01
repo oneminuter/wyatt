@@ -532,6 +532,30 @@
 
 ***
 
+## 添加评论
+
+**Post /comment/add**
+
+### 请求参数
+```shell
+{
+    "articleId":"string" //文章流水号
+    "content":"string" //评论类容
+    "replyCid":"string" //回复流水号，非必须参数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
 ## 评论列表
 
 **Get /comment/list**

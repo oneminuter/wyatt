@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 //用户建议
 type Advise struct {
 	TableModel
@@ -9,4 +11,9 @@ type Advise struct {
 	Content string `json:"content"` //建议内容
 	Status  int    `json:"status"`  //处理状态， 默认 0, 1 已看
 	Remark  string `json:"remark"`  //备注
+}
+
+func (bc *Advise) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }

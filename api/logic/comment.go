@@ -15,6 +15,12 @@ type Comment struct {
 	Limit     int    `json:"limit" form:"limit"`                            //查询条数, 最大查询20条
 }
 
+type CommentAdd struct {
+	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 流水号
+	Content   string `json:"content" form:"content" binding:"required"`
+	ReplyCId  string `json:"replyCid" form:"replyCid"`
+}
+
 func (c *Comment) List() interface{} {
 	splits := strings.Split(c.ArticleId, ".")
 	if 1 > len(splits) {
@@ -56,4 +62,39 @@ func (c *Comment) List() interface{} {
 	list := vc.HandlerRespList(comments, uMap)
 
 	return view.SetRespData(list)
+}
+
+func (ca *CommentAdd) Add(userId int64) interface{} {
+	//判断用户是否禁止在本社区发言
+	var mcm model.CommunityManager
+	count := mcm.QueryCount("user_id = ? AND role = -1", userId)
+	if count > 0 {
+		return view.SetErr(constant.AccountForbid)
+	}
+
+	//分割文章流水号
+	tableName, TableID, timestamp, err := SplitFlowNumber(ca.ArticleId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	//验证流水号是否合法
+	if !model.ValidateFlowId(tableName, TableID, timestamp) {
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	var mc = model.Comment{
+		UserId:       userId,
+		Content:      ca.Content,
+		SourceFlowId: ca.ArticleId,
+		ReplyCId:     ca.ReplyCId,
+	}
+
+	err = mc.Add()
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.AddErr)
+	}
+	return view.SetErr(constant.Success)
 }

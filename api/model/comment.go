@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
@@ -9,12 +10,15 @@ import (
 //评论
 type Comment struct {
 	TableModel
-	CID       int64  `json:"cid"`                               //评论id, 10为数字
-	UserId    int64  `json:"userId"`                            //发送者用户id
-	Content   string `json:"content" gorm:"type:varchar(5000)"` //评论内容
-	Classify  string `json:"classify"`                          //分类：社区话题 还是其他的评论，和表关联
-	AritcleId int64  `json:"aritcleId"`                         //文章id, 这条评论属于哪个文章或者哪个话题的id
-	ReplyCId  string `json:"replyCid"`                          //回复评论id，流水号//todo
+	UserId       int64  `json:"userId"`                            //发送者用户id
+	Content      string `json:"content" gorm:"type:varchar(5000)"` //评论内容
+	SourceFlowId string `json:"sourceFlowId"`                      //被评论对象的完整流水号
+	ReplyCId     string `json:"replyCid"`                          //被回复评论的完整流水号
+}
+
+func (bc *Comment) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 func (c *Comment) Add() error {

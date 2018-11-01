@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -12,6 +13,11 @@ type CommunityManager struct {
 	CommunityId int64 `json:"communityId"` // community 的主键
 	UserId      int64 `json:"userId"`      //用户id
 	Role        int   `json:"role"`        // -1 封禁， 0 普通成员，1 管理员  其他为游客，封禁状态不能参与该社区的话题和发言
+}
+
+func (bc *CommunityManager) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 func (cm *CommunityManager) Add() error {
@@ -50,4 +56,15 @@ func (cm *CommunityManager) Delete(where interface{}, args ...interface{}) error
 		return err
 	}
 	return nil
+}
+
+func (cm *CommunityManager) QueryCount(where interface{}, args ...interface{}) int {
+	mdb := db.GetMysqlDB()
+	var c int
+	err := mdb.Model(cm).Where(where, args...).Count(&c).Error
+	if err != nil {
+		util.LoggerError(err)
+		return 0
+	}
+	return c
 }

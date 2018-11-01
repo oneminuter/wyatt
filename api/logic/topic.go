@@ -3,7 +3,6 @@ package logic
 import (
 	"strconv"
 	"strings"
-	"time"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -89,7 +88,6 @@ func (ta *TopicAdd) Add(creatorId int64) interface{} {
 
 	//够造数据
 	mt := model.Topic{
-		TId:         time.Now().Unix(),
 		Title:       ta.Title,
 		Desc:        ta.Desc,
 		CommunityId: mc.ID,
@@ -198,7 +196,7 @@ func (Topic) Detail(tId int64) interface{} {
 
 	//返回视图
 	var vt view.Topic
-	vt.HandlerRespDetail(mt, mc.CId, mu)
+	vt.HandlerRespDetail(mt, mc.FlowId, mu)
 
 	return view.SetRespData(vt)
 }

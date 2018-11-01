@@ -3,7 +3,6 @@ package logic
 import (
 	"strconv"
 	"strings"
-	"time"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -79,7 +78,6 @@ func (cc *CommunityCreate) Create(userId int64) interface{} {
 	}
 
 	c = model.Community{
-		CId:       time.Now().Unix(),
 		Logo:      "",
 		Name:      cc.Name,
 		Desc:      cc.Desc,

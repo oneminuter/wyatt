@@ -34,6 +34,7 @@ const (
 	TopicIdErr                         = 629 //话题号错误
 	CommentIdErr                       = 630 //评论编号错误
 	QueryCommentListErr                = 631 //查询评论列表错误
+	IncorrectFlowNumber                = 632 //错误的流水号
 )
 
 var ErrMap = map[int]string{
@@ -69,4 +70,5 @@ var ErrMap = map[int]string{
 	TopicIdErr:                         "话题号错误",
 	CommentIdErr:                       "评论编号错误",
 	QueryCommentListErr:                "查询评论列表错误",
+	IncorrectFlowNumber:                "错误的流水号",
 }

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -11,6 +12,11 @@ type Img struct {
 
 	Path     string `json:"path"`     //路径 或者 图片oss域名
 	FileName string `json:"fileName"` //图片图片名
+}
+
+func (bc *Img) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 func (i *Img) Add() error {

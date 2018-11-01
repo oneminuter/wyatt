@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
@@ -10,12 +11,16 @@ import (
 type Community struct {
 	TableModel
 
-	CId       int64  `json:"cId"`                //社区号，创建时的时间戳(s)
 	Logo      string `json:"logo"`               //社区logo
 	Name      string `json:"name" gorm:"unique"` //社区名
 	Desc      string `json:"desc"`               //社区描述
 	CreatorId int64  `json:"creatorId"`          //创建者id
 	Status    int    `json:"status"`             //社区状态: -1 封禁下架, 0 申请中, 1 正常, 2 解散删除
+}
+
+func (bc *Community) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 func (c *Community) QueryOne(field string, where interface{}, args ...interface{}) error {

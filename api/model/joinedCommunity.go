@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -12,6 +13,11 @@ type JoinedCommunity struct {
 	UserId      int64 `json:"userId"`
 	CommunityId int64 `json:"communityId"` //社区id
 	Count       int   `json:"-" gorm:"-"`
+}
+
+func (bc *JoinedCommunity) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 //按组查询

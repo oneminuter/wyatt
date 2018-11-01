@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
@@ -10,7 +11,6 @@ import (
 type Topic struct {
 	TableModel
 
-	TId         int64  `json:"tId"`                   //话题id，创建的时间戳
 	Title       string `json:"title"`                 //标题
 	Desc        string `json:"desc" gorm:"type:text"` //简介，详情，或者内容
 	CommunityId int64  `json:"communityId"`           //所属社区id
@@ -19,6 +19,11 @@ type Topic struct {
 	ZanNum      int64  `json:"zanNum"`                //点赞量
 	CommentNum  int64  `json:"commentNum"`            //评论数量
 	Count       int    `json:"-" gorm:"-"`
+}
+
+func (bc *Topic) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 //按组查询

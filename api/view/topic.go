@@ -23,7 +23,7 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]mo
 	var list = make([]Topic, 0, len(mtList))
 	for _, v := range mtList {
 		t := Topic{
-			TId:              fmt.Sprintf("%s.%d", model.TP, v.TId),
+			TId:              fmt.Sprintf("%s.%d", model.TP, v.FlowId),
 			Title:            v.Title,
 			Desc:             v.Desc,
 			CId:              fmt.Sprintf("%s.%d", model.CMT, cId),
@@ -41,7 +41,7 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]mo
 
 //话题详情
 func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
-	t.TId = fmt.Sprintf("%s.%d", model.TP, mt.TId)
+	t.TId = fmt.Sprintf("%s.%d", model.TP, mt.FlowId)
 	t.Title = mt.Title
 	t.Desc = mt.Desc
 	t.CId = fmt.Sprintf("%s.%d", model.CMT, cId)
@@ -79,7 +79,7 @@ func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]int6
 		}
 
 		t := Topic{
-			TId:              fmt.Sprintf("%s.%d", model.TP, v.TId),
+			TId:              fmt.Sprintf("%s.%d", model.TP, v.FlowId),
 			Title:            v.Title,
 			Desc:             v.Desc,
 			CId:              fmt.Sprintf("%s.%d", model.CMT, cId),

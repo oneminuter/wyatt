@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -26,6 +27,11 @@ type User struct {
 	Status         int64  `json:"status" gorm:"size:4"`  //用户状态: -1 封禁用户, 0 临时用户 1或空位正常用户
 	IsSetedAccount bool   `json:"-"`                     //是否设置过account, 每人只能设置一次
 	Signature      string `json:"signature"`             //个性签名
+}
+
+func (bc *User) BeforeCreate() (err error) {
+	bc.FlowId = time.Now().Unix()
+	return
 }
 
 func (u *User) Add() error {

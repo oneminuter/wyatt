@@ -44,7 +44,7 @@ func Router(server *gin.Engine) {
 	//评论
 	commentGroup := server.Group("/comment")
 	commentGroup.GET("/list", handler.CommentList)
-	commentGroup.POST("/add")
+	commentGroup.POST("/add", handler.CommentAdd)
 	commentGroup.POST("/delete")
 
 	//点赞
