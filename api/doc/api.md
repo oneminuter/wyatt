@@ -116,7 +116,7 @@
     "data": [
         {
             "createdAt": 1538035982, //创建时间
-            "cId": "CMT.1234567890", //社区号
+            "cId": "CMT.1234567890", //社区流水号
             "logo": "http://oneminuter.com/favicon.ico", //社区logo
             "name": "一分钟社区", //社区名
             "desc": "一分钟社区", //社区介绍
@@ -135,7 +135,7 @@
 ### 请求参数
 ```shell
 {
-    "cId":"string" //社区号
+    "cId":"string" //社区流水号
 }
 ```
 
@@ -156,7 +156,7 @@
 ### 请求参数
 ```shell
 {
-    "cId": "string" //社区号
+    "cId": "string" //社区流水号
 }
 ```
 
@@ -189,7 +189,7 @@
     "data": [
         {
             "createdAt": 1538035982, //创建时间
-            "cId": "CMT.1234567890", //社区号
+            "cId": "CMT.1234567890", //社区流水号
             "logo": "http://oneminuter.com/favicon.ico", //logo
             "name": "一分钟社区", //社区名
             "desc": "一分钟社区", //简介
@@ -259,7 +259,7 @@
 ### 请求参数
 ```shell
 {
-    "cId": "string" // 社区id
+    "cId": "string" // 社区流水号
 }
 ```
 
@@ -281,7 +281,7 @@
 ### 请求参数
 ```shell
 {
-    "cId": "string", //社区id
+    "cId": "string", //社区流水号
     "account": "string" //被添加目标用户的账号
 }
 ```
@@ -304,7 +304,7 @@
 ### 请求参数
 ```shell
 {
-    "cId": "string", //社区id
+    "cId": "string", //社区流水号
     "account": "string" //被删除目标用户的账号
 }
 ```
@@ -327,7 +327,7 @@
 ### 请求参数
 ```shell
 {
-    "cId": "string" //社区id
+    "cId": "string" //社区流水号
     "title": "string" //标题
     "desc": "string" //简介或者内容
 }
@@ -351,7 +351,7 @@
 ### 请求参数
 ```shell
 {
-    "cId": "string" //社区id
+    "cId": "string" //社区流水号
 }
 ```
 
@@ -362,10 +362,10 @@
     "errMsg": "",
     "data": [
         {
-            "tId": "TP.1539533494", //话题id
+            "tId": "TP.1539533494", //话题流水号
             "title": "这是话题标题", //标题
             "desc": "这是话题内容", //内容或简介
-            "cId": "CMT.1538754033", //所属社区id
+            "cId": "CMT.1538754033", //所属社区流水号
             "creatorAccount": "1234", //发布者账号
             "creatorAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //发布者头像
             "createTime": 1539533494, //创建时间
@@ -385,7 +385,7 @@
 ### 请求参数
 ```shell
 {
-    "tId": "string", //话题id
+    "tId": "string", //话题流水号
     "title": "string", //标题
     "desc": "string" //内容或简介
 }
@@ -409,7 +409,7 @@
 ### 请求参数
 ```shell
 {
-    "tId": "string" //话题id
+    "tId": "string" //话题流水号
 }
 ```
 
@@ -419,10 +419,10 @@
     "errCode": 200,
     "errMsg": "",
     "data": {
-        "tId": "TP.1539792891", //话题id
+        "tId": "TP.1539792891", //话题流水号
         "title": "标题标题标题标题", //标题
         "desc": "修改后的内容1", //内容
-        "cId": "CMT.1538754033", //所属社区id
+        "cId": "CMT.1538754033", //所属社区流水号
         "creatorAccount": "1234", //发布者账号
         "creatorAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //发布者头像
         "createTime": 1539792891, //发布时间
@@ -442,7 +442,7 @@
 ### 请求参数
 ```shell
 {
-    "tId": "string" //话题id
+    "tId": "string" //话题流水号
 }
 ```
 
@@ -464,7 +464,7 @@
 ### 请求参数
 ```shell
 {
-    "tId":"string" //话题id
+    "tId":"string" //话题流水号
 }
 ```
 
@@ -486,7 +486,7 @@
 ### 请求参数
 ```shell
 {
-    "tId":"string" //话题id
+    "tId":"string" //话题流水号
 }
 ```
 
@@ -514,10 +514,10 @@
     "errMsg": "",
     "data": [
         {
-           "tId": "TP.1539792891", //话题id
+           "tId": "TP.1539792891", //话题流水号
            "title": "标题标题标题标题", //标题
            "desc": "修改后的内容1", //内容
-           "cId": "CMT.1538754033", //所属社区id
+           "cId": "CMT.1538754033", //所属社区流水号
            "creatorAccount": "1234", //发布者账号
            "creatorAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //发布者头像
            "createTime": 1539792891, //发布时间
