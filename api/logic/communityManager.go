@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"strconv"
 	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
@@ -17,20 +16,20 @@ type CommunityManager struct {
 
 //添加管理员
 func (cm *CommunityManager) Add(creatorId int64) interface{} {
-	splits := strings.Split(cm.CId, ".")
-	if 2 > len(splits) {
-		return view.SetErr(constant.CommunityIdErr)
+	_, TableID, _, err := SplitFlowNumber(cm.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 	//判断权限
 	var sc service.Community
-	if !sc.IsAdmin(cId, creatorId) {
+	if !sc.IsAdmin(TableID, creatorId) {
 		return view.SetErr(constant.NoAuth)
 	}
 
 	//查询对应的用户id
 	var mu model.User
-	err := mu.QueryOne("*", "account = ?", cm.Account)
+	err = mu.QueryOne("*", "account = ?", cm.Account)
 	if err != nil && strings.Contains(err.Error(), constant.MysqlNotHaveData) {
 		return view.SetErr(constant.UserNotExist)
 	}
@@ -45,7 +44,7 @@ func (cm *CommunityManager) Add(creatorId int64) interface{} {
 	}
 
 	var mc model.Community
-	err = mc.QueryOne("*", "c_id = ?", cId)
+	err = mc.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -67,21 +66,21 @@ func (cm *CommunityManager) Add(creatorId int64) interface{} {
 
 //删除管理员
 func (cm *CommunityManager) Delete(creatorId int64) interface{} {
-	splits := strings.Split(cm.CId, ".")
-	if 2 > len(splits) {
-		return view.SetErr(constant.CommunityIdErr)
+	_, TableID, _, err := SplitFlowNumber(cm.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 
 	//判断权限
 	var sc service.Community
-	if !sc.IsAdmin(cId, creatorId) {
+	if !sc.IsAdmin(TableID, creatorId) {
 		return view.SetErr(constant.NoAuth)
 	}
 
 	//查询对应的用户id
 	var mu model.User
-	err := mu.QueryOne("*", "account = ?", cm.Account)
+	err = mu.QueryOne("*", "account = ?", cm.Account)
 	if err != nil && strings.Contains(err.Error(), constant.MysqlNotHaveData) {
 		return view.SetErr(constant.UserNotExist)
 	}

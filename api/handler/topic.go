@@ -2,11 +2,12 @@ package handler
 
 import (
 	"net/http"
-	"strconv"
 	"wyatt/api/constant"
 	"wyatt/api/logic"
 	"wyatt/api/view"
 	"wyatt/util"
+
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -80,13 +81,11 @@ var TopicModify = func(ctx *gin.Context) {
 var TopicDetail = func(ctx *gin.Context) {
 	var t logic.Topic
 	tId := ctx.Query("tId")
-	topicId, err := strconv.ParseInt(tId, 10, 64)
-	if err != nil {
-		util.LoggerError(err)
+	if "" != strings.TrimSpace(tId) {
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
 		return
 	}
-	ctx.JSON(http.StatusOK, t.Detail(topicId))
+	ctx.JSON(http.StatusOK, t.Detail(tId))
 	return
 }
 

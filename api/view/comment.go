@@ -28,7 +28,7 @@ func (c *Comment) HandlerRespList(mcList []model.Comment, uMap map[int64]model.U
 		}
 
 		list = append(list, Comment{
-			CID:           fmt.Sprintf("%s.%d", model.CM, v.FlowId),
+			CID:           fmt.Sprintf("%s.%d.%d", model.CM, v.ID, v.FlowId),
 			UserAccount:   u.Account,
 			UserAvatarUrl: u.AvatarUrl,
 			CreatedAt:     v.CreatedAt.Unix(),

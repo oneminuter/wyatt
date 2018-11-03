@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -10,7 +9,7 @@ import (
 )
 
 type Comment struct {
-	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 流水号
+	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的流水号
 	Page      int    `json:"page" form:"page"`                              //页码，从0开始，默认为0
 	Limit     int    `json:"limit" form:"limit"`                            //查询条数, 最大查询20条
 }
@@ -22,21 +21,14 @@ type CommentAdd struct {
 }
 
 func (c *Comment) List() interface{} {
-	splits := strings.Split(c.ArticleId, ".")
-	if 1 > len(splits) {
-		return view.SetErr(constant.QueryDBEmptyErr)
-	}
-	tableAlias := splits[0]
-	AId := splits[1]
-
-	classify, ok := model.TabelMap[tableAlias]
-	if !ok {
-		return view.SetErr(constant.QueryDBEmptyErr)
+	_, _, _, err := SplitFlowNumber(c.ArticleId)
+	if err != nil {
+		return view.SetErr(constant.PasswordIsEmptyErr)
 	}
 
 	//查询评论
 	var mc model.Comment
-	comments, err := mc.QueryList("*", c.Page, c.Limit, "classify = ? AND aritcle_id = ?", classify, AId)
+	comments, err := mc.QueryList("*", c.Page, c.Limit, "source_flow_id = ?", c.ArticleId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryCommentListErr)

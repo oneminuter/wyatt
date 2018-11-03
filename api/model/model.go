@@ -59,7 +59,7 @@ func init() {
 func ValidateFlowId(tableName string, tableId int64, timestamp int64) bool {
 	mdb := db.GetMysqlDB()
 	var c int
-	err := mdb.Table(tableName).Where("id = ? AND flow_id = ?").Count(&c).Error
+	err := mdb.Table(tableName).Where("id = ? AND flow_id = ?", tableId, timestamp).Count(&c).Error
 	if err != nil {
 		util.LoggerError(err)
 		return false

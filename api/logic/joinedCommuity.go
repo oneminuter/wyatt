@@ -9,9 +9,9 @@ import (
 )
 
 type JoinedCommunity struct {
-	CId   int64 `json:"cId" form:"cId" binding:"required"`
-	Page  int   `json:"page" form:"page"`   //页码，默认从0开始
-	Limit int   `json:"limit" form:"limit"` //查询条数, 最大查询 constant.MAX_QUERY_COUNT
+	CId   string `json:"cId" form:"cId" binding:"required"`
+	Page  int    `json:"page" form:"page"`   //页码，默认从0开始
+	Limit int    `json:"limit" form:"limit"` //查询条数, 最大查询 constant.MAX_QUERY_COUNT
 }
 
 //我加入的社区列表
@@ -73,8 +73,14 @@ func (c *JoinedCommunity) MyList(userId int64) interface{} {
 	cId: 社区号
 */
 func (jc *JoinedCommunity) Join(userId int64) interface{} {
+	_, TableID, _, err := SplitFlowNumber(jc.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
 	var mc model.Community
-	err := mc.QueryOne("*", "c_id = ?", jc.CId)
+	err = mc.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)

@@ -1,8 +1,6 @@
 package logic
 
 import (
-	"strconv"
-	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -100,14 +98,13 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 		value string
 	)
 
-	splits := strings.Split(cm.CId, ".")
-	if 2 > len(splits) {
-		return view.SetErr(constant.CommunityIdErr)
+	_, tableID, _, err := SplitFlowNumber(cm.CId)
+	if err != nil {
+		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 
 	//判断权限
-	isManager := sc.IsManager(cId, userId)
+	isManager := sc.IsManager(tableID, userId)
 	if !isManager {
 		return view.SetErr(constant.NoAuth)
 	}
@@ -129,7 +126,7 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 		return view.SetErr(constant.ModifyErr)
 	}
 
-	err := c.Update(map[string]string{field: value}, "c_id = ?", cm.CId)
+	err = c.Update(map[string]string{field: value}, "c_id = ?", cm.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.ModifyErr)
@@ -139,20 +136,21 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 
 //删除社区
 func (cd *CommunityDelete) Delete(userId int64) interface{} {
-	splits := strings.Split(cd.CId, ".")
-	if 2 > len(splits) {
-		return view.SetErr(constant.CommunityIdErr)
+	_, TableID, _, err := SplitFlowNumber(cd.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-	cId, _ := strconv.ParseInt(splits[1], 10, 64)
+
 	//判断权限
 	var sc service.Community
-	if !sc.IsAdmin(cId, userId) {
+	if !sc.IsAdmin(TableID, userId) {
 		return view.SetErr(constant.NoAuth)
 	}
 
 	//修改社区的状态为 2
 	var mc model.Community
-	err := mc.Update(map[string]int{"status": 2}, "c_id = ?", cd.CId)
+	err = mc.Update(map[string]int{"status": 2}, "c_id = ?", cd.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.DeleteErr)

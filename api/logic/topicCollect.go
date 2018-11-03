@@ -10,9 +10,9 @@ import (
 )
 
 type TopicCollect struct {
-	TId   int64 `json:"tId" form:"tId" binding:"required"` //话题id, 10位数字-为创建时的时间戳
-	Page  int   `json:"page" form:"page"`                  //页码，默认从0开始
-	Limit int   `json:"limit" form:"limit"`                //查询条数, 最大查询 constant.MAX_QUERY_COUNT
+	TId   string `json:"tId" form:"tId" binding:"required"` //话题id, 10位数字-为创建时的时间戳
+	Page  int    `json:"page" form:"page"`                  //页码，默认从0开始
+	Limit int    `json:"limit" form:"limit"`                //查询条数, 最大查询 constant.MAX_QUERY_COUNT
 }
 
 //收藏话题
@@ -25,9 +25,15 @@ func (tc *TopicCollect) Add(userId int64) interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
+	_, TableID, _, err := SplitFlowNumber(tc.TId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
 	//查询话题信息
 	var mt model.Topic
-	err = mt.QueryOne("*", "t_id = ?", tc.TId)
+	err = mt.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -57,9 +63,14 @@ func (tc *TopicCollect) Cancel(userId int64) interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
+	_, TableID, _, err := SplitFlowNumber(tc.TId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
 	//查询话题信息
 	var mt model.Topic
-	err = mt.QueryOne("*", "t_id = ?", tc.TId)
+	err = mt.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -133,9 +144,9 @@ func (tc *TopicCollect) List(userId int64) interface{} {
 		return view.SetErr(constant.QueryDBErr)
 	}
 
-	//社区主键id:社区id map
+	//社区主键id:社区 map
 	var sc service.Community
-	cidMap := sc.GetCIDMap(communities)
+	communityMap := sc.GetCommunityMap(communities)
 
 	//提取话题创建者信息
 	creatorIdArr := st.GetCreatorIdList(topics)
@@ -153,7 +164,7 @@ func (tc *TopicCollect) List(userId int64) interface{} {
 
 	//处理返回
 	var vt view.Topic
-	list := vt.HandlerRespCollectList(topics, cidMap, uMap)
+	list := vt.HandlerRespCollectList(topics, communityMap, uMap)
 
 	return view.SetRespData(list)
 }

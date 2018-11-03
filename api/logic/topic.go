@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"strconv"
 	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
@@ -16,15 +15,15 @@ type Topic struct {
 	Limit int    `json:"limit" form:"limit"` //查询条数, 最大查询 constant.MAX_QUERY_COUNT
 }
 type TopicAdd struct {
-	CId   int64  `json:"cId" form:"cId" binding:"required"`
+	CId   string `json:"cId" form:"cId" binding:"required"`
 	Title string `json:"title" form:"title" binding:"required"` //话题标题
 	Desc  string `json:"desc" form:"desc" binding:"required"`   //话题内容
 }
 type TopicDelete struct {
-	Tid int64 `json:"tid" form:"tId" binding:"required"` //话题id
+	Tid string `json:"tid" form:"tId" binding:"required"` //话题id
 }
 type TopicModify struct {
-	Tid   int64  `json:"tid" form:"tId" binding:"required"` //话题id
+	Tid   string `json:"tid" form:"tId" binding:"required"` //话题id
 	Title string `json:"title" form:"title"`                //话题标题
 	Desc  string `json:"desc" form:"desc"`                  //话题内容
 }
@@ -39,14 +38,13 @@ func (t *Topic) List() interface{} {
 		mu model.User
 		su service.User
 	)
-	//社区号
-	splits := strings.Split(t.CId, ".")
-	if 2 > len(splits) {
-		return view.SetErr(constant.CommunityIdErr)
+	_, TableID, timesteamp, err := SplitFlowNumber(t.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-	cId, _ := strconv.ParseInt(splits[1], 10, 64)
 	//查询社区信息
-	err := mc.QueryOne("*", "c_id = ?", cId)
+	err = mc.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -72,15 +70,21 @@ func (t *Topic) List() interface{} {
 	uMap := su.TransformToMap(ulist)
 
 	//返回
-	list := vt.HandlerRespList(topics, cId, uMap)
+	list := vt.HandlerRespList(topics, TableID, timesteamp, uMap)
 	return view.SetRespData(list)
 }
 
 //增加话题
 func (ta *TopicAdd) Add(creatorId int64) interface{} {
+	_, TableID, _, err := SplitFlowNumber(ta.CId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
 	//查询社区
 	var mc model.Community
-	err := mc.QueryOne("*", "c_id = ?", ta.CId)
+	err = mc.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -108,8 +112,13 @@ func (ta *TopicAdd) Add(creatorId int64) interface{} {
 
 //删除话题
 func (td *TopicDelete) Delete(userId int64) interface{} {
+	_, TableID, _, err := SplitFlowNumber(td.Tid)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
 	var mt model.Topic
-	err := mt.QueryOne("*", "t_id = ?", td.Tid)
+	err = mt.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		view.CheckMysqlErr(err)
@@ -119,7 +128,7 @@ func (td *TopicDelete) Delete(userId int64) interface{} {
 	if userId != mt.CreatorId {
 		return view.SetErr(constant.NoAuth)
 	}
-	err = mt.Delete("t_id = ?", td.Tid)
+	err = mt.Delete("id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.DeleteErr)
@@ -129,8 +138,13 @@ func (td *TopicDelete) Delete(userId int64) interface{} {
 
 //修改话题
 func (tm *TopicModify) Modify(userId int64) interface{} {
+	_, TableID, _, err := SplitFlowNumber(tm.Tid)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
 	var mt model.Topic
-	err := mt.QueryOne("*", "t_id = ?", tm.Tid)
+	err = mt.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		view.CheckMysqlErr(err)
@@ -160,7 +174,7 @@ func (tm *TopicModify) Modify(userId int64) interface{} {
 		return view.SetErr(constant.NoModify)
 	}
 
-	err = mt.Update(m, "t_id = ?", tm.Tid)
+	err = mt.Update(m, "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.ModifyErr)
@@ -170,9 +184,15 @@ func (tm *TopicModify) Modify(userId int64) interface{} {
 }
 
 //查看话题详情
-func (Topic) Detail(tId int64) interface{} {
+func (Topic) Detail(tId string) interface{} {
+	_, TableID, _, err := SplitFlowNumber(tId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
 	var mt model.Topic
-	err := mt.QueryOne("*", "t_id = ?", tId)
+	err = mt.QueryOne("*", "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.CheckMysqlErr(err)
@@ -180,7 +200,7 @@ func (Topic) Detail(tId int64) interface{} {
 
 	//查询话题所属社区号
 	var mc model.Community
-	err = mc.QueryOne("c_id", "id = ?", mt.CommunityId)
+	err = mc.QueryOne("*", "id = ?", mt.CommunityId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
@@ -196,7 +216,7 @@ func (Topic) Detail(tId int64) interface{} {
 
 	//返回视图
 	var vt view.Topic
-	vt.HandlerRespDetail(mt, mc.FlowId, mu)
+	vt.HandlerRespDetail(mt, mc.ID, mc.FlowId, mu)
 
 	return view.SetRespData(vt)
 }

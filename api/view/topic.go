@@ -19,14 +19,14 @@ type Topic struct {
 }
 
 //渲染话题列表
-func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]model.User) []Topic {
+func (*Topic) HandlerRespList(mtList []model.Topic, cID int64, cFlowId int64, uMap map[int64]model.User) []Topic {
 	var list = make([]Topic, 0, len(mtList))
 	for _, v := range mtList {
 		t := Topic{
-			TId:              fmt.Sprintf("%s.%d", model.TP, v.FlowId),
+			TId:              fmt.Sprintf("%s.%d.%d", model.TP, v.ID, v.FlowId),
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              fmt.Sprintf("%s.%d", model.CMT, cId),
+			CId:              fmt.Sprintf("%s.%d.%d", model.CMT, cID, cFlowId),
 			CreatorAccount:   uMap[v.CreatorId].Account,
 			CreatorAvatarUrl: uMap[v.CreatorId].AvatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),
@@ -40,11 +40,11 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cId int64, uMap map[int64]mo
 }
 
 //话题详情
-func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
-	t.TId = fmt.Sprintf("%s.%d", model.TP, mt.FlowId)
+func (t *Topic) HandlerRespDetail(mt model.Topic, cID int64, cFlowId int64, u model.User) {
+	t.TId = fmt.Sprintf("%s.%d.%d", model.TP, mt.ID, mt.FlowId)
 	t.Title = mt.Title
 	t.Desc = mt.Desc
-	t.CId = fmt.Sprintf("%s.%d", model.CMT, cId)
+	t.CId = fmt.Sprintf("%s.%d.%d", model.CMT, cID, cFlowId)
 	t.CreatorAccount = u.Account
 	t.CreatorAvatarUrl = u.AvatarUrl
 	t.CreateTime = mt.CreatedAt.Unix()
@@ -54,19 +54,19 @@ func (t *Topic) HandlerRespDetail(mt model.Topic, cId int64, u model.User) {
 }
 
 //收藏话题列表
-func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]int64, uMap map[int64]model.User) []Topic {
+func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]model.Community, uMap map[int64]model.User) []Topic {
 	var (
 		ok        bool
-		cId       int64 //社区id - 10为数字
+		comm      model.Community //社区id - 10为数字
 		u         model.User
 		avatarUrl string
 		account   string
 		list      = make([]Topic, 0, len(mtList))
 	)
 	for _, v := range mtList {
-		cId, ok = cIDMap[v.CommunityId]
+		comm, ok = cIDMap[v.CommunityId]
 		if !ok {
-			cId = 0
+			continue
 		}
 
 		u, ok = uMap[v.CreatorId]
@@ -79,10 +79,10 @@ func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]int6
 		}
 
 		t := Topic{
-			TId:              fmt.Sprintf("%s.%d", model.TP, v.FlowId),
+			TId:              fmt.Sprintf("%s.%d.%d", model.TP, v.ID, v.FlowId),
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              fmt.Sprintf("%s.%d", model.CMT, cId),
+			CId:              fmt.Sprintf("%s.%d.%d", model.CMT, comm.ID, comm.FlowId),
 			CreatorAccount:   account,
 			CreatorAvatarUrl: avatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),

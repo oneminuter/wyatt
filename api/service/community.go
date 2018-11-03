@@ -50,7 +50,7 @@ func (Community) SaveLogo(imgBase64 string) (string, error) {
 
 /*
 判断是不是管理员或者是不是创建者
-	cId: 社区号 - 10位的时间错
+	cId: 社区号，主键
 	userId: 用户id
 */
 
@@ -59,7 +59,7 @@ func (Community) IsManager(cId int64, userId int64) bool {
 		mc  model.Community
 		mcm model.CommunityManager
 	)
-	err := mc.QueryOne("*", "c_id = ?", cId)
+	err := mc.QueryOne("*", "id = ?", cId)
 	if err != nil {
 		util.LoggerError(err)
 		return false
@@ -87,18 +87,20 @@ func (Community) IsManager(cId int64, userId int64) bool {
 
 /*
 判断是否是创建者 - 删除社区，管理管理员
+cId: 社区主键号
+userId: 用户id
 */
 func (Community) IsAdmin(cId int64, userId int64) bool {
 	var mc model.Community
-	count := mc.QueryCount("c_id = ? AND creator_id = ?", cId, userId)
+	count := mc.QueryCount("id = ? AND creator_id = ?", cId, userId)
 	return count > 0
 }
 
-//提取 社区主键id:社区号 map
-func (c *Community) GetCIDMap(list []model.Community) map[int64]int64 {
-	var m = make(map[int64]int64)
+//提取 社区主键id:社区 map
+func (c *Community) GetCommunityMap(list []model.Community) map[int64]model.Community {
+	var m = make(map[int64]model.Community)
 	for _, v := range list {
-		m[v.ID] = v.FlowId
+		m[v.ID] = v
 	}
 	return m
 }

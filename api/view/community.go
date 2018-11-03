@@ -20,7 +20,7 @@ func (c *Community) HandlerRespListAll(mlist []model.Community, joinNumMap, topi
 	for _, v := range mlist {
 		c := Community{
 			CreatedAt: v.CreatedAt.Unix(),
-			CId:       fmt.Sprintf("%s.%d", model.CM),
+			CId:       fmt.Sprintf("%s.%d.%d", model.CM, v.ID, v.FlowId),
 			Logo:      v.Logo,
 			Name:      v.Name,
 			Desc:      v.Desc,
