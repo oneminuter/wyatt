@@ -572,6 +572,40 @@
 ### 返回参数
 ```shell
 {
-    //待补充
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "cid": "CM.1.1541220122", //评论流水号
+            "userAccount": "123", //评论者账号
+            "userAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //评论者头像
+            "createdAt": 1541220123, //评论时间
+            "content": "这是评论内容", //评论内容
+            "replyCid": "" //回复id
+        }
+    ]
 }
 ```
+
+***
+
+## 删除评论
+
+**Post /comment/delete**
+
+### 请求参数
+```shell
+{
+    "articleId": "string" //文章流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+

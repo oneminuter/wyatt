@@ -73,7 +73,7 @@ var CommunityListMy = func(ctx *gin.Context) {
 }
 
 //加入社区
-var Join = func(ctx *gin.Context) {
+var CommunityJoin = func(ctx *gin.Context) {
 	userId := ctx.GetInt64("userId")
 	//获取社区号，创建社区的的时间戳(秒)
 	var jc logic.JoinedCommunity

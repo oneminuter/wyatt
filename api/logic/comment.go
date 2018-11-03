@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"errors"
+	"log"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -18,6 +20,10 @@ type CommentAdd struct {
 	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 流水号
 	Content   string `json:"content" form:"content" binding:"required"`
 	ReplyCId  string `json:"replyCid" form:"replyCid"`
+}
+
+type CommentDelete struct {
+	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 流水号
 }
 
 func (c *Comment) List() interface{} {
@@ -70,23 +76,49 @@ func (ca *CommentAdd) Add(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-
+	log.Println(tableName, TableID, timestamp)
 	//验证流水号是否合法
 	if !model.ValidateFlowId(tableName, TableID, timestamp) {
+		util.LoggerError(errors.New("流水号不合法"))
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
 
+	//构造数据，添加
 	var mc = model.Comment{
 		UserId:       userId,
 		Content:      ca.Content,
 		SourceFlowId: ca.ArticleId,
 		ReplyCId:     ca.ReplyCId,
 	}
-
 	err = mc.Add()
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.AddErr)
 	}
+
+	return view.SetErr(constant.Success)
+}
+
+func (cd *CommentDelete) Delete(userId int64) interface{} {
+	_, TableID, _, err := SplitFlowNumber(cd.ArticleId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	//查询评论
+	var mc model.Comment
+	err = mc.QueryOne("*", "id = ? AND user_id = ?", TableID, userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	err = mc.Delete("id = ?", mc.ID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.DeleteErr)
+	}
+
 	return view.SetErr(constant.Success)
 }

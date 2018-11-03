@@ -9,8 +9,13 @@ import (
 
 	"strings"
 
+	"errors"
+
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/json-iterator/go"
 )
 
 var TopicList = func(ctx *gin.Context) {
@@ -24,7 +29,10 @@ var TopicList = func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
 		return
 	}
+	bytes, _ := jsoniter.Marshal(param)
+	log.Println(string(bytes))
 	if "" == param.CId {
+		util.LoggerError(errors.New("社区流水号为空"))
 		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
 		return
 	}

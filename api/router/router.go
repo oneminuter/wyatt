@@ -22,7 +22,7 @@ func Router(server *gin.Engine) {
 	communityGroup := server.Group("/community")
 	communityGroup.GET("/list/all", handler.CommunityListAll)
 	communityGroup.GET("/list/my", handler.CommunityListMy)
-	communityGroup.POST("/join", handler.Join)
+	communityGroup.POST("/join", handler.CommunityJoin)
 	communityGroup.POST("/exit", handler.CommunityExit)
 	communityGroup.POST("/create", handler.CommunityCreate)
 	communityGroup.POST("/modify", handler.CommunityModify)
@@ -45,7 +45,7 @@ func Router(server *gin.Engine) {
 	commentGroup := server.Group("/comment")
 	commentGroup.GET("/list", handler.CommentList)
 	commentGroup.POST("/add", handler.CommentAdd)
-	commentGroup.POST("/delete")
+	commentGroup.POST("/delete", handler.CommentDelete)
 
 	//点赞
 	zanGroup := server.Group("/zan")

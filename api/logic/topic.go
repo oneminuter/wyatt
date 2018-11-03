@@ -10,7 +10,7 @@ import (
 )
 
 type Topic struct {
-	CId   string `json:"cId"`                //表别名+10位数字的社区id
+	CId   string `json:"cId" form:"cId"`     //表别名+10位数字的社区id
 	Page  int    `json:"page" form:"page"`   //页码，默认从0开始
 	Limit int    `json:"limit" form:"limit"` //查询条数, 最大查询 constant.MAX_QUERY_COUNT
 }
