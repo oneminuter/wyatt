@@ -23,11 +23,11 @@ type CommentAdd struct {
 }
 
 type CommentDelete struct {
-	ArticleId string `json:"articleId" form:"articleId" binding:"required"` //所属文章或者话题的id, 流水号
+	CId string `json:"articleId" form:"cId" binding:"required"` //评论id, 流水号
 }
 
 func (c *Comment) List() interface{} {
-	_, _, _, err := SplitFlowNumber(c.ArticleId)
+	_, _, _, err := util.SplitFlowNumber(c.ArticleId)
 	if err != nil {
 		return view.SetErr(constant.PasswordIsEmptyErr)
 	}
@@ -71,7 +71,7 @@ func (ca *CommentAdd) Add(userId int64) interface{} {
 	}
 
 	//分割文章流水号
-	tableName, TableID, timestamp, err := SplitFlowNumber(ca.ArticleId)
+	tableName, TableID, timestamp, err := util.SplitFlowNumber(ca.ArticleId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
@@ -85,7 +85,7 @@ func (ca *CommentAdd) Add(userId int64) interface{} {
 
 	//构造数据，添加
 	var mc = model.Comment{
-		UserId:       userId,
+		CreatorId:    userId,
 		Content:      ca.Content,
 		SourceFlowId: ca.ArticleId,
 		ReplyCId:     ca.ReplyCId,
@@ -100,7 +100,7 @@ func (ca *CommentAdd) Add(userId int64) interface{} {
 }
 
 func (cd *CommentDelete) Delete(userId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(cd.ArticleId)
+	_, TableID, _, err := util.SplitFlowNumber(cd.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)

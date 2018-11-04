@@ -25,7 +25,7 @@ func (tc *TopicCollect) Add(userId int64) interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
-	_, TableID, _, err := SplitFlowNumber(tc.TId)
+	_, TableID, _, err := util.SplitFlowNumber(tc.TId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
@@ -63,7 +63,7 @@ func (tc *TopicCollect) Cancel(userId int64) interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
-	_, TableID, _, err := SplitFlowNumber(tc.TId)
+	_, TableID, _, err := util.SplitFlowNumber(tc.TId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)

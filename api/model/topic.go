@@ -14,7 +14,7 @@ type Topic struct {
 	Title       string `json:"title"`                 //标题
 	Desc        string `json:"desc" gorm:"type:text"` //简介，详情，或者内容
 	CommunityId int64  `json:"communityId"`           //所属社区id
-	CreatorId   int64  `json:"creator"`               //创建者id
+	CreatorId   int64  `json:"creatorId"`             //创建者id
 	ViewedNum   int64  `json:"viewedNum"`             //浏览量
 	ZanNum      int64  `json:"zanNum"`                //点赞量
 	CommentNum  int64  `json:"commentNum"`            //评论数量

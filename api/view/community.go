@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"wyatt/api/constant"
 	"wyatt/api/model"
 )
 
@@ -20,7 +21,7 @@ func (c *Community) HandlerRespListAll(mlist []model.Community, joinNumMap, topi
 	for _, v := range mlist {
 		c := Community{
 			CreatedAt: v.CreatedAt.Unix(),
-			CId:       fmt.Sprintf("%s.%d.%d", model.CM, v.ID, v.FlowId),
+			CId:       fmt.Sprintf("%s.%d.%d", constant.CM, v.ID, v.FlowId),
 			Logo:      v.Logo,
 			Name:      v.Name,
 			Desc:      v.Desc,

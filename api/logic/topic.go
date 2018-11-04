@@ -38,7 +38,7 @@ func (t *Topic) List() interface{} {
 		mu model.User
 		su service.User
 	)
-	_, TableID, timesteamp, err := SplitFlowNumber(t.CId)
+	_, TableID, timesteamp, err := util.SplitFlowNumber(t.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
@@ -76,12 +76,11 @@ func (t *Topic) List() interface{} {
 
 //增加话题
 func (ta *TopicAdd) Add(creatorId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(ta.CId)
+	_, TableID, _, err := util.SplitFlowNumber(ta.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-
 	//查询社区
 	var mc model.Community
 	err = mc.QueryOne("*", "id = ?", TableID)
@@ -112,7 +111,7 @@ func (ta *TopicAdd) Add(creatorId int64) interface{} {
 
 //删除话题
 func (td *TopicDelete) Delete(userId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(td.Tid)
+	_, TableID, _, err := util.SplitFlowNumber(td.Tid)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
@@ -138,7 +137,7 @@ func (td *TopicDelete) Delete(userId int64) interface{} {
 
 //修改话题
 func (tm *TopicModify) Modify(userId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(tm.Tid)
+	_, TableID, _, err := util.SplitFlowNumber(tm.Tid)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
@@ -185,7 +184,7 @@ func (tm *TopicModify) Modify(userId int64) interface{} {
 
 //查看话题详情
 func (Topic) Detail(tId string) interface{} {
-	_, TableID, _, err := SplitFlowNumber(tId)
+	_, TableID, _, err := util.SplitFlowNumber(tId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)

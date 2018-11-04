@@ -49,9 +49,9 @@ func Router(server *gin.Engine) {
 
 	//点赞
 	zanGroup := server.Group("/zan")
-	zanGroup.GET("/list")
-	zanGroup.POST("/add")
-	zanGroup.POST("/cancel")
+	zanGroup.GET("/list", handler.ZanList)
+	zanGroup.POST("/add", handler.ZanAdd)
+	zanGroup.POST("/cancel", handler.ZanCancel)
 
 	//粉丝
 	fansGroup := server.Group("/fans")

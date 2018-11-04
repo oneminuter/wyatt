@@ -16,7 +16,7 @@ type CommunityManager struct {
 
 //添加管理员
 func (cm *CommunityManager) Add(creatorId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(cm.CId)
+	_, TableID, _, err := util.SplitFlowNumber(cm.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
@@ -66,7 +66,7 @@ func (cm *CommunityManager) Add(creatorId int64) interface{} {
 
 //删除管理员
 func (cm *CommunityManager) Delete(creatorId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(cm.CId)
+	_, TableID, _, err := util.SplitFlowNumber(cm.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)

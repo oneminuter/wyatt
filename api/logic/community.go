@@ -98,7 +98,7 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 		value string
 	)
 
-	_, tableID, _, err := SplitFlowNumber(cm.CId)
+	_, tableID, _, err := util.SplitFlowNumber(cm.CId)
 	if err != nil {
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
@@ -136,7 +136,7 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 
 //删除社区
 func (cd *CommunityDelete) Delete(userId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(cd.CId)
+	_, TableID, _, err := util.SplitFlowNumber(cd.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)

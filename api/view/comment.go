@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"wyatt/api/constant"
 	"wyatt/api/model"
 )
 
@@ -21,14 +22,14 @@ func (c *Comment) HandlerRespList(mcList []model.Comment, uMap map[int64]model.U
 		ok bool
 	)
 	for _, v := range mcList {
-		u, ok = uMap[v.UserId]
+		u, ok = uMap[v.CreatorId]
 		if !ok {
-			u.Account = ""
+			u.Account = constant.DefaultAvator
 			u.AvatarUrl = ""
 		}
 
 		list = append(list, Comment{
-			CID:           fmt.Sprintf("%s.%d.%d", model.CM, v.ID, v.FlowId),
+			CID:           fmt.Sprintf("%s.%d.%d", constant.CM, v.ID, v.FlowId),
 			UserAccount:   u.Account,
 			UserAvatarUrl: u.AvatarUrl,
 			CreatedAt:     v.CreatedAt.Unix(),

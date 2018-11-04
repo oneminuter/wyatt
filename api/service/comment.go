@@ -8,7 +8,7 @@ type Comment struct{}
 func (c *Comment) GetUserIDArr(mcList []model.Comment) []int64 {
 	var list = make([]int64, 0)
 	for _, v := range mcList {
-		list = append(list, v.UserId)
+		list = append(list, v.CreatorId)
 	}
 	return list
 }

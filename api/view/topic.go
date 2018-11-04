@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"wyatt/api/constant"
 	"wyatt/api/model"
 )
 
@@ -23,10 +24,10 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cID int64, cFlowId int64, uM
 	var list = make([]Topic, 0, len(mtList))
 	for _, v := range mtList {
 		t := Topic{
-			TId:              fmt.Sprintf("%s.%d.%d", model.TP, v.ID, v.FlowId),
+			TId:              fmt.Sprintf("%s.%d.%d", constant.TP, v.ID, v.FlowId),
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              fmt.Sprintf("%s.%d.%d", model.CMT, cID, cFlowId),
+			CId:              fmt.Sprintf("%s.%d.%d", constant.CMT, cID, cFlowId),
 			CreatorAccount:   uMap[v.CreatorId].Account,
 			CreatorAvatarUrl: uMap[v.CreatorId].AvatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),
@@ -41,10 +42,10 @@ func (*Topic) HandlerRespList(mtList []model.Topic, cID int64, cFlowId int64, uM
 
 //话题详情
 func (t *Topic) HandlerRespDetail(mt model.Topic, cID int64, cFlowId int64, u model.User) {
-	t.TId = fmt.Sprintf("%s.%d.%d", model.TP, mt.ID, mt.FlowId)
+	t.TId = fmt.Sprintf("%s.%d.%d", constant.TP, mt.ID, mt.FlowId)
 	t.Title = mt.Title
 	t.Desc = mt.Desc
-	t.CId = fmt.Sprintf("%s.%d.%d", model.CMT, cID, cFlowId)
+	t.CId = fmt.Sprintf("%s.%d.%d", constant.CMT, cID, cFlowId)
 	t.CreatorAccount = u.Account
 	t.CreatorAvatarUrl = u.AvatarUrl
 	t.CreateTime = mt.CreatedAt.Unix()
@@ -56,12 +57,10 @@ func (t *Topic) HandlerRespDetail(mt model.Topic, cID int64, cFlowId int64, u mo
 //收藏话题列表
 func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]model.Community, uMap map[int64]model.User) []Topic {
 	var (
-		ok        bool
-		comm      model.Community //社区id - 10为数字
-		u         model.User
-		avatarUrl string
-		account   string
-		list      = make([]Topic, 0, len(mtList))
+		ok   bool
+		comm model.Community //社区id - 10为数字
+		u    model.User
+		list = make([]Topic, 0, len(mtList))
 	)
 	for _, v := range mtList {
 		comm, ok = cIDMap[v.CommunityId]
@@ -70,21 +69,18 @@ func (*Topic) HandlerRespCollectList(mtList []model.Topic, cIDMap map[int64]mode
 		}
 
 		u, ok = uMap[v.CreatorId]
-		if ok {
-			avatarUrl = u.AvatarUrl
-			account = u.Account
-		} else {
-			avatarUrl = ""
-			account = ""
+		if !ok {
+			u.AvatarUrl = constant.DefaultAvator
+			u.Account = ""
 		}
 
 		t := Topic{
-			TId:              fmt.Sprintf("%s.%d.%d", model.TP, v.ID, v.FlowId),
+			TId:              fmt.Sprintf("%s.%d.%d", constant.TP, v.ID, v.FlowId),
 			Title:            v.Title,
 			Desc:             v.Desc,
-			CId:              fmt.Sprintf("%s.%d.%d", model.CMT, comm.ID, comm.FlowId),
-			CreatorAccount:   account,
-			CreatorAvatarUrl: avatarUrl,
+			CId:              fmt.Sprintf("%s.%d.%d", constant.CMT, comm.ID, comm.FlowId),
+			CreatorAccount:   u.Account,
+			CreatorAvatarUrl: u.AvatarUrl,
 			CreateTime:       v.CreatedAt.Unix(),
 			ViewedNum:        v.ViewedNum,
 			ZanNum:           v.ZanNum,

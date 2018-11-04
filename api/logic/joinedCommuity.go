@@ -73,7 +73,7 @@ func (c *JoinedCommunity) MyList(userId int64) interface{} {
 	cId: 社区号
 */
 func (jc *JoinedCommunity) Join(userId int64) interface{} {
-	_, TableID, _, err := SplitFlowNumber(jc.CId)
+	_, TableID, _, err := util.SplitFlowNumber(jc.CId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)

@@ -609,3 +609,77 @@
 }
 ```
 
+***
+
+## 点赞
+
+**Post /zan/add**
+
+### 请求参数
+```shell
+{
+    "sourceFlowId":"string" //点赞对象的流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 取消点赞
+
+**Post /zan/cancel**
+
+### 请求参数
+```shell
+{
+    "sourceFlowId":"string" //点赞对象的流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 获得的点赞列表
+
+**Get /zan/list**
+
+### 请求参数
+```shell
+{
+    "page":"int" //请求页码
+    "limit":"int" //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "userAccount": "123", //点赞用户账号
+            "userAvatarUrl": "http://blog.oneminuter.com/favicon.ico", //点赞用户头像
+            "sourceFlowId": "TP.2.1541326047", //点赞的资源信息流水号
+            "classify": "话题", //点赞资源的分类
+            "createdAt": 1541347056 //点赞时间
+        }
+    ]
+}
+```

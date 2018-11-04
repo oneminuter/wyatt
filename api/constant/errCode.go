@@ -35,6 +35,7 @@ const (
 	CommentIdErr                       = 630 //评论编号错误
 	QueryCommentListErr                = 631 //查询评论列表错误
 	IncorrectFlowNumber                = 632 //错误的流水号
+	RepeatOperate                      = 633 //重复的操作
 )
 
 var ErrMap = map[int]string{
@@ -71,4 +72,5 @@ var ErrMap = map[int]string{
 	CommentIdErr:                       "评论编号错误",
 	QueryCommentListErr:                "查询评论列表错误",
 	IncorrectFlowNumber:                "错误的流水号",
+	RepeatOperate:                      "重复的操作",
 }

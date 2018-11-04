@@ -1,9 +1,11 @@
 package util
 
 import (
+	"errors"
 	"math/rand"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 	"unicode"
 	"wyatt/api/constant"
@@ -75,4 +77,37 @@ func IsPhoneNumber(str string) bool {
 func IsEmail(str string) bool {
 	reg := regexp.MustCompile(`^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$`)
 	return reg.MatchString(str)
+}
+
+//分割前端传过来的流水号
+func SplitFlowNumber(flow string) (tableName string, TableID int64, timestamp int64, err error) {
+	splits := strings.Split(flow, ".")
+	if 3 != len(splits) {
+		err = errors.New("Incorrect flow number")
+		return
+	}
+
+	tn := splits[0]
+	var ok bool
+	tableName, ok = constant.TabelMap[tn]
+	if !ok {
+		err = errors.New("Incorrect flow number: table not exist")
+		return
+	}
+
+	TID := splits[1]
+	TableID, err = strconv.ParseInt(TID, 10, 64)
+	if err != nil {
+		LoggerError(err)
+		return
+	}
+
+	t := splits[2]
+	timestamp, err = strconv.ParseInt(t, 10, 64)
+	if err != nil {
+		LoggerError(err)
+		return
+	}
+
+	return
 }
