@@ -1,7 +1,6 @@
 package view
 
 import (
-	"log"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/util"
@@ -31,7 +30,6 @@ func (*Zan) HandlerRespList(zans []model.Zan, uMap map[int64]model.User) []Zan {
 
 		//根据表别名取分类
 		tableName, _, _, _ := util.SplitFlowNumber(v.SourceFlowId)
-		log.Println(tableName)
 		classify, ok = constant.TableAliasNameMap[tableName]
 		if !ok {
 			classify = ""
