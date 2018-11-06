@@ -2,6 +2,7 @@ package model
 
 import (
 	"time"
+	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -33,10 +34,17 @@ func (jc *JoinedCommunity) QueryGrounp(field string, group string, where interfa
 }
 
 //查询列表
-func (jc *JoinedCommunity) QueryList(field string, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
+func (jc *JoinedCommunity) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
+	if 0 > page {
+		page = 0
+	}
+	if 0 > limit || constant.MAX_QUERY_COUNT < limit {
+		limit = constant.MAX_QUERY_COUNT
+	}
+
 	mdb := db.GetMysqlDB()
 	var list []JoinedCommunity
-	err := mdb.Model(jc).Select(field).Where(where, args...).Find(&list).Error
+	err := mdb.Model(jc).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]JoinedCommunity, 0), err

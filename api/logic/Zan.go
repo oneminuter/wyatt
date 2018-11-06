@@ -89,7 +89,7 @@ userId: 用户id
 func (zl *ZanList) List(userId int64) interface{} {
 	// 查询用户的点赞信息
 	var mz model.Zan
-	zans, err := mz.QueryList("*", "owner_id = ?", userId)
+	zans, err := mz.QueryList("*", zl.Page, zl.Limit, "owner_id = ?", userId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)

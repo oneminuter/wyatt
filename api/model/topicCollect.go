@@ -2,6 +2,7 @@ package model
 
 import (
 	"time"
+	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -52,10 +53,16 @@ func (tc *TopicCollect) QueryOne(field string, where interface{}, args ...interf
 	}
 	return nil
 }
-func (tc *TopicCollect) QueryList(field string, where interface{}, args ...interface{}) ([]TopicCollect, error) {
+func (tc *TopicCollect) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]TopicCollect, error) {
+	if 0 > page {
+		page = 0
+	}
+	if 0 > limit || constant.MAX_QUERY_COUNT < limit {
+		limit = constant.MAX_QUERY_COUNT
+	}
 	mdb := db.GetMysqlDB()
 	var list []TopicCollect
-	err := mdb.Model(tc).Select(field).Where(where, args...).Find(&list).Error
+	err := mdb.Model(tc).Select(field).Where(where, args...).Offset(page * limit).Offset(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]TopicCollect, 0), err

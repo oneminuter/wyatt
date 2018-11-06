@@ -55,9 +55,10 @@ func Router(server *gin.Engine) {
 
 	//粉丝
 	fansGroup := server.Group("/fans")
-	fansGroup.GET("/list")
-	fansGroup.POST("/follow")
-	fansGroup.POST("/cancel")
+	fansGroup.POST("/follow", handler.FansFollow)
+	fansGroup.POST("/cancel", handler.FansCancel)
+	fansGroup.GET("/list", handler.FansList)       //粉丝列表
+	server.GET("/follow/list", handler.FollowList) //关注列表
 
 	//消息中心
 	messageGroup := server.Group("/message")

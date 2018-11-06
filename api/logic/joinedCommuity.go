@@ -16,10 +16,9 @@ type JoinedCommunity struct {
 
 //我加入的社区列表
 func (c *JoinedCommunity) MyList(userId int64) interface{} {
-
 	//已加入的社区列表
 	var mjc model.JoinedCommunity
-	jlist, err := mjc.QueryList("*", "user_id = ?", userId)
+	jlist, err := mjc.QueryList("*", c.Page, c.Limit, "user_id = ?", userId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
@@ -31,7 +30,7 @@ func (c *JoinedCommunity) MyList(userId int64) interface{} {
 
 	//获取社区信息
 	var mc model.Community
-	communities, err := mc.QueryList("*", c.Page, c.Limit, "status = 1 AND id in (?)", joinedIdArr)
+	communities, err := mc.QueryList("*", 0, c.Limit, "status = 1 AND id in (?)", joinedIdArr)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)

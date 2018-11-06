@@ -683,3 +683,105 @@
     ]
 }
 ```
+
+***
+
+## 订阅用户 - 成为其粉丝
+**Post /fans/follow**
+
+### 请求参数
+```shell
+{
+    "userAccount": "string" //用户账号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 取消订阅用户
+**Post /fans/cancel**
+
+### 请求参数
+```shell
+{
+    "userAccount": "string" //用户账号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 粉丝列表
+**Get /fans/list**
+
+### 请求参数
+```shell
+{
+    "page":"int", //请求页码
+    "limit":"int" //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "account": "1234", //用户账号
+            "avatarrl": "http://blog.oneminuter.com/favicon.ico", //用户头像
+            "nickName": "1234", //用户昵称
+            "sex": 0, //用户性别
+            "signature": "" //个性签名
+        }
+    ]
+}
+```
+
+***
+
+## 订阅列表
+**Get /follow/list**
+
+### 请求参数
+```shell
+{
+    "page":"int", //请求页码
+    "limit":"int" //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "account": "1234", //用户账号
+            "avatarrl": "http://blog.oneminuter.com/favicon.ico", //用户头像
+            "nickName": "1234", //用户昵称
+            "sex": 0, //用户性别
+            "signature": "" //个性签名
+        }
+    ]
+}
+```

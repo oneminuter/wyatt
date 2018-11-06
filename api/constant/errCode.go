@@ -36,6 +36,7 @@ const (
 	QueryCommentListErr                = 631 //查询评论列表错误
 	IncorrectFlowNumber                = 632 //错误的流水号
 	RepeatOperate                      = 633 //重复的操作
+	TargetAccountForbid                = 634 //目标用户已被封禁
 )
 
 var ErrMap = map[int]string{
@@ -73,4 +74,5 @@ var ErrMap = map[int]string{
 	QueryCommentListErr:                "查询评论列表错误",
 	IncorrectFlowNumber:                "错误的流水号",
 	RepeatOperate:                      "重复的操作",
+	TargetAccountForbid:                "目标用户已被封禁",
 }

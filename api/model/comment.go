@@ -56,7 +56,7 @@ func (c *Comment) QueryList(field string, page int, limit int, where interface{}
 
 	mdb := db.GetMysqlDB()
 	var list = make([]Comment, 0)
-	err := mdb.Model(c).Select(field).Where(where, args...).Find(&list).Error
+	err := mdb.Model(c).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]Comment, 0), err
