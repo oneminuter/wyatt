@@ -11,7 +11,7 @@ import (
 type Topic struct {
 	TableModel
 
-	Title       string `json:"title"`                 //标题
+	Title       string `json:"title" gorm:"size:30"`  //标题
 	Desc        string `json:"desc" gorm:"type:text"` //简介，详情，或者内容
 	CommunityId int64  `json:"communityId"`           //所属社区id
 	CreatorId   int64  `json:"creatorId"`             //创建者id

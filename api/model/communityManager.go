@@ -10,9 +10,9 @@ import (
 type CommunityManager struct {
 	TableModel
 
-	CommunityId int64 `json:"communityId"` // community 的主键
-	UserId      int64 `json:"userId"`      //用户id
-	Role        int   `json:"role"`        // -1 封禁， 0 普通成员，1 管理员  其他为游客，封禁状态不能参与该社区的话题和发言
+	CommunityId int64 `json:"communityId"`        // community 的主键
+	UserId      int64 `json:"userId"`             //用户id
+	Role        int   `json:"role" gorm:"size:4"` // -1 封禁， 0 普通成员，1 管理员  其他为游客，封禁状态不能参与该社区的话题和发言
 }
 
 func (bc *CommunityManager) BeforeCreate() (err error) {

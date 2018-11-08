@@ -54,3 +54,16 @@ var MessageDelete = func(ctx *gin.Context) {
 	userId := ctx.GetInt64("userId")
 	ctx.JSON(http.StatusOK, param.Delete(userId))
 }
+
+var MessageViewed = func(ctx *gin.Context) {
+	var param logic.Message
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Viewed(userId))
+}

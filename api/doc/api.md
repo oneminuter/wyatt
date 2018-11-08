@@ -847,6 +847,28 @@
 
 ***
 
+## 消息查看回调
+
+**Get /message/viewed**
+
+### 请求参数
+```shell
+{
+    "mId": "string" //消息流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
 ## 删除消息
 
 **Get /message/delete**

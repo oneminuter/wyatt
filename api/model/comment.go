@@ -12,8 +12,8 @@ type Comment struct {
 	TableModel
 	CreatorId    int64  `json:"creatorId"`                         //发送者用户id
 	Content      string `json:"content" gorm:"type:varchar(5000)"` //评论内容
-	SourceFlowId string `json:"sourceFlowId"`                      //被评论对象的完整流水号
-	ReplyCId     string `json:"replyCid"`                          //被回复评论的完整流水号
+	SourceFlowId string `json:"sourceFlowId" gorm:"size:30"`       //被评论对象的完整流水号
+	ReplyCId     string `json:"replyCid" gorm:"size:30"`           //被回复评论的完整流水号
 }
 
 func (bc *Comment) BeforeCreate() (err error) {

@@ -65,6 +65,7 @@ func Router(server *gin.Engine) {
 	messageGroup.GET("/list", handler.MessageList)
 	messageGroup.GET("/detail", handler.MessageDetail)
 	messageGroup.GET("/delete", handler.MessageDelete)
+	messageGroup.POST("/viewed", handler.MessageViewed)
 
 	//接口不存在
 	server.NoRoute(handler.Page404)

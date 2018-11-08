@@ -12,7 +12,7 @@ type Message struct {
 	TableModel
 
 	UserId   int64  `json:"userId"`                 //用户id
-	MsgType  string `json:"msgType"`                //消息类型， system:系统消息，custom:自定义消息，可以根据该字段来判断是不是定向消息
+	MsgType  string `json:"msgType" gorm:"size:30"` //消息类型， system:系统消息，custom:自定义消息，可以根据该字段来判断是不是定向消息
 	Content  string `json:"content"`                //消息内容
 	IsViewed int    `json:"isViewed" gorm:"size:4"` //是否查看过
 }
@@ -66,6 +66,19 @@ func (m *Message) Delete(where interface{}, args ...interface{}) error {
 	tx := mdb.Begin()
 	defer tx.Commit()
 	err := tx.Model(m).Where(where, args...).Delete(m).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *Message) Update(update interface{}, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Update(update).Error
 	if err != nil {
 		util.LoggerError(err)
 		tx.Rollback()

@@ -83,3 +83,30 @@ func (m *Message) Delete(userId int64) interface{} {
 	}
 	return view.SetErr(constant.Success)
 }
+
+func (m *Message) Viewed(userId int64) interface{} {
+	_, TableID, timestamp, err := util.SplitFlowNumber(m.MId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	var mm model.Message
+	err = mm.QueryOne("*", "id = ? AND flow_id = ?", TableID, timestamp)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//判断是够有权限
+	if userId != mm.UserId {
+		return view.SetErr(constant.NoAuth)
+	}
+
+	err = mm.Update("is_viewed = 1", "id = ?", mm.ID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
+}
