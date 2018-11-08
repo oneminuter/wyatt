@@ -785,3 +785,84 @@
     ]
 }
 ```
+
+***
+
+## 消息列表
+
+**Get /message/list**
+
+### 请求参数
+```shell
+{
+    "page":"int", //请求页码
+    "limit":"int" //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "mId": "MG.1.1541692635", //消息流水号
+            "msgType": "system", //消息类型
+            "content": "这是一个测试消息", //消息内容
+            "isViewed": 0, //是否查看过
+            "createdAt": 1541692635 //消息创建时间
+        }
+    ]
+}
+```
+
+***
+
+## 休息详情
+
+**Get /message/detaill**
+
+### 请求参数
+```shell
+{
+    "mId": "string" //消息流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": {
+        "mId": "MG.1.1541692635", //消息流水号
+        "msgType": "system", //消息类型
+        "content": "这是一个测试消息", //消息内容
+        "isViewed": 0, //是否查看过
+        "createdAt": 1541692635 //消息创建时间戳
+    }
+}
+```
+
+***
+
+## 删除消息
+
+**Get /message/delete**
+
+### 请求参数
+```shell
+{
+    "mId": "string" //消息流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```

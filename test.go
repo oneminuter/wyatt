@@ -7,12 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 	"wyatt/api/constant"
+	"wyatt/api/model"
 	"wyatt/util"
 )
 
 func main() {
 	//getToken()
-	getCurrentPath()
+	//getCurrentPath()
+	addMessage()
 }
 
 func getToken() {
@@ -41,4 +43,14 @@ func getCurrentPath() {
 		log.Fatal(err)
 	}
 	fmt.Println(dir)
+}
+
+func addMessage() {
+	var m = model.Message{
+		UserId:  1,
+		MsgType: "system",
+		Content: "这是一个测试消息",
+	}
+
+	m.Add()
 }
