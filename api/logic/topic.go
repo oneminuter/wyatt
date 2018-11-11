@@ -60,7 +60,7 @@ func (t *Topic) List() interface{} {
 	creatorIds := st.GetCreatorIdList(topics)
 
 	//获取用户信息
-	ulist, err := mu.QueryList("*", "id IN (?)", creatorIds)
+	ulist, err := mu.QueryList("*", 0, t.Limit, "id IN (?)", creatorIds)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)

@@ -103,7 +103,7 @@ func (zl *ZanList) List(userId int64) interface{} {
 
 	//查询点赞用户的信息
 	var mu model.User
-	ulist, err := mu.QueryList("*", "id IN (?)", userIdArr)
+	ulist, err := mu.QueryList("*", 0, zl.Limit, "id IN (?)", userIdArr)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)

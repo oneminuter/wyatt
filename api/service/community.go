@@ -69,7 +69,7 @@ func (Community) IsManager(cId int64, userId int64) bool {
 		return true
 	}
 
-	managers, err := mcm.QueryList("*", "community_id = ?", mc.ID)
+	managers, err := mcm.QueryList("*", 0, 999, "community_id = ?", mc.ID)
 	if err != nil {
 		util.LoggerError(err)
 		return false
@@ -92,7 +92,11 @@ userId: 用户id
 */
 func (Community) IsAdmin(cId int64, userId int64) bool {
 	var mc model.Community
-	count := mc.QueryCount("id = ? AND creator_id = ?", cId, userId)
+	count, err := mc.QueryCount("id = ? AND creator_id = ?", cId, userId)
+	if err != nil {
+		util.LoggerError(err)
+		return false
+	}
 	return count > 0
 }
 

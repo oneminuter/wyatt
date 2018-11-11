@@ -2,6 +2,7 @@ package model
 
 import (
 	"time"
+	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -15,28 +16,61 @@ type CommunityManager struct {
 	Role        int   `json:"role" gorm:"size:4"` // -1 封禁， 0 普通成员，1 管理员  其他为游客，封禁状态不能参与该社区的话题和发言
 }
 
-func (bc *CommunityManager) BeforeCreate() (err error) {
-	bc.FlowId = time.Now().Unix()
+func (m *CommunityManager) BeforeCreate() (err error) {
+	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (cm *CommunityManager) Add() error {
+func (m *CommunityManager) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-
-	err := tx.Create(cm).Error
+	err := tx.Create(m).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
+		tx.Rollback()
 		return err
 	}
 	return nil
 }
-func (cm *CommunityManager) QueryList(field string, where interface{}, args ...interface{}) ([]CommunityManager, error) {
+
+func (m *CommunityManager) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	var list []CommunityManager
-	err := mdb.Model(cm).Where(where, args...).Find(&list).Error
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Delete(m).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *CommunityManager) Update(update, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Updates(update).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *CommunityManager) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]CommunityManager, error) {
+	if 0 > page {
+		page = 0
+	}
+	if 0 > limit || constant.MAX_QUERY_COUNT < limit {
+		limit = constant.MAX_QUERY_COUNT
+	}
+
+	mdb := db.GetMysqlDB()
+	var list = make([]CommunityManager, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]CommunityManager, 0), err
@@ -44,27 +78,35 @@ func (cm *CommunityManager) QueryList(field string, where interface{}, args ...i
 	return list, nil
 }
 
-func (cm *CommunityManager) Delete(where interface{}, args ...interface{}) error {
+func (m *CommunityManager) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	tx := mdb.Begin()
-	defer tx.Commit()
-
-	err := tx.Model(cm).Where(where, args...).Delete(cm).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
 		return err
 	}
+
 	return nil
 }
 
-func (cm *CommunityManager) QueryCount(where interface{}, args ...interface{}) int {
+func (m *CommunityManager) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
-	var c int
-	err := mdb.Model(cm).Where(where, args...).Count(&c).Error
+	var count int
+	err := mdb.Model(m).Where(where, args...).Count(&count).Error
 	if err != nil {
 		util.LoggerError(err)
-		return 0
+		return 0, err
 	}
-	return c
+	return count, nil
+}
+
+func (m *CommunityManager) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]CommunityManager, error) {
+	mdb := db.GetMysqlDB()
+	var list = make([]CommunityManager, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]CommunityManager, 0), err
+	}
+	return list, nil
 }

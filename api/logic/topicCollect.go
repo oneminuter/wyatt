@@ -143,7 +143,7 @@ func (tc *TopicCollectList) List(userId int64) interface{} {
 	creatorIdArr := st.GetCreatorIdList(topics)
 
 	//查询创建者信息
-	users, err := mu.QueryList("*", "id IN (?)", creatorIdArr)
+	users, err := mu.QueryList("*", 0, tc.Limit, "id IN (?)", creatorIdArr)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)

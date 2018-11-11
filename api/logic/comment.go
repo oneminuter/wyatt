@@ -46,7 +46,7 @@ func (c *Comment) List() interface{} {
 
 	//查询用户信息
 	var mu model.User
-	userinfoList, err := mu.QueryList("*", "id IN (?)", userIdArr)
+	userinfoList, err := mu.QueryList("*", 0, c.Limit, "id IN (?)", userIdArr)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryCommentListErr)
@@ -65,7 +65,11 @@ func (c *Comment) List() interface{} {
 func (ca *CommentAdd) Add(userId int64) interface{} {
 	//判断用户是否禁止在本社区发言
 	var mcm model.CommunityManager
-	count := mcm.QueryCount("user_id = ? AND role = -1", userId)
+	count, err := mcm.QueryCount("user_id = ? AND role = -1", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
 	if count > 0 {
 		return view.SetErr(constant.AccountForbid)
 	}

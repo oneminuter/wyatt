@@ -21,48 +21,51 @@ type Topic struct {
 	Count       int    `json:"-" gorm:"-"`
 }
 
-func (bc *Topic) BeforeCreate() (err error) {
-	bc.FlowId = time.Now().Unix()
+func (m *Topic) BeforeCreate() (err error) {
+	m.FlowId = time.Now().Unix()
 	return
 }
 
-//按组查询
-func (t *Topic) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]Topic, error) {
-	mdb := db.GetMysqlDB()
-	var list []Topic
-	err := mdb.Model(t).Select(field).Where(where, args...).Group(group).Find(&list).Error
-	if err != nil {
-		util.LoggerError(err)
-		return make([]Topic, 0), err
-	}
-	return list, nil
-}
-
-func (t *Topic) Add() error {
+func (m *Topic) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-	err := tx.Create(t).Error
+	err := tx.Create(m).Error
 	if err != nil {
+		util.LoggerError(err)
 		tx.Rollback()
-		util.LoggerError(err)
 		return err
 	}
 	return nil
 }
 
-func (t *Topic) QueryOne(field string, where interface{}, args ...interface{}) error {
+func (m *Topic) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-
-	err := mdb.Model(t).Select(field).Where(where, args...).Last(t).Error
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Delete(m).Error
 	if err != nil {
 		util.LoggerError(err)
+		tx.Rollback()
 		return err
 	}
 	return nil
 }
 
-func (t *Topic) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]Topic, error) {
+func (m *Topic) Update(update, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Updates(update).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *Topic) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]Topic, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -71,8 +74,8 @@ func (t *Topic) QueryList(field string, page int, limit int, where interface{}, 
 	}
 
 	mdb := db.GetMysqlDB()
-	var list []Topic
-	err := mdb.Model(t).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
+	var list = make([]Topic, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]Topic, 0), err
@@ -80,28 +83,35 @@ func (t *Topic) QueryList(field string, page int, limit int, where interface{}, 
 	return list, nil
 }
 
-func (t *Topic) Delete(where interface{}, args ...interface{}) error {
+func (m *Topic) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	tx := mdb.Begin()
-	defer tx.Commit()
-	err := tx.Where(where, args...).Delete(t).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
 		return err
 	}
+
 	return nil
 }
 
-func (t *Topic) Update(update interface{}, where interface{}, args ...interface{}) error {
+func (m *Topic) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
-	tx := mdb.Begin()
-	defer tx.Commit()
-	err := tx.Model(t).Where(where, args...).Updates(update).Error
+	var count int
+	err := mdb.Model(m).Where(where, args...).Count(&count).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
-		return err
+		return 0, err
 	}
-	return nil
+	return count, nil
+}
+
+func (m *Topic) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]Topic, error) {
+	mdb := db.GetMysqlDB()
+	var list = make([]Topic, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]Topic, 0), err
+	}
+	return list, nil
 }

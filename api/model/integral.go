@@ -7,21 +7,22 @@ import (
 	"wyatt/util"
 )
 
-//内容举报
-type TipOff struct {
+//积分
+type Integral struct {
 	TableModel
-	UserId       int64  `json:"userId"`                      //用户id
-	SourceFlowId string `json:"sourceFlowId" gorm:"size:30"` //举报内容完整流水号
-	Status       int    `json:"status" gorm:"size:4"`        //处理状态
-	Remark       string `json:"remark"`                      //处理备注
+
+	Avaliable int   `json:"avaliable"` //可用积分，可消耗，1积分等于1分钱
+	Growth    int   `json:"growth"`    //成长值，判断用户等级
+	UserId    int64 `json:"userId"`    //用户id
+	Level     int   `json:"level"`     //用户等级
 }
 
-func (m *TipOff) BeforeCreate() (err error) {
+func (m *Integral) BeforeCreate() (err error) {
 	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (m *TipOff) Add() error {
+func (m *Integral) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -34,7 +35,7 @@ func (m *TipOff) Add() error {
 	return nil
 }
 
-func (m *TipOff) Delete(where interface{}, args ...interface{}) error {
+func (m *Integral) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -47,7 +48,7 @@ func (m *TipOff) Delete(where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (m *TipOff) Update(update, where interface{}, args ...interface{}) error {
+func (m *Integral) Update(update, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -60,7 +61,7 @@ func (m *TipOff) Update(update, where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (m *TipOff) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]TipOff, error) {
+func (m *Integral) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]Integral, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -69,16 +70,16 @@ func (m *TipOff) QueryList(field string, page, limit int, where interface{}, arg
 	}
 
 	mdb := db.GetMysqlDB()
-	var list = make([]TipOff, 0)
+	var list = make([]Integral, 0)
 	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]TipOff, 0), err
+		return make([]Integral, 0), err
 	}
 	return list, nil
 }
 
-func (m *TipOff) QueryOne(field string, where interface{}, args ...interface{}) error {
+func (m *Integral) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
@@ -89,7 +90,7 @@ func (m *TipOff) QueryOne(field string, where interface{}, args ...interface{}) 
 	return nil
 }
 
-func (m *TipOff) QueryCount(where interface{}, args ...interface{}) (int, error) {
+func (m *Integral) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
 	var count int
 	err := mdb.Model(m).Where(where, args...).Count(&count).Error
@@ -100,13 +101,13 @@ func (m *TipOff) QueryCount(where interface{}, args ...interface{}) (int, error)
 	return count, nil
 }
 
-func (m *TipOff) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]TipOff, error) {
+func (m *Integral) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]Integral, error) {
 	mdb := db.GetMysqlDB()
-	var list = make([]TipOff, 0)
+	var list = make([]Integral, 0)
 	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]TipOff, 0), err
+		return make([]Integral, 0), err
 	}
 	return list, nil
 }

@@ -16,25 +16,51 @@ type JoinedCommunity struct {
 	Count       int   `json:"-" gorm:"-"`
 }
 
-func (bc *JoinedCommunity) BeforeCreate() (err error) {
-	bc.FlowId = time.Now().Unix()
+func (m *JoinedCommunity) BeforeCreate() (err error) {
+	m.FlowId = time.Now().Unix()
 	return
 }
 
-//按组查询
-func (jc *JoinedCommunity) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
+func (m *JoinedCommunity) Add() error {
 	mdb := db.GetMysqlDB()
-	var list []JoinedCommunity
-	err := mdb.Model(jc).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Create(m).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]JoinedCommunity, 0), err
+		tx.Rollback()
+		return err
 	}
-	return list, nil
+	return nil
 }
 
-//查询列表
-func (jc *JoinedCommunity) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
+func (m *JoinedCommunity) Delete(where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Delete(m).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *JoinedCommunity) Update(update, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Updates(update).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *JoinedCommunity) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -43,8 +69,8 @@ func (jc *JoinedCommunity) QueryList(field string, page int, limit int, where in
 	}
 
 	mdb := db.GetMysqlDB()
-	var list []JoinedCommunity
-	err := mdb.Model(jc).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
+	var list = make([]JoinedCommunity, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]JoinedCommunity, 0), err
@@ -52,30 +78,35 @@ func (jc *JoinedCommunity) QueryList(field string, page int, limit int, where in
 	return list, nil
 }
 
-func (jc *JoinedCommunity) Add() error {
+func (m *JoinedCommunity) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	tx := mdb.Begin()
-	defer tx.Commit()
-
-	err := tx.Create(jc).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
 		util.LoggerError(err)
-		tx.Rollback()
 		return err
 	}
+
 	return nil
 }
 
-func (jc *JoinedCommunity) Delete(where interface{}, args ...interface{}) error {
+func (m *JoinedCommunity) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
-	tx := mdb.Begin()
-	defer tx.Commit()
-
-	err := tx.Where(where, args...).Delete(jc).Error
+	var count int
+	err := mdb.Model(m).Where(where, args...).Count(&count).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
-		return err
+		return 0, err
 	}
-	return nil
+	return count, nil
+}
+
+func (m *JoinedCommunity) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]JoinedCommunity, error) {
+	mdb := db.GetMysqlDB()
+	var list = make([]JoinedCommunity, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]JoinedCommunity, 0), err
+	}
+	return list, nil
 }

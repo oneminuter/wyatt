@@ -2,6 +2,7 @@ package model
 
 import (
 	"time"
+	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
 )
@@ -29,53 +30,71 @@ type User struct {
 	Signature      string `json:"signature"`                 //个性签名
 }
 
-func (bc *User) BeforeCreate() (err error) {
-	bc.FlowId = time.Now().Unix()
+func (m *User) BeforeCreate() (err error) {
+	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (u *User) Add() error {
+func (m *User) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-
-	err := tx.Model(u).Create(u).Error
+	err := tx.Create(m).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
+		tx.Rollback()
 		return err
 	}
 	return nil
 }
 
-func (u *User) Update(update, where interface{}, args ...interface{}) error {
+func (m *User) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-
-	err := tx.Model(u).Where(where, args...).Updates(update).Error
+	err := tx.Model(m).Where(where, args...).Delete(m).Error
 	if err != nil {
-		tx.Rollback()
 		util.LoggerError(err)
+		tx.Rollback()
 		return err
 	}
 	return nil
 }
 
-func (u *User) QueryList(field string, where interface{}, args ...interface{}) (list []User, err error) {
+func (m *User) Update(update, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	err = mdb.Model(u).Select(field).Where(where, args...).Find(&list).Error
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Updates(update).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *User) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]User, error) {
+	if 0 > page {
+		page = 0
+	}
+	if 0 > limit || constant.MAX_QUERY_COUNT < limit {
+		limit = constant.MAX_QUERY_COUNT
+	}
+
+	mdb := db.GetMysqlDB()
+	var list = make([]User, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]User, 0), err
 	}
-
 	return list, nil
 }
 
-func (u *User) QueryOne(field string, where interface{}, args ...interface{}) error {
+func (m *User) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	err := mdb.Model(u).Select(field).Where(where, args...).Last(u).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
 		util.LoggerError(err)
 		return err
@@ -84,13 +103,24 @@ func (u *User) QueryOne(field string, where interface{}, args ...interface{}) er
 	return nil
 }
 
-func (u *User) QueryCount(where interface{}, args ...interface{}) (int, error) {
+func (m *User) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
 	var count int
-	err := mdb.Model(u).Where(where, args...).Count(&count).Error
+	err := mdb.Model(m).Where(where, args...).Count(&count).Error
 	if err != nil {
 		util.LoggerError(err)
 		return 0, err
 	}
 	return count, nil
+}
+
+func (m *User) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]User, error) {
+	mdb := db.GetMysqlDB()
+	var list = make([]User, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]User, 0), err
+	}
+	return list, nil
 }

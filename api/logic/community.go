@@ -70,7 +70,11 @@ func (c *Community) ListAll() interface{} {
 //创建社区
 func (cc *CommunityCreate) Create(userId int64) interface{} {
 	var c model.Community
-	count := c.QueryCount("name = ?", cc.Name)
+	count, err := c.QueryCount("name = ?", cc.Name)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
 	if count > 0 {
 		return view.SetErr(constant.CommunityIsExist)
 	}
@@ -82,7 +86,7 @@ func (cc *CommunityCreate) Create(userId int64) interface{} {
 		CreatorId: userId,
 		Status:    0,
 	}
-	err := c.Add()
+	err = c.Add()
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.CommunityCreateErr)

@@ -14,16 +14,16 @@ type Fans struct {
 	FansUserId int64 `json:"fansUserId"` //订阅者，粉丝的用户id
 }
 
-func (bc *Fans) BeforeCreate() (err error) {
-	bc.FlowId = time.Now().Unix()
+func (m *Fans) BeforeCreate() (err error) {
+	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (f *Fans) Add() error {
+func (m *Fans) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-	err := mdb.Create(f).Error
+	err := tx.Create(m).Error
 	if err != nil {
 		util.LoggerError(err)
 		tx.Rollback()
@@ -32,11 +32,11 @@ func (f *Fans) Add() error {
 	return nil
 }
 
-func (f *Fans) Delete(where interface{}, args ...interface{}) error {
+func (m *Fans) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-	err := tx.Model(f).Where(where, args...).Delete(f).Error
+	err := tx.Model(m).Where(where, args...).Delete(m).Error
 	if err != nil {
 		util.LoggerError(err)
 		tx.Rollback()
@@ -45,7 +45,20 @@ func (f *Fans) Delete(where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (f *Fans) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]Fans, error) {
+func (m *Fans) Update(update, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Updates(update).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *Fans) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]Fans, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -55,10 +68,43 @@ func (f *Fans) QueryList(field string, page int, limit int, where interface{}, a
 
 	mdb := db.GetMysqlDB()
 	var list = make([]Fans, 0)
-	err := mdb.Model(f).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]Fans, 0), err
 	}
-	return list, err
+	return list, nil
+}
+
+func (m *Fans) QueryOne(field string, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
+	if err != nil {
+		util.LoggerError(err)
+		return err
+	}
+
+	return nil
+}
+
+func (m *Fans) QueryCount(where interface{}, args ...interface{}) (int, error) {
+	mdb := db.GetMysqlDB()
+	var count int
+	err := mdb.Model(m).Where(where, args...).Count(&count).Error
+	if err != nil {
+		util.LoggerError(err)
+		return 0, err
+	}
+	return count, nil
+}
+
+func (m *Fans) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]Fans, error) {
+	mdb := db.GetMysqlDB()
+	var list = make([]Fans, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]Fans, 0), err
+	}
+	return list, nil
 }

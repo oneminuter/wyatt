@@ -7,21 +7,19 @@ import (
 	"wyatt/util"
 )
 
-//内容举报
-type TipOff struct {
+//用户积分等级规则
+type GrowthlLevel struct {
 	TableModel
-	UserId       int64  `json:"userId"`                      //用户id
-	SourceFlowId string `json:"sourceFlowId" gorm:"size:30"` //举报内容完整流水号
-	Status       int    `json:"status" gorm:"size:4"`        //处理状态
-	Remark       string `json:"remark"`                      //处理备注
+	Level int `json:"level"` //等级
+	Start int `json:"start"` //每个等级的开始值
 }
 
-func (m *TipOff) BeforeCreate() (err error) {
+func (m *GrowthlLevel) BeforeCreate() (err error) {
 	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (m *TipOff) Add() error {
+func (m *GrowthlLevel) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -34,7 +32,7 @@ func (m *TipOff) Add() error {
 	return nil
 }
 
-func (m *TipOff) Delete(where interface{}, args ...interface{}) error {
+func (m *GrowthlLevel) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -47,7 +45,7 @@ func (m *TipOff) Delete(where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (m *TipOff) Update(update, where interface{}, args ...interface{}) error {
+func (m *GrowthlLevel) Update(update, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -60,7 +58,7 @@ func (m *TipOff) Update(update, where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (m *TipOff) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]TipOff, error) {
+func (m *GrowthlLevel) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]GrowthlLevel, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -69,16 +67,16 @@ func (m *TipOff) QueryList(field string, page, limit int, where interface{}, arg
 	}
 
 	mdb := db.GetMysqlDB()
-	var list = make([]TipOff, 0)
+	var list = make([]GrowthlLevel, 0)
 	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]TipOff, 0), err
+		return make([]GrowthlLevel, 0), err
 	}
 	return list, nil
 }
 
-func (m *TipOff) QueryOne(field string, where interface{}, args ...interface{}) error {
+func (m *GrowthlLevel) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
@@ -89,7 +87,7 @@ func (m *TipOff) QueryOne(field string, where interface{}, args ...interface{}) 
 	return nil
 }
 
-func (m *TipOff) QueryCount(where interface{}, args ...interface{}) (int, error) {
+func (m *GrowthlLevel) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
 	var count int
 	err := mdb.Model(m).Where(where, args...).Count(&count).Error
@@ -100,13 +98,13 @@ func (m *TipOff) QueryCount(where interface{}, args ...interface{}) (int, error)
 	return count, nil
 }
 
-func (m *TipOff) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]TipOff, error) {
+func (m *GrowthlLevel) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]GrowthlLevel, error) {
 	mdb := db.GetMysqlDB()
-	var list = make([]TipOff, 0)
+	var list = make([]GrowthlLevel, 0)
 	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]TipOff, 0), err
+		return make([]GrowthlLevel, 0), err
 	}
 	return list, nil
 }

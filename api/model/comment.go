@@ -16,28 +16,16 @@ type Comment struct {
 	ReplyCId     string `json:"replyCid" gorm:"size:30"`           //被回复评论的完整流水号
 }
 
-func (bc *Comment) BeforeCreate() (err error) {
-	bc.FlowId = time.Now().Unix()
+func (m *Comment) BeforeCreate() (err error) {
+	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (c *Comment) Add() error {
+func (m *Comment) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
-	err := tx.Create(c).Error
-	if err != nil {
-		util.LoggerError(err)
-		tx.Rollback()
-		return err
-	}
-	return nil
-}
-func (c *Comment) Delete(where interface{}, args ...interface{}) error {
-	mdb := db.GetMysqlDB()
-	tx := mdb.Begin()
-	defer tx.Commit()
-	err := tx.Model(c).Where(where, args...).Delete(c).Error
+	err := tx.Create(m).Error
 	if err != nil {
 		util.LoggerError(err)
 		tx.Rollback()
@@ -46,7 +34,33 @@ func (c *Comment) Delete(where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (c *Comment) QueryList(field string, page int, limit int, where interface{}, args ...interface{}) ([]Comment, error) {
+func (m *Comment) Delete(where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Delete(m).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *Comment) Update(update, where interface{}, args ...interface{}) error {
+	mdb := db.GetMysqlDB()
+	tx := mdb.Begin()
+	defer tx.Commit()
+	err := tx.Model(m).Where(where, args...).Updates(update).Error
+	if err != nil {
+		util.LoggerError(err)
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *Comment) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]Comment, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -56,7 +70,7 @@ func (c *Comment) QueryList(field string, page int, limit int, where interface{}
 
 	mdb := db.GetMysqlDB()
 	var list = make([]Comment, 0)
-	err := mdb.Model(c).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]Comment, 0), err
@@ -64,12 +78,35 @@ func (c *Comment) QueryList(field string, page int, limit int, where interface{}
 	return list, nil
 }
 
-func (c *Comment) QueryOne(field string, where interface{}, args ...interface{}) error {
+func (m *Comment) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	err := mdb.Model(c).Select(field).Where(where, args...).Last(c).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
 		util.LoggerError(err)
 		return err
 	}
+
 	return nil
+}
+
+func (m *Comment) QueryCount(where interface{}, args ...interface{}) (int, error) {
+	mdb := db.GetMysqlDB()
+	var count int
+	err := mdb.Model(m).Where(where, args...).Count(&count).Error
+	if err != nil {
+		util.LoggerError(err)
+		return 0, err
+	}
+	return count, nil
+}
+
+func (m *Comment) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]Comment, error) {
+	mdb := db.GetMysqlDB()
+	var list = make([]Comment, 0)
+	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
+	if err != nil {
+		util.LoggerError(err)
+		return make([]Comment, 0), err
+	}
+	return list, nil
 }

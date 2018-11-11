@@ -78,7 +78,7 @@ func (fl *FansOrFollowList) List(userId int64) interface{} {
 
 	//查询粉丝信息
 	var mu model.User
-	ulist, err := mu.QueryList("*", "id IN (?)", fansIdArr)
+	ulist, err := mu.QueryList("*", 0, fl.Limit, "id IN (?)", fansIdArr)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
@@ -108,7 +108,7 @@ func (fl *FansOrFollowList) FollowList(userId int64) interface{} {
 
 	//查询粉丝信息
 	var mu model.User
-	ulist, err := mu.QueryList("*", "id IN (?)", userIdArr)
+	ulist, err := mu.QueryList("*", 0, fl.Limit, "id IN (?)", userIdArr)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
