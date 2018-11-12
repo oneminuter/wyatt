@@ -15,7 +15,7 @@ const (
 	ModifyDesc = "desc" //简介
 
 	//最大查询条数
-	MAX_QUERY_COUNT = 30
+	MAX_QUERY_COUNT = 100
 
 	//表别名
 	CM   = "CM"   //评论表

@@ -18,9 +18,11 @@ type User struct {
 	Country   string `json:"country"`   //国家
 	Province  string `json:"province"`  //省份
 	City      string `json:"city"`      //城市
+	Avaliable int    `json:"avaliable"` //可用积分，可消耗
+	Level     int    `json:"level"`     //用户等级
 }
 
-func (u *User) HandlerRespUserInfo(mUser *model.User) {
+func (u *User) HandlerRespUserInfo(mUser *model.User, mi *model.Integral) {
 	u.Token = util.NewToken(mUser.ID, mUser.Status, mUser.UUID)
 	u.Account = mUser.Account
 	u.UUID = mUser.UUID
@@ -33,5 +35,7 @@ func (u *User) HandlerRespUserInfo(mUser *model.User) {
 	u.Country = mUser.Country
 	u.Province = mUser.Province
 	u.City = mUser.City
+	u.Avaliable = mi.Avaliable
+	u.Level = mi.Level
 	return
 }

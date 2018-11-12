@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/util"
 )
@@ -69,7 +70,7 @@ func (Community) IsManager(cId int64, userId int64) bool {
 		return true
 	}
 
-	managers, err := mcm.QueryList("*", 0, 999, "community_id = ?", mc.ID)
+	managers, err := mcm.QueryList("*", 0, constant.MAX_QUERY_COUNT, "community_id = ?", mc.ID)
 	if err != nil {
 		util.LoggerError(err)
 		return false

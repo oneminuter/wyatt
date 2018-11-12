@@ -26,7 +26,7 @@ func init() {
 	mdb := db.GetMysqlDB()
 	mdb.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		&Comment{}, &Community{}, &JoinedCommunity{}, &Message{}, &Topic{}, &Zan{}, &User{},
-		&CommunityManager{}, &TopicCollect{}, &Fans{})
+		&CommunityManager{}, &TopicCollect{}, &Fans{}, &Integral{}, &IntegralRecord{}, &IntegralRuler{}, &GrowthlLevel{})
 }
 
 //验证流水号是否合法

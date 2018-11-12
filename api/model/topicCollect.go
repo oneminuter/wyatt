@@ -10,8 +10,8 @@ import (
 type TopicCollect struct {
 	TableModel
 
-	TopicId int64 `json:"tid"`    //话题id, 主键id
-	UserId  int64 `json:"userId"` //用户id
+	TopicId int64 `json:"tid"`                //话题id, 主键id
+	UserId  int64 `json:"userId" sql:"index"` //用户id
 }
 
 func (m *TopicCollect) BeforeCreate() (err error) {

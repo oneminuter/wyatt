@@ -11,7 +11,7 @@ import (
 type Message struct {
 	TableModel
 
-	UserId   int64  `json:"userId"`                 //用户id
+	UserId   int64  `json:"userId" sql:"index"`     //用户id
 	MsgType  string `json:"msgType" gorm:"size:30"` //消息类型， system:系统消息，custom:自定义消息，可以根据该字段来判断是不是定向消息
 	Content  string `json:"content"`                //消息内容
 	IsViewed int    `json:"isViewed" gorm:"size:4"` //是否查看过

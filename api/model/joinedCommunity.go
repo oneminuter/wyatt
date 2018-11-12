@@ -11,8 +11,8 @@ import (
 type JoinedCommunity struct {
 	TableModel
 
-	UserId      int64 `json:"userId"`
-	CommunityId int64 `json:"communityId"` //社区id
+	UserId      int64 `json:"userId" sql:"index"`
+	CommunityId int64 `json:"communityId" sql:"index"` //社区id
 	Count       int   `json:"-" gorm:"-"`
 }
 

@@ -35,9 +35,18 @@ func (*User) Info(userId int64) interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
+	//查询积分信息
+	var mi model.Integral
+	mi.UserId = userId
+	err = mi.QueryOne("*", "user_id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
 	//返回数据
 	var vUser view.User
-	vUser.HandlerRespUserInfo(&mUser)
+	vUser.HandlerRespUserInfo(&mUser, &mi)
 	return view.SetRespData(&vUser)
 }
 
@@ -76,9 +85,22 @@ func (u *UserRegister) Register() interface{} {
 		return view.SetErr(constant.CreateUserErr)
 	}
 
+	//积分初始化
+	var mi = model.Integral{
+		Avaliable: 0,
+		Growth:    0,
+		UserId:    mUser.ID,
+		Level:     0,
+	}
+	err = mi.Add()
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.AddErr)
+	}
+
 	//返回数据
 	var vUser view.User
-	vUser.HandlerRespUserInfo(&mUser)
+	vUser.HandlerRespUserInfo(&mUser, &mi)
 	return view.SetRespData(&vUser)
 }
 
@@ -131,8 +153,15 @@ func (u *UserLogin) Login() interface{} {
 		return view.SetErr(constant.LoginErr)
 	}
 
+	var mi model.Integral
+	err = mi.QueryOne("*", "user_id = ?", mUser.ID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
 	//返回数据
 	var vUser view.User
-	vUser.HandlerRespUserInfo(&mUser)
+	vUser.HandlerRespUserInfo(&mUser, &mi)
 	return view.SetRespData(&vUser)
 }

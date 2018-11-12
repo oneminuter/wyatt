@@ -11,13 +11,13 @@ import (
 type Topic struct {
 	TableModel
 
-	Title       string `json:"title" gorm:"size:30"`  //标题
-	Desc        string `json:"desc" gorm:"type:text"` //简介，详情，或者内容
-	CommunityId int64  `json:"communityId"`           //所属社区id
-	CreatorId   int64  `json:"creatorId"`             //创建者id
-	ViewedNum   int64  `json:"viewedNum"`             //浏览量
-	ZanNum      int64  `json:"zanNum"`                //点赞量
-	CommentNum  int64  `json:"commentNum"`            //评论数量
+	Title       string `json:"title" gorm:"size:30"`    //标题
+	Desc        string `json:"desc" gorm:"type:text"`   //简介，详情，或者内容
+	CommunityId int64  `json:"communityId" sql:"index"` //所属社区id
+	CreatorId   int64  `json:"creatorId" sql:"index"`   //创建者id
+	ViewedNum   int64  `json:"viewedNum"`               //浏览量
+	ZanNum      int64  `json:"zanNum"`                  //点赞量
+	CommentNum  int64  `json:"commentNum"`              //评论数量
 	Count       int    `json:"-" gorm:"-"`
 }
 

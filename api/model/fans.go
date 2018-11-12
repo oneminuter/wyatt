@@ -10,8 +10,8 @@ import (
 //关注粉丝
 type Fans struct {
 	TableModel
-	UserId     int64 `json:"userId"`     //用户id
-	FansUserId int64 `json:"fansUserId"` //订阅者，粉丝的用户id
+	UserId     int64 `json:"userId" sql:"index"`     //用户id
+	FansUserId int64 `json:"fansUserId" sql:"index"` //订阅者，粉丝的用户id
 }
 
 func (m *Fans) BeforeCreate() (err error) {

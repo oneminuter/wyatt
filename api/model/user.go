@@ -11,23 +11,23 @@ import (
 type User struct {
 	TableModel
 
-	Account        string `json:"account" gorm:"unique"`     //账号, 临时账号为 10 位随机字符串
-	Password       string `json:"password"`                  //密码
-	RandomStr      string `json:"-"`                         //密码加密随机字符串
-	Phone          string `json:"phone" gorm:"size:30"`      //手机号
-	UUID           string `json:"uuid" gorm:"size:50"`       //用户标识, MD5随机字符串
-	NickName       string `json:"nickName" gorm:"size:50"`   //昵称
-	Sex            int    `json:"sex" gorm:"size:4"`         //性别 0 未知, 1 男, 2 女
-	Name           string `json:"name" gorm:"size:30"`       //姓名
-	Email          string `json:"email" gorm:"size:50"`      //邮箱
-	AvatarUrl      string `json:"avatarUrl"`                 //头像
-	Country        string `json:"country" gorm:"size:50"`    //国家
-	Province       string `json:"province" gorm:"size:50"`   //省份
-	City           string `json:"city" gorm:"size:50"`       //城市
-	RegisterIp     string `json:"registerIp" gorm:"size:30"` //注册ip
-	Status         int64  `json:"status" gorm:"size:4"`      //用户状态: -1 封禁用户, 0 临时用户 1或空位正常用户
-	IsSetedAccount bool   `json:"-"`                         //是否设置过account, 每人只能设置一次
-	Signature      string `json:"signature"`                 //个性签名
+	Account        string `json:"account" gorm:"unique" sql:"index"` //账号, 临时账号为 10 位随机字符串
+	Password       string `json:"password"`                          //密码
+	RandomStr      string `json:"-"`                                 //密码加密随机字符串
+	Phone          string `json:"phone" gorm:"size:30" sql:"index"`  //手机号
+	UUID           string `json:"uuid" gorm:"size:50"`               //用户标识, MD5随机字符串
+	NickName       string `json:"nickName" gorm:"size:50"`           //昵称
+	Sex            int    `json:"sex" gorm:"size:4"`                 //性别 0 未知, 1 男, 2 女
+	Name           string `json:"name" gorm:"size:30"`               //姓名
+	Email          string `json:"email" gorm:"size:50"`              //邮箱
+	AvatarUrl      string `json:"avatarUrl"`                         //头像
+	Country        string `json:"country" gorm:"size:50"`            //国家
+	Province       string `json:"province" gorm:"size:50"`           //省份
+	City           string `json:"city" gorm:"size:50"`               //城市
+	RegisterIp     string `json:"registerIp" gorm:"size:30"`         //注册ip
+	Status         int64  `json:"status" gorm:"size:4"`              //用户状态: -1 封禁用户, 0 临时用户 1或空位正常用户
+	IsSetedAccount bool   `json:"-"`                                 //是否设置过account, 每人只能设置一次
+	Signature      string `json:"signature"`                         //个性签名
 }
 
 func (m *User) BeforeCreate() (err error) {

@@ -11,8 +11,8 @@ import (
 type Zan struct {
 	TableModel
 	UserId       int64  `json:"userId"` //触发者用户id
-	OwnerId      int64  `json:"ownerId"`
-	SourceFlowId string `json:"sourceFlowId" gorm:"size:30"` //赞来源流水号，完整流水号
+	OwnerId      int64  `json:"ownerId" sql:"index"`
+	SourceFlowId string `json:"sourceFlowId" gorm:"size:30" sql:"index"` //赞来源流水号，完整流水号
 }
 
 func (m *Zan) BeforeCreate() (err error) {

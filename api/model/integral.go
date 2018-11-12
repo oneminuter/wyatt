@@ -11,10 +11,10 @@ import (
 type Integral struct {
 	TableModel
 
-	Avaliable int   `json:"avaliable"` //可用积分，可消耗，1积分等于1分钱
-	Growth    int   `json:"growth"`    //成长值，判断用户等级
-	UserId    int64 `json:"userId"`    //用户id
-	Level     int   `json:"level"`     //用户等级
+	Avaliable int   `json:"avaliable"`          //可用积分，可消耗，1积分等于1分钱
+	Growth    int   `json:"growth"`             //成长值，判断用户等级
+	UserId    int64 `json:"userId" sql:"index"` //用户id
+	Level     int   `json:"level"`              //用户等级
 }
 
 func (m *Integral) BeforeCreate() (err error) {
@@ -81,12 +81,15 @@ func (m *Integral) QueryList(field string, page, limit int, where interface{}, a
 
 func (m *Integral) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
-	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
-	if err != nil {
-		util.LoggerError(err)
-		return err
+	notFound := mdb.Model(m).Select(field).Where(where, args...).Last(m).RecordNotFound()
+	//不存在，则初始化一条记录
+	if notFound {
+		err := mdb.FirstOrCreate(m).Error
+		if err != nil {
+			util.LoggerError(err)
+			return err
+		}
 	}
-
 	return nil
 }
 

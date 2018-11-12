@@ -9,12 +9,8 @@ import (
 
 //积分获得与消费记录
 type IntegralRecord struct {
-	TableModel
-
-	Operate   int     `json:"operate"`                    //操作字符串，1 发表文章，2 参与话题并发表评论...
-	Integral  int     `json:"integral"`                   //本次操作对应积分，小于0为消耗的积分，大于0为获得的积分
-	SpeedRate float64 `json:"speedRate" gorm:"default:1"` //获得成长值的倍率，一般情况下，获得1积分同时可获得1成长值，特殊活动可得到不同倍率的成长值
-	Growth    int     `json:"growth"`                     //获得成长值，当为消耗时，获得成长值可能为0
+	IntegralRuler
+	Growth int `json:"growth"` //获得成长值，当为消耗时，获得成长值可能为0
 }
 
 func (m *IntegralRecord) BeforeCreate() (err error) {
