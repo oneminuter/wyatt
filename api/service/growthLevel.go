@@ -11,7 +11,7 @@ type GrowthLevel struct{}
 //启动时，将等级划分规则加载到内存中
 var levels = []model.GrowthlLevel{}
 
-func init() {
+func (*GrowthLevel) initGrowthLevel() {
 	var (
 		mgl model.GrowthlLevel
 		err error

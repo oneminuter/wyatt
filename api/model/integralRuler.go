@@ -5,6 +5,8 @@ import (
 	"wyatt/api/constant"
 	"wyatt/db"
 	"wyatt/util"
+
+	"github.com/jinzhu/gorm"
 )
 
 //积分获取和消费规则，定义每个操作对应获取的积分或者消耗的积分
@@ -14,6 +16,36 @@ type IntegralRuler struct {
 	Operate   string  `json:"operate" sql:"index" gorm:"size:50"` //操作字符串，1 发表文章，2 参与话题并发表评论...
 	Integral  int     `json:"integral"`                           //本次操作对应积分，小于0为消耗的积分，大于0为获得的积分
 	SpeedRate float64 `json:"speedRate" gorm:"default:1"`         //获得成长值的倍率，一般情况下，获得1积分同时可获得1成长值，特殊活动可得到不同倍率的成长值
+}
+
+//获取和消费积分的一些操作
+var (
+	OPT_REGISTER         = "register"        //注册
+	OPT_LOGIN            = "login"           //登录
+	OPT_CREATE_COMMUNITY = "createCommunity" //创建社区
+	OPT_ADD_TOPIC        = "addTopic"        //添加话题
+	OPT_ADD_COMMENT      = "addComment"      //添加评论
+	OPT_GET_ZAN          = "getZan"          //获得赞
+)
+
+//初始化数据
+var integralRulerInitDataList = []*IntegralRuler{
+	{TableModel: TableModel{ID: 1}, Operate: OPT_REGISTER, Integral: 20, SpeedRate: 1},
+	{TableModel: TableModel{ID: 2}, Operate: OPT_LOGIN, Integral: 5, SpeedRate: 1},
+	{TableModel: TableModel{ID: 3}, Operate: OPT_CREATE_COMMUNITY, Integral: 10, SpeedRate: 1},
+	{TableModel: TableModel{ID: 4}, Operate: OPT_ADD_TOPIC, Integral: 10, SpeedRate: 1},
+	{TableModel: TableModel{ID: 5}, Operate: OPT_ADD_COMMENT, Integral: 5, SpeedRate: 1},
+	{TableModel: TableModel{ID: 6}, Operate: OPT_GET_ZAN, Integral: 1, SpeedRate: 1},
+}
+
+//积分规则数据初始化
+func (*IntegralRuler) initIntegralRuler(mdb *gorm.DB) {
+	for _, v := range integralRulerInitDataList {
+		err := mdb.Where("id = ?", v.ID).FirstOrCreate(v).Error
+		if err != nil {
+			util.LoggerError(err)
+		}
+	}
 }
 
 func (m *IntegralRuler) BeforeCreate() (err error) {

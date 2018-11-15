@@ -27,6 +27,14 @@ func init() {
 	mdb.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		&Comment{}, &Community{}, &JoinedCommunity{}, &Message{}, &Topic{}, &Zan{}, &User{},
 		&CommunityManager{}, &TopicCollect{}, &Fans{}, &Integral{}, &IntegralRecord{}, &IntegralRuler{}, &GrowthlLevel{})
+
+	//基础数据初始化
+	var (
+		gl GrowthlLevel
+		ir IntegralRuler
+	)
+	gl.initGrowthLevel(mdb)
+	ir.initIntegralRuler(mdb)
 }
 
 //验证流水号是否合法

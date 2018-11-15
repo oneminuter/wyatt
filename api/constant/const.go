@@ -27,6 +27,7 @@ const (
 	U    = "U"    //用户
 	CMTM = "CMTM" //社区管理员
 	TPC  = "TPC"  //话题收藏表
+
 )
 
 //表别名:表名 map

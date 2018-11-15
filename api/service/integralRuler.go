@@ -11,7 +11,7 @@ type IntegralRuler struct{}
 //缓存积分获取与消费规则
 var rulers = []model.IntegralRuler{}
 
-func init() {
+func (*IntegralRuler) initIntegralRuler() {
 	var (
 		ir  model.IntegralRuler
 		err error
@@ -24,7 +24,7 @@ func init() {
 	util.Logger("缓存积分或获取与消耗规则")
 }
 
-//获取积分列表
+//获取积分规则列表
 func (gl *IntegralRuler) GetIntegralRulerList() []model.IntegralRuler {
 	if 0 < len(levels) {
 		util.Logger("从缓存积分或获取与消耗规则")
