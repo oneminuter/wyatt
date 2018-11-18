@@ -59,6 +59,11 @@ func (za *Zan) Add(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.AddErr)
 	}
+
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(mz.OwnerId, model.OPT_GET_ZAN)
+
 	return view.SetErr(constant.Success)
 }
 
@@ -79,6 +84,11 @@ func (za *Zan) Delete(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.ModifyErr)
 	}
+
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(mz.OwnerId, model.OPT_CANCEL_ZAN)
+
 	return view.SetErr(constant.Success)
 }
 

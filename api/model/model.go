@@ -26,15 +26,15 @@ func init() {
 	mdb := db.GetMysqlDB()
 	mdb.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		&Comment{}, &Community{}, &JoinedCommunity{}, &Message{}, &Topic{}, &Zan{}, &User{},
-		&CommunityManager{}, &TopicCollect{}, &Fans{}, &Integral{}, &IntegralRecord{}, &IntegralRuler{}, &GrowthlLevel{})
+		&CommunityManager{}, &TopicCollect{}, &Fans{}, &Integral{}, &IntegralRecord{}, &IntegralRule{}, &GrowthlLevel{})
 
 	//基础数据初始化
 	var (
 		gl GrowthlLevel
-		ir IntegralRuler
+		ir IntegralRule
 	)
 	gl.initGrowthLevel(mdb)
-	ir.initIntegralRuler(mdb)
+	ir.initIntegralRule(mdb)
 }
 
 //验证流水号是否合法

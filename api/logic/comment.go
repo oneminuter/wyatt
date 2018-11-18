@@ -100,6 +100,10 @@ func (ca *CommentAdd) Add(userId int64) interface{} {
 		return view.SetErr(constant.AddErr)
 	}
 
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(userId, model.OPT_ADD_COMMENT)
+
 	return view.SetErr(constant.Success)
 }
 

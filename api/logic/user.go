@@ -98,6 +98,10 @@ func (u *UserRegister) Register() interface{} {
 		return view.SetErr(constant.AddErr)
 	}
 
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(mUser.ID, model.OPT_REGISTER)
+
 	//返回数据
 	var vUser view.User
 	vUser.HandlerRespUserInfo(&mUser, &mi)
@@ -159,6 +163,10 @@ func (u *UserLogin) Login() interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
 	}
+
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(mUser.ID, model.OPT_LOGIN)
 
 	//返回数据
 	var vUser view.User

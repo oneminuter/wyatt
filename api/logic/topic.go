@@ -106,6 +106,11 @@ func (ta *TopicAdd) Add(creatorId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.AddErr)
 	}
+
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(creatorId, model.OPT_ADD_TOPIC)
+
 	return view.SetErr(constant.Success)
 }
 

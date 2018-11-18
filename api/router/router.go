@@ -12,11 +12,11 @@ func Router(server *gin.Engine) {
 	//用户
 	userGroup := server.Group("/user")
 	userGroup.GET("/info", handler.UserInfo)
-	userGroup.POST("/info/modify")
 	userGroup.POST("/register", handler.UserRegister)
 	userGroup.POST("/login", handler.UserLogin)
-	userGroup.POST("/password/modify")
-	userGroup.POST("/password/reset")
+	userGroup.POST("/info/modify")     //todo
+	userGroup.POST("/password/modify") //todo
+	userGroup.POST("/password/reset")  //todo
 
 	//社区
 	communityGroup := server.Group("/community")

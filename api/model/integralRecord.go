@@ -9,8 +9,9 @@ import (
 
 //积分获得与消费记录
 type IntegralRecord struct {
-	IntegralRuler
-	Growth int `json:"growth"` //获得成长值，当为消耗时，获得成长值可能为0
+	IntegralRule
+	UserId int64 `json:"userId"` //用户id
+	Growth int   `json:"growth"` //获得成长值，当为消耗时，获得成长值可能为0
 }
 
 func (m *IntegralRecord) BeforeCreate() (err error) {

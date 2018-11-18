@@ -91,6 +91,11 @@ func (cc *CommunityCreate) Create(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.CommunityCreateErr)
 	}
+
+	//送积分
+	var sir service.IntegralRecord
+	go sir.AddIntegral(userId, model.OPT_CREATE_COMMUNITY)
+
 	return view.SetErr(constant.Success)
 }
 
