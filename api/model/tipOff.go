@@ -12,7 +12,8 @@ type TipOff struct {
 	TableModel
 	UserId       int64  `json:"userId"`                                  //用户id
 	SourceFlowId string `json:"sourceFlowId" gorm:"size:30" sql:"index"` //举报内容完整流水号
-	Status       int    `json:"status" gorm:"size:4"`                    //处理状态
+	Reason       string `json:"reason"`                                  //举报原因
+	Status       int    `json:"status" gorm:"size:4"`                    //处理状态, 0 未处理，1 已处理
 	Remark       string `json:"remark"`                                  //处理备注
 }
 

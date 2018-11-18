@@ -10,13 +10,13 @@ func Router(server *gin.Engine) {
 	server.GET("ping", handler.Ping)
 
 	//用户
-	userGroup := server.Group("/user")
+	userGroup := server.Group("/user") //todo
 	userGroup.GET("/info", handler.UserInfo)
 	userGroup.POST("/register", handler.UserRegister)
 	userGroup.POST("/login", handler.UserLogin)
-	userGroup.POST("/info/modify")     //todo
-	userGroup.POST("/password/modify") //todo
-	userGroup.POST("/password/reset")  //todo
+	userGroup.POST("/info/modify")
+	userGroup.POST("/password/modify")
+	userGroup.POST("/password/reset")
 
 	//社区
 	communityGroup := server.Group("/community")
@@ -74,10 +74,10 @@ func Router(server *gin.Engine) {
 
 	//举报
 	tipGroup := server.Group("/tip")
-	tipGroup.POST("/add") //todo
+	tipGroup.POST("/add", handler.TipAdd)
 
 	//故事
-	storyGroup := server.Group("/story")
+	storyGroup := server.Group("/story") //todo
 	storyGroup.POST("/add")
 	storyGroup.GET("/list")        //某用户的所有零散故事列表
 	storyGroup.GET("/series/list") //系列列表
