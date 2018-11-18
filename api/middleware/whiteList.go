@@ -5,6 +5,7 @@ var whiteUrlList = []string{
 	"/ping",
 	"/user/login",
 	"/user/register",
+	"/advise/add",
 }
 
 //判断请求url是否在白名单中
