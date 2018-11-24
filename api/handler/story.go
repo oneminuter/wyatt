@@ -42,6 +42,7 @@ var StoryList = func(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, param.List())
 }
+
 var StoryModify = func(ctx *gin.Context) {}
 var StoryContentModify = func(ctx *gin.Context) {}
 var StorySeriesList = func(ctx *gin.Context) {}

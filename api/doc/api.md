@@ -943,6 +943,38 @@
 }
 ```
 
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 举报
+
+**Post /tip/add**
+
+### 请求参数
+```shell
+{
+    "sourceFlowId":"string", //举报内容流水号id
+    "reason":"string", //举报原因
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
 ***
 
 ## 添加故事
