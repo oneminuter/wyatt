@@ -7,23 +7,19 @@ import (
 	"wyatt/util"
 )
 
-//故事角色
-type StoryRole struct {
+//系列故事集合，整合系列和故事的关系，系列：故事（1：n）
+type SeriseStoryGather struct {
 	TableModel
-	AvatarUrl string `json:"avatarUrl"` //角色头像
-	Nickname  string `json:"nickname"`  //角色昵称
-	Sex       int    `json:"sex"`       //角色性别 0 未知， 1 男， 2 女
-	Introduce string `json:"introduce"` //角色介绍
-	StoryId   int64  `json:"storyId"`   //所属故事id
-	CreatorId int64  `json:"creatorId"` //创建者用户id
+	SeriesId int64 `json:"seriesId"` //系列id
+	StoryId  int64 `json:"storyId"`  //故事id
 }
 
-func (m *StoryRole) BeforeCreate() (err error) {
+func (m *SeriseStoryGather) BeforeCreate() (err error) {
 	m.FlowId = time.Now().Unix()
 	return
 }
 
-func (m *StoryRole) Add() error {
+func (m *SeriseStoryGather) Add() error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -36,7 +32,7 @@ func (m *StoryRole) Add() error {
 	return nil
 }
 
-func (m *StoryRole) Delete(where interface{}, args ...interface{}) error {
+func (m *SeriseStoryGather) Delete(where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -49,7 +45,7 @@ func (m *StoryRole) Delete(where interface{}, args ...interface{}) error {
 	return nil
 }
 
-func (m *StoryRole) Update(update, where interface{}, args ...interface{}) error {
+func (m *SeriseStoryGather) Update(update, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	tx := mdb.Begin()
 	defer tx.Commit()
@@ -62,7 +58,7 @@ func (m *StoryRole) Update(update, where interface{}, args ...interface{}) error
 	return nil
 }
 
-func (m *StoryRole) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]StoryRole, error) {
+func (m *SeriseStoryGather) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]SeriseStoryGather, error) {
 	if 0 > page {
 		page = 0
 	}
@@ -71,16 +67,16 @@ func (m *StoryRole) QueryList(field string, page, limit int, where interface{}, 
 	}
 
 	mdb := db.GetMysqlDB()
-	var list = make([]StoryRole, 0)
+	var list = make([]SeriseStoryGather, 0)
 	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]StoryRole, 0), err
+		return make([]SeriseStoryGather, 0), err
 	}
 	return list, nil
 }
 
-func (m *StoryRole) QueryOne(field string, where interface{}, args ...interface{}) error {
+func (m *SeriseStoryGather) QueryOne(field string, where interface{}, args ...interface{}) error {
 	mdb := db.GetMysqlDB()
 	err := mdb.Model(m).Select(field).Where(where, args...).Last(m).Error
 	if err != nil {
@@ -91,7 +87,7 @@ func (m *StoryRole) QueryOne(field string, where interface{}, args ...interface{
 	return nil
 }
 
-func (m *StoryRole) QueryCount(where interface{}, args ...interface{}) (int, error) {
+func (m *SeriseStoryGather) QueryCount(where interface{}, args ...interface{}) (int, error) {
 	mdb := db.GetMysqlDB()
 	var count int
 	err := mdb.Model(m).Where(where, args...).Count(&count).Error
@@ -102,13 +98,13 @@ func (m *StoryRole) QueryCount(where interface{}, args ...interface{}) (int, err
 	return count, nil
 }
 
-func (m *StoryRole) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]StoryRole, error) {
+func (m *SeriseStoryGather) QueryGrounp(field string, group string, where interface{}, args ...interface{}) ([]SeriseStoryGather, error) {
 	mdb := db.GetMysqlDB()
-	var list = make([]StoryRole, 0)
+	var list = make([]SeriseStoryGather, 0)
 	err := mdb.Model(m).Select(field).Where(where, args...).Group(group).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
-		return make([]StoryRole, 0), err
+		return make([]SeriseStoryGather, 0), err
 	}
 	return list, nil
 }

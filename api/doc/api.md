@@ -819,7 +819,7 @@
 
 ***
 
-## 休息详情
+## 消息详情
 
 **Get /message/detaill**
 
@@ -877,6 +877,146 @@
 ```shell
 {
     "mId": "string" //消息流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 用户建议
+
+**Post /advise/add**
+
+### 请求参数
+```shell
+{
+    "content":"string", //建议内容, 必须
+    "phone":"string", //建议人手机号， 非必须
+    "email":"string", //建议人邮箱，非必须
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 用户建议列表
+
+**Post /advise/list**
+
+### 请求参数
+```shell
+{
+    "page":"int", //页码
+    "limit":"int", //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "content": "建议123", //建议内容
+            "status": 0, //处理状态
+            "remark": "", //处理备注
+            "createdAt": 1543074241 //处理时间
+        }
+    ]
+}
+```
+
+***
+
+## 添加故事
+
+**Post /story/add**
+
+### 请求参数
+```shell
+{
+    "title":"string", //故事标题
+    "desc":"string", //标题
+    "classify":"string", //分类
+    "coverImg":"http://blog.oneminuter.com/favicon.ico" //封面图
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 故事列表
+
+**Get /story/list**
+
+### 请求参数
+```shell
+{
+    "page":"int", //请求页码
+    "limit":"int", //请求条数
+    "userAccour":"string", //作者账号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "storyId": "S.1.1543076097", //故事流水号id
+            "title": "一个人的故事", //故事标题
+            "desc": "", //故事简介
+            "classify": "", //分类
+            "coverImg": "", //封面图
+            "viewedNum": 0, //浏览量
+            "zanNum": 0, //点赞数
+            "commentNum": 0 //评论数
+        }
+    ]
+}
+```
+
+***
+
+## 添加角色
+
+**Get /role/add**
+
+### 请求参数
+```shell
+{
+    "storyId":"string", //为哪个故事添加角色，该故事的流水号id，该参数必须
+    "nickname":"string", //角色昵称，该参数必须
+    "sex":"int", //角色性别，非必须
+    "avatarUrl": "string", //角色头像
+    "introduce": "string", //角色介绍
 }
 ```
 

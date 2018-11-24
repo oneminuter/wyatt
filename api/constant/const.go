@@ -27,7 +27,7 @@ const (
 	U    = "U"    //用户
 	CMTM = "CMTM" //社区管理员
 	TPC  = "TPC"  //话题收藏表
-
+	S    = "S"    //故事
 )
 
 //表别名:表名 map
@@ -43,6 +43,7 @@ var (
 		U:    "users",
 		CMTM: "community_managers",
 		TPC:  "topic_collects",
+		S:    "stories",
 	}
 	TableAliasNameMap = map[string]string{
 		TabelMap[CM]:   "评论",
@@ -54,5 +55,6 @@ var (
 		TabelMap[U]:    "用户",
 		TabelMap[CMTM]: "社区管理",
 		TabelMap[TPC]:  "话题收藏",
+		TabelMap[S]:    "故事",
 	}
 )

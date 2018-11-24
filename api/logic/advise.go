@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"log"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/view"
@@ -42,6 +43,8 @@ func (al *AdviseList) List(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.QueryDBErr)
 	}
+
+	log.Println(advises)
 
 	var sa view.Advise
 	respData := sa.HandlerRespList(advises)

@@ -27,7 +27,7 @@ func init() {
 	mdb.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		&Comment{}, &Community{}, &JoinedCommunity{}, &Message{}, &Topic{}, &Zan{}, &User{},
 		&CommunityManager{}, &TopicCollect{}, &Fans{}, &Integral{}, &IntegralRecord{}, &IntegralRule{},
-		&GrowthlLevel{}, &Series{}, &Story{}, StoryContent{})
+		&GrowthlLevel{}, &Series{}, &Story{}, &StoryRole{}, &StoryContent{}, &SeriseStoryGather{}, &Advise{})
 
 	//基础数据初始化
 	var (
