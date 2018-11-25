@@ -17,7 +17,7 @@ func Router(server *gin.Engine) {
 	userGroup.POST("/login", handler.UserLogin)
 	userGroup.POST("/info/modify", handler.UserinfoModify)
 	userGroup.POST("/account/modify", handler.UserAccountModify) //修改账号，以为账号目前定的是用户只能修改一次
-	userGroup.POST("/password/modify")
+	userGroup.POST("/password/modify", handler.UserPasswordModify)
 	userGroup.POST("/password/reset")
 
 	//社区

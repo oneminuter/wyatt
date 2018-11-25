@@ -41,6 +41,11 @@ type UserAccountModify struct {
 	Account string `json:"account" form:"account" binding:"required"` //账号
 }
 
+type UserPasswordModify struct {
+	OldPassword string `json:"oldPassword"` //老密码
+	NewPassword string `json:"newPassword"` //新密码
+}
+
 //用户信息
 func (*User) Info(userId int64) interface{} {
 	//获取用户信息
@@ -252,6 +257,42 @@ func (uam *UserAccountModify) Modify(userId int64) interface{} {
 	//修改
 	mu.Account = uam.Account
 	err = mu.Update(map[string]string{"account": uam.Account}, "id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
+}
+
+//修改密码
+func (upm *UserPasswordModify) Modify(userId int64) interface{} {
+	//查询用户信息
+	var mu model.User
+	err := mu.QueryOne("*", "id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//判断用户是否是临时用户，临时用户不能修改密码
+	if 0 == mu.Status {
+		return view.SetErr(constant.TempUserNntCanModify)
+	}
+
+	//验证旧密码是否正确
+	var su service.User
+	if !su.ValidatePassword(mu.RandomStr, upm.OldPassword, mu.Password) {
+		return view.SetErr(constant.PasswordErr)
+	}
+
+	//加密新的密码
+	randomStr, password := su.MakePassword(upm.NewPassword)
+
+	//更新数据库
+	err = mu.Update(map[string]string{
+		"password":   password,
+		"random_str": randomStr,
+	}, "id = ?", userId)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.ModifyErr)

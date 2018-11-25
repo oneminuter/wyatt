@@ -104,3 +104,16 @@ var UserAccountModify = func(ctx *gin.Context) {
 	userId := ctx.GetInt64("userId")
 	ctx.JSON(http.StatusOK, param.Modify(userId))
 }
+
+//修改密码
+var UserPasswordModify = func(ctx *gin.Context) {
+	var param logic.UserPasswordModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Modify(userId))
+}

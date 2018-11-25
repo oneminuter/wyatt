@@ -70,6 +70,9 @@ func (*User) MakePassword(str string) (randomStr, password string) {
 /*
 验证密码
 传入加密的随机字符串，明文密码，加密后的密码
+randomStr：加密随机字符串
+pass: 密文密码，没有加密之前的密码
+password：加密后的密码
 */
 func (*User) ValidatePassword(randomStr, pass, password string) bool {
 	p1 := util.MD5(pass)

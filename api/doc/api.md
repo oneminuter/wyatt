@@ -207,6 +207,29 @@
 
 ***
 
+## 修改登录密码
+
+**Post /user/password/modify**
+
+### 请求参数
+```shell
+{
+    "oldPassword":"string", //旧密码
+    "newPassword":"string", //新密码
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
 ## 所有社区列表
 **Get /community/list/all**
 
