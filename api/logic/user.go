@@ -26,6 +26,22 @@ type UserLogin struct {
 	Password string `json:"password" form:"password" binding:"required"` //密码
 }
 
+//修改用户信息
+type UserinfoModify struct {
+	Phone     string `json:"phone" form:"phone"`         //电话
+	Nickname  string `json:"nickName" form:"nickname"`   //昵称
+	Sex       int    `json:"sex" form:"sex"`             //性别
+	Name      string `json:"name" form:"name"`           //姓名
+	Email     string `json:"email" form:"email"`         //邮箱
+	AvatarUrl string `json:"avatarUrl" form:"avatarUrl"` //头像
+	Signature string `json:"signature" form:"signature"` //个性签名
+}
+
+type UserAccountModify struct {
+	Account string `json:"account" form:"account" binding:"required"` //账号
+}
+
+//用户信息
 func (*User) Info(userId int64) interface{} {
 	//获取用户信息
 	var mUser model.User
@@ -51,18 +67,22 @@ func (*User) Info(userId int64) interface{} {
 }
 
 //新增临时用户
-func (*User) AddTempUser(ip string) (userId int64, err error) {
+func (*User) AddTempUser(ip string) interface{} {
 	//构建一个用户
 	var sUser service.User
 	mUser := sUser.GenerateUser("", ip, 0)
 
 	//存入数据库
-	err = mUser.Add()
+	err := mUser.Add()
 	if err != nil {
 		util.LoggerError(err)
+		return view.SetErr(constant.CreateUserErr)
 	}
-	userId = mUser.ID
-	return
+
+	//返回
+	var vu view.User
+	vu.HandlerRespUserInfo(&mUser, &model.Integral{})
+	return view.SetRespData(vu)
 }
 
 /*
@@ -172,4 +192,69 @@ func (u *UserLogin) Login() interface{} {
 	var vUser view.User
 	vUser.HandlerRespUserInfo(&mUser, &mi)
 	return view.SetRespData(&vUser)
+}
+
+//修改用户信息
+func (um *UserinfoModify) Modify(userId int64) interface{} {
+	var modify = make(map[string]interface{})
+	if "" != strings.TrimSpace(um.Name) {
+		modify["name"] = um.Name
+	}
+	if "" != strings.TrimSpace(um.AvatarUrl) {
+		modify["avatar_url"] = um.AvatarUrl
+	}
+	if "" != strings.TrimSpace(um.Email) {
+		modify["email"] = um.Email
+	}
+	if "" != strings.TrimSpace(um.Phone) {
+		modify["phone"] = um.Phone
+	}
+	if "" != strings.TrimSpace(um.Signature) {
+		modify["signature"] = um.Signature
+	}
+	if "" != strings.TrimSpace(um.Nickname) {
+		modify["nick_name"] = um.Nickname
+	}
+	if 0 < um.Sex && 3 > um.Sex {
+		modify["sex"] = um.Sex
+	}
+
+	//修改
+	var mu model.User
+	err := mu.Update(modify, "id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
+}
+
+//用户修改账号
+func (uam *UserAccountModify) Modify(userId int64) interface{} {
+	//查询用户信息
+	var mu model.User
+	err := mu.QueryOne("*", "id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//判断是否是临时用户，临时用户不能修改账号
+	if 0 == mu.Status {
+		return view.SetErr(constant.TempUserNntCanModify)
+	}
+
+	//判断用户是否第一次修改
+	if mu.IsSetedAccount {
+		return view.SetErr(constant.CanModifyOneTime)
+	}
+
+	//修改
+	mu.Account = uam.Account
+	err = mu.Update(map[string]string{"account": uam.Account}, "id = ?", userId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
 }

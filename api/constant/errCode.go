@@ -37,6 +37,9 @@ const (
 	IncorrectFlowNumber                = 632 //错误的流水号
 	RepeatOperate                      = 633 //重复的操作
 	TargetAccountForbid                = 634 //目标用户已被封禁
+	MustLogin                          = 635 //你还没有登录，请先登录
+	CanModifyOneTime                   = 636 //账号只能修改一次
+	TempUserNntCanModify               = 637 //临时用户不能修改
 )
 
 var ErrMap = map[int]string{
@@ -75,4 +78,7 @@ var ErrMap = map[int]string{
 	IncorrectFlowNumber:                "错误的流水号",
 	RepeatOperate:                      "重复的操作",
 	TargetAccountForbid:                "目标用户已被封禁",
+	MustLogin:                          "你还没有登录，请先登录",
+	CanModifyOneTime:                   "账号只能修改一次",
+	TempUserNntCanModify:               "临时用户不能修改",
 }

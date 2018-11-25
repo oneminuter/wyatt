@@ -14,16 +14,20 @@
     "errCode": 200,
     "errMsg": "",
     "data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0ZThhOTY2MTRkNTU2NWIwOWJkY2EzMDQxYzFhZmU2MiIsImV4cCI6MTUzODE4ODExNCwianRpIjoiMSJ9.a4ACiS2kTkr2mWeC3cPpD43LgIZIoVaH-LtyunP0DcM", //用户标识jwt
-        "account": "y0KjesQn7Q", //账号
-        "uuid": "4e8a96614d5565b09bdca3041c1afe62", //用户标识
-        "nickName": "y0KjesQn7Q", //昵称
-        "sex": 0, //性别
-        "name": "", //名字
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYzQ5ZTBhZmQ4MGZhNDIzZWY0NjU0MzYyNTJmMjgyNiIsImV4cCI6MTU0NTczNDIyMCwianRpIjoiMSIsImlhdCI6MX0.1tGsLd094pImTZYCCwPbdgG4fusvV0uj-qD_OiAFI1M", //token
+        "account": "1234", //账号
+        "uuid": "bc49e0afd80fa423ef465436252f2826", //uuid
+        "email": "1050086935@qq.com", //邮箱
+        "nickName": "  一分钟", //昵称
+        "sex": 1, //性别
+        "name": "小林", //名字
         "avatarUrl": "http://blog.oneminuter.com/favicon.ico", //头像
+        "signature": "each youth will be old", //个性签名
         "country": "XX", //国家
         "province": "XX", //省份
-        "city": "内网IP" //城市
+        "city": "内网IP", //城市
+        "avaliable": 0, //可用积分
+        "level": 0 //等级
     }
 }
 ```
@@ -47,16 +51,52 @@
     "errCode": 200,
     "errMsg": "",
     "data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0ZThhOTY2MTRkNTU2NWIwOWJkY2EzMDQxYzFhZmU2MiIsImV4cCI6MTUzODE4ODExNCwianRpIjoiMSJ9.a4ACiS2kTkr2mWeC3cPpD43LgIZIoVaH-LtyunP0DcM", //用户标识jwt
-        "account": "y0KjesQn7Q", //账号
-        "uuid": "4e8a96614d5565b09bdca3041c1afe62", //用户标识
-        "nickName": "y0KjesQn7Q", //昵称
-        "sex": 0, //性别
-        "name": "", //名字
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYzQ5ZTBhZmQ4MGZhNDIzZWY0NjU0MzYyNTJmMjgyNiIsImV4cCI6MTU0NTczNDIyMCwianRpIjoiMSIsImlhdCI6MX0.1tGsLd094pImTZYCCwPbdgG4fusvV0uj-qD_OiAFI1M", //token
+        "account": "1234", //账号
+        "uuid": "bc49e0afd80fa423ef465436252f2826", //uuid
+        "email": "1050086935@qq.com", //邮箱
+        "nickName": "  一分钟", //昵称
+        "sex": 1, //性别
+        "name": "小林", //名字
         "avatarUrl": "http://blog.oneminuter.com/favicon.ico", //头像
+        "signature": "each youth will be old", //个性签名
         "country": "XX", //国家
         "province": "XX", //省份
-        "city": "内网IP" //城市
+        "city": "内网IP", //城市
+        "avaliable": 0, //可用积分
+        "level": 0 //等级
+    }
+}
+```
+
+***
+
+## 创建临时账号
+**Post: /user/temp/create**
+
+### 请求参数
+无
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYzQ5ZTBhZmQ4MGZhNDIzZWY0NjU0MzYyNTJmMjgyNiIsImV4cCI6MTU0NTczNDIyMCwianRpIjoiMSIsImlhdCI6MX0.1tGsLd094pImTZYCCwPbdgG4fusvV0uj-qD_OiAFI1M", //token
+        "account": "1234", //账号
+        "uuid": "bc49e0afd80fa423ef465436252f2826", //uuid
+        "email": "1050086935@qq.com", //邮箱
+        "nickName": "  一分钟", //昵称
+        "sex": 1, //性别
+        "name": "小林", //名字
+        "avatarUrl": "http://blog.oneminuter.com/favicon.ico", //头像
+        "signature": "each youth will be old", //个性签名
+        "country": "XX", //国家
+        "province": "XX", //省份
+        "city": "内网IP", //城市
+        "avaliable": 0, //可用积分
+        "level": 0 //等级
     }
 }
 ```
@@ -83,17 +123,85 @@
     "errCode": 200,
     "errMsg": "",
     "data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI0ZThhOTY2MTRkNTU2NWIwOWJkY2EzMDQxYzFhZmU2MiIsImV4cCI6MTUzODE4ODExNCwianRpIjoiMSJ9.a4ACiS2kTkr2mWeC3cPpD43LgIZIoVaH-LtyunP0DcM", //用户标识jwt
-        "account": "y0KjesQn7Q", //账号
-        "uuid": "4e8a96614d5565b09bdca3041c1afe62", //用户标识
-        "nickName": "y0KjesQn7Q", //昵称
-        "sex": 0, //性别
-        "name": "", //名字
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYzQ5ZTBhZmQ4MGZhNDIzZWY0NjU0MzYyNTJmMjgyNiIsImV4cCI6MTU0NTczNDIyMCwianRpIjoiMSIsImlhdCI6MX0.1tGsLd094pImTZYCCwPbdgG4fusvV0uj-qD_OiAFI1M", //token
+        "account": "1234", //账号
+        "uuid": "bc49e0afd80fa423ef465436252f2826", //uuid
+        "email": "1050086935@qq.com", //邮箱
+        "nickName": "  一分钟", //昵称
+        "sex": 1, //性别
+        "name": "小林", //名字
         "avatarUrl": "http://blog.oneminuter.com/favicon.ico", //头像
+        "signature": "each youth will be old", //个性签名
         "country": "XX", //国家
         "province": "XX", //省份
-        "city": "内网IP" //城市
+        "city": "内网IP", //城市
+        "avaliable": 0, //可用积分
+        "level": 0 //等级
     }
+}
+```
+
+***
+
+## 修改用户信息
+**Post: /user/info/modify**
+
+### 请求参数
+```shell
+{
+    "phone":"string", //手机号
+    "nickname": "string", //昵称
+    "sex":"string", //性别
+    "name": "string", //名字
+    "email":"string", //邮箱
+    "avatarUrl":"string", //头像
+    "signature":"string", //个性签名
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYzQ5ZTBhZmQ4MGZhNDIzZWY0NjU0MzYyNTJmMjgyNiIsImV4cCI6MTU0NTczNDIyMCwianRpIjoiMSIsImlhdCI6MX0.1tGsLd094pImTZYCCwPbdgG4fusvV0uj-qD_OiAFI1M", //token
+        "account": "1234", //账号
+        "uuid": "bc49e0afd80fa423ef465436252f2826", //uuid
+        "email": "1050086935@qq.com", //邮箱
+        "nickName": "  一分钟", //昵称
+        "sex": 1, //性别
+        "name": "小林", //名字
+        "avatarUrl": "http://blog.oneminuter.com/favicon.ico", //头像
+        "signature": "each youth will be old", //个性签名
+        "country": "XX", //国家
+        "province": "XX", //省份
+        "city": "内网IP", //城市
+        "avaliable": 0, //可用积分
+        "level": 0 //等级
+    }
+}
+```
+
+***
+
+## 修改用户账号
+
+**Post /user/account/modify**
+
+### 请求参数
+```shell
+{
+    "account":"string" //新账号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
 }
 ```
 

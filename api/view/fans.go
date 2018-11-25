@@ -16,7 +16,7 @@ func (*Fans) HandlerRespList(muList []model.User) []Fans {
 		list = append(list, Fans{
 			Account:   v.Account,
 			AvatarUrl: v.AvatarUrl,
-			NickName:  v.NickName,
+			NickName:  v.Nickname,
 			Sex:       v.Sex,
 			Signature: v.Signature,
 		})

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strings"
 	"wyatt/api/constant"
-	"wyatt/api/logic"
 	"wyatt/api/view"
 	"wyatt/util"
 
@@ -30,15 +29,9 @@ var Auth = func(ctx *gin.Context) {
 	uuid := ctx.GetHeader("uuid")
 	token := ctx.GetHeader("token")
 
+	//没有登录
 	if "" == strings.TrimSpace(token) && "" == strings.TrimSpace(uuid) {
-		var u logic.User
-		ip := ctx.ClientIP()
-		userId, err := u.AddTempUser(ip)
-		if err != nil {
-			util.LoggerError(err)
-			ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.CreateUserErr))
-		}
-		ctx.Set("userId", userId)
+		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.MustLogin))
 		return
 	}
 
@@ -48,6 +41,7 @@ var Auth = func(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.AccountExpire))
 		return
 	}
+	//解析token出错
 	if err != nil {
 		util.LoggerError(err)
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.IllegalAccount))

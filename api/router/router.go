@@ -10,11 +10,13 @@ func Router(server *gin.Engine) {
 	server.GET("ping", handler.Ping)
 
 	//用户
-	userGroup := server.Group("/user") //todo
+	userGroup := server.Group("/user")
 	userGroup.GET("/info", handler.UserInfo)
 	userGroup.POST("/register", handler.UserRegister)
+	userGroup.POST("/temp/create", handler.UserTemp)
 	userGroup.POST("/login", handler.UserLogin)
-	userGroup.POST("/info/modify")
+	userGroup.POST("/info/modify", handler.UserinfoModify)
+	userGroup.POST("/account/modify", handler.UserAccountModify) //修改账号，以为账号目前定的是用户只能修改一次
 	userGroup.POST("/password/modify")
 	userGroup.POST("/password/reset")
 
@@ -77,10 +79,11 @@ func Router(server *gin.Engine) {
 	tipGroup.POST("/add", handler.TipAdd)
 
 	//故事
-	storyGroup := server.Group("/story") //todo
+	storyGroup := server.Group("/story")
 	storyGroup.POST("/add", handler.StoryAdd)
 	storyGroup.GET("/list", handler.StoryList)                     //某用户的所有零散故事列表
 	storyGroup.POST("/modify", handler.StoryModify)                //修改标题，简介，封面图之类
+	storyGroup.POST("/content/add")                                //增加故事细节内容 //todo
 	storyGroup.POST("/content/modify", handler.StoryContentModify) //修改故事的内容
 	storyGroup.GET("/series/list", handler.StorySeriesList)        //系列列表
 	storyGroup.GET("/content/list", handler.StoryContentList)      //故事具体内容列表
@@ -88,7 +91,7 @@ func Router(server *gin.Engine) {
 	//故事角色
 	roleGroup := server.Group("/role")
 	roleGroup.POST("/add", handler.RoleAdd)
-	roleGroup.POST("/modify", handler.RoleModify)
+	roleGroup.POST("/modify", handler.RoleModify) //todo
 	roleGroup.POST("/delete", handler.RoleDelete)
 	roleGroup.GET("/list", handler.RoleList)
 	roleGroup.GET("/info", handler.RoleInfo)

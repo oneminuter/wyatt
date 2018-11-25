@@ -16,7 +16,7 @@ type User struct {
 	RandomStr      string `json:"-"`                                 //密码加密随机字符串
 	Phone          string `json:"phone" gorm:"size:30" sql:"index"`  //手机号
 	UUID           string `json:"uuid" gorm:"size:50"`               //用户标识, MD5随机字符串
-	NickName       string `json:"nickName" gorm:"size:50"`           //昵称
+	Nickname       string `json:"nickname" gorm:"size:50"`           //昵称
 	Sex            int    `json:"sex" gorm:"size:4"`                 //性别 0 未知, 1 男, 2 女
 	Name           string `json:"name" gorm:"size:30"`               //姓名
 	Email          string `json:"email" gorm:"size:50"`              //邮箱

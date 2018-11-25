@@ -47,6 +47,13 @@ var UserRegister = func(ctx *gin.Context) {
 	return
 }
 
+//创建临时用户
+var UserTemp = func(ctx *gin.Context) {
+	var u logic.User
+	ip := ctx.ClientIP()
+	ctx.JSON(http.StatusOK, u.AddTempUser(ip))
+}
+
 /*
 登录
 方式可以是：账号，手机号，邮箱
@@ -70,4 +77,30 @@ var UserLogin = func(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, params.Login())
 	return
+}
+
+//修改用户信息
+var UserinfoModify = func(ctx *gin.Context) {
+	var param logic.UserinfoModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Modify(userId))
+}
+
+//修改用户账号
+var UserAccountModify = func(ctx *gin.Context) {
+	var param logic.UserAccountModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Modify(userId))
 }
