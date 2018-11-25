@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/view"
@@ -20,19 +21,14 @@ type StoryList struct {
 	Limit       int    `json:"limit" form:"limit"`
 }
 
+type StoryModify struct {
+	StoryId  string `json:"storyId" form:"storyId" binding:"required"` //故事流水号id
+	Title    string `json:"title" form:"title"`
+	Desc     string `json:"desc" form:"desc"`
+	CoverImg string `json:"coverImg" form:"coverImg"`
+}
+
 func (s *Story) Add(userId int64) interface{} {
-	//查询用户信息，看用户状态
-	var mu model.User
-	err := mu.QueryOne("*", "id = ?", userId)
-	if err != nil {
-		util.LoggerError(err)
-		return view.SetErr(constant.QueryDBErr)
-	}
-
-	if mu.Status == -1 {
-		return view.SetErr(constant.AccountForbid)
-	}
-
 	//添加
 	ms := model.Story{
 		Title:    s.Title,
@@ -41,7 +37,7 @@ func (s *Story) Add(userId int64) interface{} {
 		AuthorId: userId,
 		CoverImg: s.CoverImg,
 	}
-	err = ms.Add()
+	err := ms.Add()
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.AddErr)
@@ -70,4 +66,35 @@ func (sl *StoryList) List() interface{} {
 	var vs view.Story
 	retData := vs.List(stories, mu)
 	return view.SetRespData(retData)
+}
+
+func (sm *StoryModify) Modify(userId int64) interface{} {
+	_, TableID, _, err := util.SplitFlowNumber(sm.StoryId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	var modify = make(map[string]string)
+	//标题
+	if "" != strings.TrimSpace(sm.Title) {
+		modify["title"] = sm.Title
+	}
+	//描述
+	if "" != strings.TrimSpace(sm.Desc) {
+		modify["desc"] = sm.Desc
+	}
+	//封面图
+	if "" != strings.TrimSpace(sm.CoverImg) {
+		modify["cover_img"] = sm.CoverImg
+	}
+
+	//更新
+	var ms model.Story
+	err = ms.Update(modify, "id = ?", TableID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.ModifyErr)
+	}
+	return view.SetErr(constant.Success)
 }

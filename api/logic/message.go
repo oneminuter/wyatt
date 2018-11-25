@@ -46,7 +46,7 @@ func (m *Message) Detail(userId int64) interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
-	//判断是够有权限
+	//判断是否有权限
 	if userId != mm.UserId {
 		return view.SetErr(constant.NoAuth)
 	}

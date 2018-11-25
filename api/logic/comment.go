@@ -2,7 +2,6 @@ package logic
 
 import (
 	"errors"
-	"log"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -80,7 +79,6 @@ func (ca *CommentAdd) Add(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-	log.Println(tableName, TableID, timestamp)
 	//验证流水号是否合法
 	if !model.ValidateFlowId(tableName, TableID, timestamp) {
 		util.LoggerError(errors.New("流水号不合法"))

@@ -8,8 +8,6 @@ import (
 	"wyatt/api/view"
 	"wyatt/util"
 
-	"strings"
-
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -124,25 +122,7 @@ var CommunityModify = func(ctx *gin.Context) {
 	}
 	userId := ctx.GetInt64("userId")
 
-	//修改logo
-	if "" != strings.TrimSpace(param.Logo) {
-		ctx.JSON(http.StatusOK, param.Modify(userId, constant.ModifyLogo))
-		return
-	}
-
-	//修改名字
-	if "" != strings.TrimSpace(param.Name) {
-		ctx.JSON(http.StatusOK, param.Modify(userId, constant.ModifyName))
-		return
-	}
-
-	//修改简介
-	if "" != strings.TrimSpace(param.Desc) {
-		ctx.JSON(http.StatusOK, param.Modify(userId, constant.ModifyDesc))
-		return
-	}
-
-	ctx.JSON(http.StatusOK, view.SetErr(constant.NoModify))
+	ctx.JSON(http.StatusOK, param.Modify(userId))
 }
 
 //删除社区

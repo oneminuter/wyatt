@@ -43,7 +43,19 @@ var StoryList = func(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, param.List())
 }
 
-var StoryModify = func(ctx *gin.Context) {}
-var StoryContentModify = func(ctx *gin.Context) {}
+var StoryModify = func(ctx *gin.Context) {
+	var param logic.StoryModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Modify(userId))
+}
+var StoryContentModify = func(ctx *gin.Context) {
+
+}
 var StorySeriesList = func(ctx *gin.Context) {}
 var StoryContentList = func(ctx *gin.Context) {}

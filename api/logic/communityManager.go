@@ -90,7 +90,7 @@ func (cm *CommunityManager) Delete(creatorId int64) interface{} {
 	}
 
 	var mcm model.CommunityManager
-	err = mcm.Delete("community_id = ? AND user_id = ?", cm.CId, mu.ID)
+	err = mcm.Delete("community_id = ? AND user_id = ?", TableID, mu.ID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.DeleteErr)

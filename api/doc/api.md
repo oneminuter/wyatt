@@ -103,10 +103,12 @@
 **Get /community/list/all**
 
 ### 请求参数
+```shell
 {
     "page": "int", //页码
     "limit": "int" //查询条数
 }
+```
 
 ### 返回参数
 ```shell
@@ -176,10 +178,12 @@
 **Get /community/list/my**
 
 ### 请求参数
+```shell
 {
     "page": "int", //页码
     "limit": "int" //查询条数
 }
+```
 
 ### 返回参数
 ```shell
@@ -230,13 +234,12 @@
 **Post /community/modify**
 
 ### 请求参数
-请求参数为单个字段修改，同时传多个值的话，会自动判断是否为空，哪个有值，就改哪个，优先级：logo > name > desc
-
 ```shell
 {
-    "logo": "string", // 社区logo
-    "name": "string", // 社区名
-    "desc": "string" // 社区简介
+    "cId": "string", //社区流水号id, 必须
+    "logo": "string", // 社区logo，非必须
+    "name": "string", // 社区名，非必须
+    "desc": "string" // 社区简介，非必须
 }
 ```
 
@@ -1037,9 +1040,34 @@
 
 ***
 
+## 故事修改
+
+**Post /story/modify**
+
+### 请求参数
+```shell
+{
+    "storyId":"string", //故事流水号id， 必须
+    "title":"string", //故事标题，非必须
+    "desc":"string", //简介，非必须
+    "coverImg":"string", //封面图链接，非必须
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
 ## 添加角色
 
-**Get /role/add**
+**Post /role/add**
 
 ### 请求参数
 ```shell

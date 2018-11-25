@@ -121,6 +121,7 @@ func (td *TopicDelete) Delete(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
+	//查询话题信息
 	var mt model.Topic
 	err = mt.QueryOne("*", "id = ?", TableID)
 	if err != nil {
@@ -132,6 +133,7 @@ func (td *TopicDelete) Delete(userId int64) interface{} {
 	if userId != mt.CreatorId {
 		return view.SetErr(constant.NoAuth)
 	}
+	//删除
 	err = mt.Delete("id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)

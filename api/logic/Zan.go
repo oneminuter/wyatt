@@ -68,6 +68,7 @@ func (za *Zan) Add(userId int64) interface{} {
 }
 
 func (za *Zan) Delete(userId int64) interface{} {
+	//查询点赞信息
 	var mz model.Zan
 	err := mz.QueryOne("*", "source_flow_id = ?")
 	if err != nil {
@@ -79,6 +80,7 @@ func (za *Zan) Delete(userId int64) interface{} {
 		return view.SetErr(constant.ModifyErr)
 	}
 
+	//删除
 	err = mz.Delete("id = ?", mz.ID)
 	if err != nil {
 		util.LoggerError(err)

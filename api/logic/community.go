@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
 	"wyatt/api/service"
@@ -100,11 +101,10 @@ func (cc *CommunityCreate) Create(userId int64) interface{} {
 }
 
 //修改社区信息
-func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
+func (cm *CommunityModify) Modify(userId int64) interface{} {
 	var (
-		c     model.Community
-		sc    service.Community
-		value string
+		c  model.Community
+		sc service.Community
 	)
 
 	_, tableID, _, err := util.SplitFlowNumber(cm.CId)
@@ -118,24 +118,21 @@ func (cm *CommunityModify) Modify(userId int64, field string) interface{} {
 		return view.SetErr(constant.NoAuth)
 	}
 
-	switch field {
-	case constant.ModifyLogo:
-		path, err := sc.SaveLogo(cm.Logo)
-		if err != nil {
-			util.LoggerError(err)
-			return view.SetErr(constant.ModifyErr)
-		}
-		value = path
-	case constant.ModifyName:
-		value = cm.Name
-	case constant.ModifyDesc:
-		value = cm.Desc
-	default:
-		util.Logger("修改选项错误")
-		return view.SetErr(constant.ModifyErr)
+	var modify = make(map[string]string)
+	//修改社区名
+	if "" != cm.Name {
+		modify["name"] = cm.Name
+	}
+	//修改社区简介
+	if "" != strings.TrimSpace(cm.Desc) {
+		modify["desc"] = cm.Desc
+	}
+	//修改社区logo
+	if "" != strings.TrimSpace(cm.Logo) {
+		modify["logo"] = cm.Logo
 	}
 
-	err = c.Update(map[string]string{field: value}, "c_id = ?", cm.CId)
+	err = c.Update(modify, "id = ?", tableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.ModifyErr)
@@ -159,7 +156,7 @@ func (cd *CommunityDelete) Delete(userId int64) interface{} {
 
 	//修改社区的状态为 2
 	var mc model.Community
-	err = mc.Update(map[string]int{"status": 2}, "c_id = ?", cd.CId)
+	err = mc.Update(map[string]int{"status": 2}, "id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.DeleteErr)
