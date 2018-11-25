@@ -23,7 +23,9 @@ var RoleAdd = func(ctx *gin.Context) {
 	userId := ctx.GetInt64("userId")
 	ctx.JSON(http.StatusOK, param.Add(userId))
 }
-var RoleModify = func(ctx *gin.Context) {}
+var RoleModify = func(ctx *gin.Context) {
+
+}
 var RoleDelete = func(ctx *gin.Context) {}
 var RoleList = func(ctx *gin.Context) {}
 var RoleInfo = func(ctx *gin.Context) {}

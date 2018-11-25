@@ -12,6 +12,20 @@ type Story struct {
 	Desc       string `json:"desc"`       //简介
 	Classify   string `json:"classify"`   //分类
 	CoverImg   string `json:"coverImg"`   //本节故事的封面图
+	Author     string `json:"author"`     //作者账号
+	AvatarUrl  string `json:"avatarUrl"`  //作者头像
+	ViewedNum  int64  `json:"viewedNum"`  //浏览量
+	ZanNum     int64  `json:"zanNum"`     //点赞量
+	CommentNum int64  `json:"commentNum"` //评论数量
+}
+type Series struct {
+	SeriesId   string `json:"seriesId"`   //系列流水号id
+	Title      string `json:"title"`      //标题
+	Desc       string `json:"desc"`       //简介
+	Classify   string `json:"classify"`   //分类
+	CoverImg   string `json:"coverImg"`   //本节故事的封面图
+	Author     string `json:"author"`     //作者账号
+	AvatarUrl  string `json:"avatarUrl"`  //作者头像
 	ViewedNum  int64  `json:"viewedNum"`  //浏览量
 	ZanNum     int64  `json:"zanNum"`     //点赞量
 	CommentNum int64  `json:"commentNum"` //评论数量
@@ -25,9 +39,30 @@ func (s *Story) List(msList []model.Story, u model.User) []Story {
 			Title:     v.Title,
 			Desc:      v.Desc,
 			Classify:  v.Classify,
+			Author:    u.Account,
+			AvatarUrl: u.AvatarUrl,
 			CoverImg:  v.CoverImg,
 			ViewedNum: v.ViewedNum,
 			ZanNum:    v.ZanNum,
+		})
+	}
+	return list
+}
+
+func (s *Series) List(msList []model.Series, u model.User) []Series {
+	var list = make([]Series, 0, len(msList))
+	for _, v := range msList {
+		list = append(list, Series{
+			SeriesId:   fmt.Sprintf("%s.%d.%d", constant.SR, v.ID, v.FlowId),
+			Title:      v.Title,
+			Desc:       v.Desc,
+			Classify:   v.Classify,
+			CoverImg:   v.CoverImg,
+			Author:     u.Account,
+			AvatarUrl:  u.AvatarUrl,
+			ViewedNum:  v.ViewedNum,
+			ZanNum:     v.ZanNum,
+			CommentNum: v.CommentNum,
 		})
 	}
 	return list

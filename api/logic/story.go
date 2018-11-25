@@ -21,11 +21,23 @@ type StoryList struct {
 	Limit       int    `json:"limit" form:"limit"`
 }
 
+//修改故事
 type StoryModify struct {
 	StoryId  string `json:"storyId" form:"storyId" binding:"required"` //故事流水号id
 	Title    string `json:"title" form:"title"`
 	Desc     string `json:"desc" form:"desc"`
 	CoverImg string `json:"coverImg" form:"coverImg"`
+}
+
+//添加故事详情
+type StoryContentAdd struct {
+	StoryId string `json:"storyId" form:"storyId" binding:"required"` //故事流水号id
+	content
+}
+type content struct {
+	RoleId  string `json:"roleId" form:"roleId"` //角色流水号id, 旁白为空
+	Type    int    `json:"type" form:"type"`     //类型 1 角色对白，2 旁白
+	Context string `json:"context"`              //内容
 }
 
 func (s *Story) Add(userId int64) interface{} {
@@ -107,4 +119,32 @@ func (sm *StoryModify) Modify(userId int64) interface{} {
 		return view.SetErr(constant.ModifyErr)
 	}
 	return view.SetErr(constant.Success)
+}
+
+//系列列表
+func (sl *StoryList) SeriesList() interface{} {
+	//查询用户信息
+	var mu model.User
+	err := mu.QueryOne("*", "account = ?", sl.UserAccount)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//查询列表
+	var ms model.Series
+	series, err := ms.QueryList("*", sl.Page, sl.Limit, "author_id = ?", mu.ID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	var vs view.Series
+	retData := vs.List(series, mu)
+	return view.SetRespData(retData)
+}
+
+//添加故事细节
+func (sca *StoryContentAdd) Add(userId int64) interface{} {
+	return nil
 }

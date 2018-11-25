@@ -1161,6 +1161,8 @@
             "desc": "", //故事简介
             "classify": "", //分类
             "coverImg": "", //封面图
+            "author":"oneminuter", //作者账号
+            "avatarUrl":"", //作者头像
             "viewedNum": 0, //浏览量
             "zanNum": 0, //点赞数
             "commentNum": 0 //评论数
@@ -1217,5 +1219,42 @@
     "errCode": 200,
     "errMsg": "",
     "data": null
+}
+```
+
+***
+
+## 系列故事列表
+
+**Get /story/series/list**
+
+### 请求参数
+```shell
+{
+    "page":"int", //请求页码
+    "limit":"int", //请求条数
+    "userAccour":"string", //作者账号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "seriesId": "S.1.1543076097", //系列流水号id
+            "title": "一个人的故事", //系列标题
+            "desc": "", //系列简介
+            "classify": "", //分类
+            "coverImg": "", //封面图
+            "author":"oneminuter", //作者账号
+            "avatarUrl":"", //作者头像
+            "viewedNum": 0, //浏览量
+            "zanNum": 0, //点赞数
+            "commentNum": 0 //评论数
+        }
+    ]
 }
 ```
