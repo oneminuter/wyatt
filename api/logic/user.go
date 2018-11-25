@@ -201,27 +201,42 @@ func (u *UserLogin) Login() interface{} {
 
 //修改用户信息
 func (um *UserinfoModify) Modify(userId int64) interface{} {
-	var modify = make(map[string]interface{})
+	var (
+		modify       = make(map[string]interface{})
+		isHaveModify bool
+	)
 	if "" != strings.TrimSpace(um.Name) {
 		modify["name"] = um.Name
+		isHaveModify = true
 	}
 	if "" != strings.TrimSpace(um.AvatarUrl) {
 		modify["avatar_url"] = um.AvatarUrl
+		isHaveModify = true
 	}
 	if "" != strings.TrimSpace(um.Email) {
 		modify["email"] = um.Email
+		isHaveModify = true
 	}
 	if "" != strings.TrimSpace(um.Phone) {
 		modify["phone"] = um.Phone
+		isHaveModify = true
 	}
 	if "" != strings.TrimSpace(um.Signature) {
 		modify["signature"] = um.Signature
+		isHaveModify = true
 	}
 	if "" != strings.TrimSpace(um.Nickname) {
 		modify["nick_name"] = um.Nickname
+		isHaveModify = true
 	}
 	if 0 < um.Sex && 3 > um.Sex {
 		modify["sex"] = um.Sex
+		isHaveModify = true
+	}
+
+	if !isHaveModify {
+		//没有修改内容
+		return view.SetErr(constant.NoModify)
 	}
 
 	//修改

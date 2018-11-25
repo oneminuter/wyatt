@@ -75,18 +75,28 @@ func (sm *StoryModify) Modify(userId int64) interface{} {
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
 
-	var modify = make(map[string]string)
+	var (
+		modify       = make(map[string]string)
+		isHaveModify bool
+	)
 	//标题
 	if "" != strings.TrimSpace(sm.Title) {
 		modify["title"] = sm.Title
+		isHaveModify = true
 	}
 	//描述
 	if "" != strings.TrimSpace(sm.Desc) {
 		modify["desc"] = sm.Desc
+		isHaveModify = true
 	}
 	//封面图
 	if "" != strings.TrimSpace(sm.CoverImg) {
 		modify["cover_img"] = sm.CoverImg
+		isHaveModify = true
+	}
+
+	if !isHaveModify {
+		return view.SetErr(constant.NoModify)
 	}
 
 	//更新

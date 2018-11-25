@@ -103,8 +103,10 @@ func (cc *CommunityCreate) Create(userId int64) interface{} {
 //修改社区信息
 func (cm *CommunityModify) Modify(userId int64) interface{} {
 	var (
-		c  model.Community
-		sc service.Community
+		c            model.Community
+		sc           service.Community
+		modify       = make(map[string]string)
+		isHaveModify bool
 	)
 
 	_, tableID, _, err := util.SplitFlowNumber(cm.CId)
@@ -118,18 +120,24 @@ func (cm *CommunityModify) Modify(userId int64) interface{} {
 		return view.SetErr(constant.NoAuth)
 	}
 
-	var modify = make(map[string]string)
 	//修改社区名
 	if "" != cm.Name {
 		modify["name"] = cm.Name
+		isHaveModify = true
 	}
 	//修改社区简介
 	if "" != strings.TrimSpace(cm.Desc) {
 		modify["desc"] = cm.Desc
+		isHaveModify = true
 	}
 	//修改社区logo
 	if "" != strings.TrimSpace(cm.Logo) {
 		modify["logo"] = cm.Logo
+		isHaveModify = true
+	}
+
+	if !isHaveModify {
+		return view.SetErr(constant.NoModify)
 	}
 
 	err = c.Update(modify, "id = ?", tableID)
