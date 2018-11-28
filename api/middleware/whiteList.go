@@ -4,6 +4,9 @@ package middleware
 var whiteUrlList = []string{
 	"/ping",
 	"/user/login",
+	"/user/register",
+	"/advise/add",
+	"/user/temp/create",
 }
 
 //判断请求url是否在白名单中

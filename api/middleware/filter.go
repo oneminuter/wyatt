@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//必须登录检测
 var MustLogin = func(ctx *gin.Context) {
 	url := ctx.Request.URL.Path
 	if isExitWhite(url) {
@@ -16,5 +17,6 @@ var MustLogin = func(ctx *gin.Context) {
 
 	if 0 == ctx.GetInt64("userId") {
 		ctx.AbortWithStatusJSON(http.StatusOK, view.SetErr(constant.IllegalAccount))
+		return
 	}
 }
