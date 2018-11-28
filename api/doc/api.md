@@ -1224,6 +1224,112 @@
 
 ***
 
+## 修改角色信息
+
+**Post /role/modify**
+
+### 请求参数
+```shell
+{
+    "rolerId":"string", //角色流水号id，该参数必须
+    "nickname":"string", //角色昵称，该参数必须
+    "sex":"int", //角色性别，非必须
+    "avatarUrl": "string", //角色头像
+    "introduce": "string", //角色介绍
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 删除角色
+
+**Post /role/delete**
+
+### 请求参数
+```shell
+{
+    "rolerId":"string", //角色流水号id
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
+## 故事角色列表
+
+**Get /role/list**
+
+### 请求参数
+```shell
+{
+    "storyId":"string", //角色流水号id
+    "page":"int", //请求页码
+    "limit":"int", //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [{
+        "rolerId": "R.1.1543076097", //角色流水号
+        "avatarUrl":"http://blog.oneminuter.com/favicon.ico", //角色头像
+        "nickname":"oneminuter", //角色昵称
+        "sex":1, //角色性别
+        "introduce":"你不懂我，我不怪你", //角色介绍
+    }]
+}
+```
+
+***
+
+## 故事角色信息
+
+**Get /role/info**
+
+### 请求参数
+```shell
+{
+    "rolerId":"string", //角色流水号id
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": {
+        "rolerId": "R.1.1543076097", //角色流水号
+        "avatarUrl":"http://blog.oneminuter.com/favicon.ico", //角色头像
+        "nickname":"oneminuter", //角色昵称
+        "sex":1, //角色性别
+        "introduce":"你不懂我，我不怪你", //角色介绍
+    }
+}
+```
+
+***
+
 ## 系列故事列表
 
 **Get /story/series/list**

@@ -29,6 +29,7 @@ const (
 	TPC  = "TPC"  //话题收藏表
 	S    = "S"    //故事
 	SR   = "SR"   //故事系列
+	R    = "R"    //角色
 )
 
 //表别名:表名 map
@@ -46,6 +47,7 @@ var (
 		TPC:  "topic_collects",
 		S:    "stories",
 		SR:   "series",
+		R:    "story_roles",
 	}
 	TableAliasNameMap = map[string]string{
 		TabelMap[CM]:   "评论",
@@ -59,5 +61,6 @@ var (
 		TabelMap[TPC]:  "话题收藏",
 		TabelMap[S]:    "故事",
 		TabelMap[SR]:   "故事系列",
+		TabelMap[R]:    "角色",
 	}
 )

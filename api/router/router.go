@@ -92,7 +92,7 @@ func Router(server *gin.Engine) {
 	//故事角色
 	roleGroup := server.Group("/role")
 	roleGroup.POST("/add", handler.RoleAdd)
-	roleGroup.POST("/modify", handler.RoleModify) //todo
+	roleGroup.POST("/modify", handler.RoleModify)
 	roleGroup.POST("/delete", handler.RoleDelete)
 	roleGroup.GET("/list", handler.RoleList)
 	roleGroup.GET("/info", handler.RoleInfo)
