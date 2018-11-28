@@ -119,7 +119,7 @@ func (sr *StoryRole) Delete(userId int64) interface{} {
 
 	//删除
 	var msr model.StoryRole
-	err := msr.Delete("id = ?", TableID)
+	err = msr.Delete("id = ?", TableID)
 	if err != nil {
 		util.LoggerError(err)
 		return view.SetErr(constant.DeleteErr)
