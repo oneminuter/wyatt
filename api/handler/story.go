@@ -78,6 +78,26 @@ var StorySeriesList = func(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, param.SeriesList())
 }
 
+//故事详情列表
+var StoryContentList = func(ctx *gin.Context) {
+	var param logic.StoryContentList
+	err := ctx.ShouldBindQuery(&param)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	//判断参数是否合法
+	if 0 > param.Page || 0 > param.Limit {
+		ctx.JSON(http.StatusOK, view.SetErr(constant.QueryPageOrLimit))
+		return
+	}
+	if constant.MAX_QUERY_COUNT < param.Limit {
+		param.Limit = constant.MAX_QUERY_COUNT
+	}
+	ctx.JSON(http.StatusOK, param.List())
+}
+
 //添加故事内容
 var StoryContentAdd = func(ctx *gin.Context) {
 	//var param logic.StoryContentAdd
@@ -85,4 +105,3 @@ var StoryContentAdd = func(ctx *gin.Context) {
 var StoryContentModify = func(ctx *gin.Context) {
 
 }
-var StoryContentList = func(ctx *gin.Context) {}

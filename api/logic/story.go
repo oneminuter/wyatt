@@ -4,6 +4,7 @@ import (
 	"strings"
 	"wyatt/api/constant"
 	"wyatt/api/model"
+	"wyatt/api/service"
 	"wyatt/api/view"
 	"wyatt/util"
 )
@@ -38,6 +39,11 @@ type content struct {
 	RoleId  string `json:"roleId" form:"roleId"` //角色流水号id, 旁白为空
 	Type    int    `json:"type" form:"type"`     //类型 1 角色对白，2 旁白
 	Context string `json:"context"`              //内容
+}
+type StoryContentList struct {
+	StoryId string `json:"storyId" form:"storyId" binding:"required"` //故事流水号id
+	Page    int    `json:"page" form:"page"`                          //页码，从0开始，默认为0
+	Limit   int    `json:"limit" form:"limit"`
 }
 
 func (s *Story) Add(userId int64) interface{} {
@@ -131,7 +137,7 @@ func (sl *StoryList) SeriesList() interface{} {
 		return view.CheckMysqlErr(err)
 	}
 
-	//查询列表
+	//查询系列列表
 	var ms model.Series
 	series, err := ms.QueryList("*", sl.Page, sl.Limit, "author_id = ?", mu.ID)
 	if err != nil {
@@ -141,6 +147,43 @@ func (sl *StoryList) SeriesList() interface{} {
 
 	var vs view.Series
 	retData := vs.List(series, mu)
+	return view.SetRespData(retData)
+}
+
+//故事细节列表
+func (scl *StoryContentList) List() interface{} {
+	_, TableID, _, err := util.SplitFlowNumber(scl.StoryId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	//查询细节列表
+	var msc model.StoryContent
+	contents, err := msc.QueryList("*", scl.Page, scl.Limit, "story_id = ?", TableID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+
+	//提取角色id
+	var ssc service.StoryContent
+	roleIdList := ssc.GetRoleIdList(contents)
+
+	//查询角色信息列表
+	var msr model.StoryRole
+	roles, err := msr.QueryList("*", 0, scl.Limit, "id IN (?)", roleIdList)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.QueryDBErr)
+	}
+	//角色信息转为map id:role
+	var ssr service.StoryRole
+	roleMap := ssr.GetRoleMap(roles)
+
+	//返回
+	var vsc view.StoryContent
+	retData := vsc.HandlerRespList(contents, roleMap)
 	return view.SetRespData(retData)
 }
 

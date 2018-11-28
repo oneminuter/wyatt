@@ -1290,13 +1290,15 @@
 {
     "errCode": 200,
     "errMsg": "",
-    "data": [{
-        "rolerId": "R.1.1543076097", //角色流水号
-        "avatarUrl":"http://blog.oneminuter.com/favicon.ico", //角色头像
-        "nickname":"oneminuter", //角色昵称
-        "sex":1, //角色性别
-        "introduce":"你不懂我，我不怪你", //角色介绍
-    }]
+    "data": [
+        {
+            "rolerId": "R.1.1543076097", //角色流水号
+            "avatarUrl":"http://blog.oneminuter.com/favicon.ico", //角色头像
+            "nickname":"oneminuter", //角色昵称
+            "sex":1, //角色性别
+            "introduce":"你不懂我，我不怪你", //角色介绍
+        }
+    ]
 }
 ```
 
@@ -1360,6 +1362,41 @@
             "viewedNum": 0, //浏览量
             "zanNum": 0, //点赞数
             "commentNum": 0 //评论数
+        }
+    ]
+}
+```
+
+***
+
+## 故事内容列表
+
+**Get /story/content/list**
+
+### 请求参数
+```shell
+{
+    "storyId"："string", //故事流水号id
+    "page":"int", //请求页码
+    "limit":"int", //请求条数
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "scId": "SC.1.1543076097", //系列流水号id
+            "type": "1", //1 角色对白，2 旁白
+            "rolerId": "R.1.1543076097", //角色流水号
+            "avatarUrl": "", //角色头像
+            "nickname": "", //角色昵称
+            "sex":1, //角色性别 0 未知， 1 男， 2 女
+            "context":"", //内容
+            "order": 0, //排序
         }
     ]
 }

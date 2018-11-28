@@ -85,9 +85,9 @@ func Router(server *gin.Engine) {
 	storyGroup.GET("/series/list", handler.StorySeriesList)        //系列列表
 	storyGroup.POST("/series/add")                                 //系列添加
 	storyGroup.POST("/modify", handler.StoryModify)                //修改标题，简介，封面图之类
+	storyGroup.GET("/content/list", handler.StoryContentList)      //故事具体内容列表
 	storyGroup.POST("/content/add", handler.StoryContentAdd)       //增加故事细节内容 //todo
 	storyGroup.POST("/content/modify", handler.StoryContentModify) //修改故事的内容
-	storyGroup.GET("/content/list", handler.StoryContentList)      //故事具体内容列表
 
 	//故事角色
 	roleGroup := server.Group("/role")

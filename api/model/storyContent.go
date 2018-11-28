@@ -62,6 +62,7 @@ func (m *StoryContent) Update(update, where interface{}, args ...interface{}) er
 	return nil
 }
 
+//查询列表，按 order 排序
 func (m *StoryContent) QueryList(field string, page, limit int, where interface{}, args ...interface{}) ([]StoryContent, error) {
 	if 0 > page {
 		page = 0
@@ -72,7 +73,7 @@ func (m *StoryContent) QueryList(field string, page, limit int, where interface{
 
 	mdb := db.GetMysqlDB()
 	var list = make([]StoryContent, 0)
-	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Find(&list).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Order("order asc").Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]StoryContent, 0), err

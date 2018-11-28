@@ -30,6 +30,7 @@ const (
 	S    = "S"    //故事
 	SR   = "SR"   //故事系列
 	R    = "R"    //角色
+	SC   = "SC"   //故事内容
 )
 
 //表别名:表名 map
@@ -48,6 +49,7 @@ var (
 		S:    "stories",
 		SR:   "series",
 		R:    "story_roles",
+		SC:   "story_contents",
 	}
 	TableAliasNameMap = map[string]string{
 		TabelMap[CM]:   "评论",
@@ -62,5 +64,6 @@ var (
 		TabelMap[S]:    "故事",
 		TabelMap[SR]:   "故事系列",
 		TabelMap[R]:    "角色",
+		TabelMap[SC]:   "故事内容",
 	}
 )
