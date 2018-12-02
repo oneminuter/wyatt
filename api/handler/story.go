@@ -111,5 +111,13 @@ var StoryContentAdd = func(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, param.Add(userId))
 }
 var StoryContentModify = func(ctx *gin.Context) {
-
+	var param logic.StoryContentModify
+	err := ctx.ShouldBindWith(&param, binding.Form)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+	userId := ctx.GetInt64("userId")
+	ctx.JSON(http.StatusOK, param.Modify(userId))
 }

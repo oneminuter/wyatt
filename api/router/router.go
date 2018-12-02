@@ -18,7 +18,7 @@ func Router(server *gin.Engine) {
 	userGroup.POST("/info/modify", handler.UserinfoModify)
 	userGroup.POST("/account/modify", handler.UserAccountModify) //修改账号，以为账号目前定的是用户只能修改一次
 	userGroup.POST("/password/modify", handler.UserPasswordModify)
-	userGroup.POST("/password/reset")
+	userGroup.POST("/password/reset") //todo
 
 	//社区
 	communityGroup := server.Group("/community")
@@ -87,7 +87,7 @@ func Router(server *gin.Engine) {
 	storyGroup.POST("/modify", handler.StoryModify)                //修改标题，简介，封面图之类
 	storyGroup.GET("/content/list", handler.StoryContentList)      //故事具体内容列表
 	storyGroup.POST("/content/add", handler.StoryContentAdd)       //增加故事细节内容
-	storyGroup.POST("/content/modify", handler.StoryContentModify) //修改故事的内容 todo
+	storyGroup.POST("/content/modify", handler.StoryContentModify) //修改故事的内容
 
 	//故事角色
 	roleGroup := server.Group("/role")

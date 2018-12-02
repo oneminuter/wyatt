@@ -1121,7 +1121,7 @@
     "title":"string", //故事标题
     "desc":"string", //标题
     "classify":"string", //分类
-    "coverImg":"http://blog.oneminuter.com/favicon.ico" //封面图
+    "coverImg":"string" //封面图
 }
 ```
 
@@ -1145,10 +1145,11 @@
 {
     "page":"int", //请求页码
     "limit":"int", //请求条数
-    "userAccour":"string", //作者账号
+    "userAccount":"string", //作者账号
 }
 ```
 
+### 返回参数
 ### 返回参数
 ```shell
 {
@@ -1378,14 +1379,14 @@
 ```shell
 {
     "storyId"："string", //故事流水号id
-    "content":"string" //故事内容content json字符串
+    "content":"string" //故事内容content数组的 json字符串
 }
 ```
 content 的字段说明
 ```
 {
    "roleId":"string", //角色流水号id
-   "type":"string", //内容的类型 1 角色对白，2 旁白
+   "type":"string", //内容的类型 1 角色对白，2 旁白， 这里接收是string类型，因为前端的数据经过 JSON.stringify() 之后，数字会变成字符串
    "context":"string", //内容文本
 }
 ```
@@ -1431,5 +1432,38 @@ content 的字段说明
             "order": 0, //排序
         }
     ]
+}
+```
+
+***
+
+## 故事内容修改
+
+**Get /story/content/modify**
+
+### 请求参数
+```shell
+{
+     "storyId"："string", //故事流水号id
+    "content":"string" //故事内容content数组的 json字符串
+}
+```
+content 的字段说明
+```
+{
+   "scId":"string", //故事内容的流水号id， 根据该字段的有无判断是新增还是修改
+   "roleId":"string", //角色流水号id
+   "type":"string", //内容的类型 1 角色对白，2 旁白， 这里接收是string类型，因为前端的数据经过 JSON.stringify() 之后，数字会变成字符串
+   "context":"string", //内容文本
+   "order":"string" //排序的序号，用 string 类型，原因同 type 字段
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
 }
 ```
