@@ -14,6 +14,7 @@ type Story struct {
 	CoverImg   string `json:"coverImg"`   //本节故事的封面图
 	Author     string `json:"author"`     //作者账号
 	AvatarUrl  string `json:"avatarUrl"`  //作者头像
+	MajorId    string `json:"majorId"`    //主角的流水号id
 	ViewedNum  int64  `json:"viewedNum"`  //浏览量
 	ZanNum     int64  `json:"zanNum"`     //点赞量
 	CommentNum int64  `json:"commentNum"` //评论数量
@@ -31,7 +32,7 @@ type Series struct {
 	CommentNum int64  `json:"commentNum"` //评论数量
 }
 
-func (s *Story) List(msList []model.Story, u model.User) []Story {
+func (s *Story) List(msList []model.Story, u model.User, major model.StoryRole) []Story {
 	var list = make([]Story, 0, len(msList))
 	for _, v := range msList {
 		list = append(list, Story{
@@ -41,6 +42,7 @@ func (s *Story) List(msList []model.Story, u model.User) []Story {
 			Classify:  v.Classify,
 			Author:    u.Account,
 			AvatarUrl: u.AvatarUrl,
+			MajorId:   fmt.Sprintf("%s.%d.%d", constant.R, major.ID, major.FlowId),
 			CoverImg:  v.CoverImg,
 			ViewedNum: v.ViewedNum,
 			ZanNum:    v.ZanNum,

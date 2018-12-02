@@ -65,7 +65,6 @@ func (sr *StoryRoleModify) Modify(userId int64) interface{} {
 		util.LoggerError(err)
 		return view.SetErr(constant.IncorrectFlowNumber)
 	}
-
 	//判断是否角色的创建者
 	var ssr service.StoryRole
 	if !ssr.IsCreator(TableID, userId) {

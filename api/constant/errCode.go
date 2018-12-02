@@ -41,6 +41,8 @@ const (
 	CanModifyOneTime                   = 636 //账号只能修改一次
 	TempUserNntCanModify               = 637 //临时用户不能修改
 	PasswordErr                        = 638 //密码错误
+	UnmarshalContentErr                = 639 //解析内容失败
+
 )
 
 var ErrMap = map[int]string{
@@ -83,4 +85,5 @@ var ErrMap = map[int]string{
 	CanModifyOneTime:                   "账号只能修改一次",
 	TempUserNntCanModify:               "临时用户不能修改",
 	PasswordErr:                        "PasswordErr",
+	UnmarshalContentErr:                "解析内容失败",
 }

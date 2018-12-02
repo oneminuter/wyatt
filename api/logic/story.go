@@ -7,6 +7,10 @@ import (
 	"wyatt/api/service"
 	"wyatt/api/view"
 	"wyatt/util"
+
+	"strconv"
+
+	"github.com/json-iterator/go"
 )
 
 type Story struct {
@@ -33,13 +37,16 @@ type StoryModify struct {
 //添加故事详情
 type StoryContentAdd struct {
 	StoryId string `json:"storyId" form:"storyId" binding:"required"` //故事流水号id
-	content
+	Content string `json:"content" form:"content" binding:"required"` //故事详情内容, json数组字符串，json的内部字段为 content
 }
+
+//故事内容详情字段
 type content struct {
-	RoleId  string `json:"roleId" form:"roleId"` //角色流水号id, 旁白为空
-	Type    int    `json:"type" form:"type"`     //类型 1 角色对白，2 旁白
-	Context string `json:"context"`              //内容
+	RoleId  string `json:"roleId"`  //角色流水号id, 旁白为空
+	Type    string `json:"type"`    //类型 1 角色对白，2 旁白
+	Context string `json:"context"` //内容
 }
+
 type StoryContentList struct {
 	StoryId string `json:"storyId" form:"storyId" binding:"required"` //故事流水号id
 	Page    int    `json:"page" form:"page"`                          //页码，从0开始，默认为0
@@ -80,9 +87,19 @@ func (sl *StoryList) List() interface{} {
 		return view.SetErr(constant.QueryDBErr)
 	}
 
+	//查询主角信息
+	var msr model.StoryRole
+	if 0 != ms.MajorId {
+		err = msr.QueryOne("*", "id = ?", ms.MajorId)
+		if err != nil {
+			util.LoggerError(err)
+			return view.CheckMysqlErr(err)
+		}
+	}
+
 	//返回
 	var vs view.Story
-	retData := vs.List(stories, mu)
+	retData := vs.List(stories, mu, msr)
 	return view.SetRespData(retData)
 }
 
@@ -189,5 +206,55 @@ func (scl *StoryContentList) List() interface{} {
 
 //添加故事细节
 func (sca *StoryContentAdd) Add(userId int64) interface{} {
-	return nil
+	_, StoryID, _, err := util.SplitFlowNumber(sca.StoryId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	var (
+		clist   []content
+		msc     model.StoryContent
+		t       int
+		rolerId int64
+	)
+
+	//解析内容
+	err = jsoniter.Unmarshal([]byte(sca.Content), &clist)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.UnmarshalContentErr)
+	}
+
+	for _, v := range clist {
+		//故事类型转换数据类型
+		t, err = strconv.Atoi(v.Type)
+		if err != nil {
+			util.LoggerError(err)
+			return view.SetErr(constant.UnmarshalContentErr)
+		}
+		//分割角色id
+		_, rolerId, _, err = util.SplitFlowNumber(v.RoleId)
+		if err != nil {
+			util.LoggerError(err)
+			return view.SetErr(constant.IncorrectFlowNumber)
+		}
+
+		//构造数据
+		msc = model.StoryContent{
+			StoryId: StoryID,
+			Type:    t,
+			RoleId:  rolerId,
+			Context: v.Context,
+		}
+
+		//入库 - 采用一条条插入是因为使用构造sql语句批量插入是，一些自动填充字段为null
+		err = msc.Add()
+		if err != nil {
+			util.LoggerError(err)
+			return view.SetErr(constant.AddErr)
+		}
+	}
+
+	return view.SetErr(constant.Success)
 }

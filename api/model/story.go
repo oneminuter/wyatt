@@ -16,6 +16,7 @@ type Story struct {
 	Classify   string `json:"classify"`   //分类，比如情感类，武侠类，转机类
 	AuthorId   int64  `json:"author"`     //作者,对应用户的id
 	CoverImg   string `json:"coverImg"`   //本节故事的封面图
+	MajorId    int64  `json:"majorId"`    //主角的角色id
 	ViewedNum  int64  `json:"viewedNum"`  //浏览量, 此字段在故事章节里是每章节的总浏览量，在系列里是该系列所有故事的总浏览量
 	ZanNum     int64  `json:"zanNum"`     //点赞量，此字段在故事章节里是每章节的总点赞量，在系列里是该系列所有故事的总点赞量
 	CommentNum int64  `json:"commentNum"` //评论数量，此字段在故事章节里是每章节的总评论量，在系列里是该系列所有故事的总评论量

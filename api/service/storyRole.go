@@ -10,7 +10,7 @@ type StoryRole struct{}
 //判断是否是角色的创建者
 func (sr *StoryRole) IsCreator(rolerId, userId int64) bool {
 	var msr model.StoryRole
-	count, err := msr.QueryCount("rolerId = ? AND creator_id = ?", rolerId, userId)
+	count, err := msr.QueryCount("id = ? AND creator_id = ?", rolerId, userId)
 	if err != nil {
 		util.LoggerError(err)
 		return false

@@ -10,7 +10,7 @@ import (
 
 type StoryContent struct {
 	SCId      string  `json:"scId"`      //内容流水号
-	Type      string  `json:"type"`      //1 角色对白，2 旁白
+	Type      int     `json:"type"`      //1 角色对白，2 旁白
 	RolerId   string  `json:"rolerId"`   //角色流水号
 	AvatarUrl string  `json:"avatarUrl"` //角色头像
 	Nickname  string  `json:"nickname"`  //角色昵称

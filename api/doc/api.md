@@ -1163,6 +1163,7 @@
             "coverImg": "", //封面图
             "author":"oneminuter", //作者账号
             "avatarUrl":"", //作者头像
+            "majorId":"string", //主角流水号id
             "viewedNum": 0, //浏览量
             "zanNum": 0, //点赞数
             "commentNum": 0 //评论数
@@ -1224,6 +1225,21 @@
 
 ***
 
+## 故事角色列表
+
+**Get /role/list**
+
+### 请求参数
+```shell
+{
+    "storyId":"string", //角色流水号id
+    "page":"int", //请求页码
+    "limit":"int", //请求条数
+}
+```
+
+***
+
 ## 修改角色信息
 
 **Post /role/modify**
@@ -1267,21 +1283,6 @@
     "errCode": 200,
     "errMsg": "",
     "data": null
-}
-```
-
-***
-
-## 故事角色列表
-
-**Get /role/list**
-
-### 请求参数
-```shell
-{
-    "storyId":"string", //角色流水号id
-    "page":"int", //请求页码
-    "limit":"int", //请求条数
 }
 ```
 
@@ -1369,6 +1370,37 @@
 
 ***
 
+## 添加故事内容
+
+**Post /story/content/add**
+
+### 请求参数
+```shell
+{
+    "storyId"："string", //故事流水号id
+    "content":"string" //故事内容content json字符串
+}
+```
+content 的字段说明
+```
+{
+   "roleId":"string", //角色流水号id
+   "type":"string", //内容的类型 1 角色对白，2 旁白
+   "context":"string", //内容文本
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": null
+}
+```
+
+***
+
 ## 故事内容列表
 
 **Get /story/content/list**
@@ -1390,7 +1422,7 @@
     "data": [
         {
             "scId": "SC.1.1543076097", //系列流水号id
-            "type": "1", //1 角色对白，2 旁白
+            "type": 1, //1 角色对白，2 旁白
             "rolerId": "R.1.1543076097", //角色流水号
             "avatarUrl": "", //角色头像
             "nickname": "", //角色昵称

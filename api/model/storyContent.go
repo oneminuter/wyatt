@@ -11,11 +11,11 @@ import (
 type StoryContent struct {
 	TableModel
 
-	StoryId string  `json:"storyId"` //属于哪个故事的id
-	Type    string  `json:"type"`    //1 角色对白，2 旁白
-	RoleId  int64   `json:"roleId"`  //角色id, 如果是旁白，该字段为空
-	Context string  `json:"context"` //内容
-	Order   float64 `json:"order"`   //权重
+	StoryId int64   `json:"storyId"`           //属于哪个故事的id
+	Type    int     `json:"type"`              //1 角色对白，2 旁白
+	RoleId  int64   `json:"roleId"`            //角色id, 如果是旁白，该字段为空
+	Context string  `json:"context"`           //内容
+	Order   float64 `json:"order" sql:"index"` //权重
 }
 
 func (m *StoryContent) BeforeCreate() (err error) {
@@ -73,7 +73,7 @@ func (m *StoryContent) QueryList(field string, page, limit int, where interface{
 
 	mdb := db.GetMysqlDB()
 	var list = make([]StoryContent, 0)
-	err := mdb.Model(m).Select(field).Where(where, args...).Offset(page * limit).Limit(limit).Order("order asc").Find(&list).Error
+	err := mdb.Model(m).Select(field).Where(where, args...).Order("`order` asc").Offset(page * limit).Limit(limit).Find(&list).Error
 	if err != nil {
 		util.LoggerError(err)
 		return make([]StoryContent, 0), err
