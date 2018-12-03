@@ -25,6 +25,9 @@ type StoryList struct {
 	Page        int    `json:"page" form:"page"` //页码，从0开始，默认为0
 	Limit       int    `json:"limit" form:"limit"`
 }
+type StoryInfo struct {
+	StoryId string `json:"storyId" form:"storyId" binding:"required"` //故事流水号
+}
 
 //修改故事
 type StoryModify struct {
@@ -350,4 +353,43 @@ func (scm *StoryContentModify) Modify(userId int64) interface{} {
 		}
 	}
 	return view.SetErr(constant.Success)
+}
+
+//故事信息
+func (si *StoryInfo) Info() interface{} {
+	_, TableID, _, err := util.SplitFlowNumber(si.StoryId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.SetErr(constant.IncorrectFlowNumber)
+	}
+
+	//查询故事信息
+	var ms model.Story
+	err = ms.QueryOne("*", "id = ?", TableID)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//查询作者信息
+	var mu model.User
+	err = mu.QueryOne("*", "id = ?", ms.AuthorId)
+	if err != nil {
+		util.LoggerError(err)
+		return view.CheckMysqlErr(err)
+	}
+
+	//查询主角信息
+	var msr model.StoryRole
+	if 0 != ms.MajorId {
+		err = msr.QueryOne("*", "id = ?", ms.MajorId)
+		if err != nil {
+			util.LoggerError(err)
+			return view.CheckMysqlErr(err)
+		}
+	}
+
+	var vs view.Story
+	vs.Info(ms, mu, msr)
+	return view.SetRespData(vs)
 }

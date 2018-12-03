@@ -69,3 +69,18 @@ func (s *Series) List(msList []model.Series, u model.User) []Series {
 	}
 	return list
 }
+
+//故事信息
+func (s *Story) Info(ms model.Story, mu model.User, major model.StoryRole) {
+	s.StoryId = fmt.Sprintf("%s.%d.%d", constant.S, ms.ID, ms.FlowId)
+	s.Title = ms.Title
+	s.Desc = ms.Desc
+	s.Classify = ms.Classify
+	s.CoverImg = ms.CoverImg
+	s.Author = mu.Account
+	s.AvatarUrl = mu.AvatarUrl
+	s.MajorId = fmt.Sprintf("%s.%d.%d", constant.R, major.ID, major.FlowId)
+	s.ViewedNum = ms.ViewedNum
+	s.ZanNum = ms.ZanNum
+	s.CommentNum = ms.CommentNum
+}

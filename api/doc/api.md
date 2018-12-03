@@ -1136,6 +1136,40 @@
 
 ***
 
+## 故事信息
+
+**Post /story/info**
+
+### 请求参数
+```shell
+{
+    "storyId":"string", //故事流水号
+}
+```
+
+### 返回参数
+```shell
+{
+    "errCode": 200,
+    "errMsg": "",
+    "data": {
+        "storyId": "S.1.1543743203", //故事流水号
+        "title": "一分钟故事", //标题
+        "desc": "", //简介
+        "classify": "", //分类
+        "coverImg": "", //封面图
+        "author": "123", //作者账号
+        "avatarUrl": "http://blog.oneminuter.com/favicon.ico", //作者头像
+        "majorId": "R.0.0", //主角流水号
+        "viewedNum": 0, //浏览量
+        "zanNum": 0, //点赞量
+        "commentNum": 0 //评论数
+    }
+}
+```
+
+***
+
 ## 故事列表
 
 **Get /story/list**

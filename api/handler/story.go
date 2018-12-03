@@ -45,6 +45,19 @@ var StoryList = func(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, param.List())
 }
 
+//故事信息
+var StoryInfo = func(ctx *gin.Context) {
+	var param logic.StoryInfo
+	err := ctx.ShouldBindQuery(&param)
+	if err != nil {
+		util.LoggerError(err)
+		ctx.JSON(http.StatusOK, view.SetErr(constant.ParamsErr))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, param.Info())
+}
+
 //修改故事
 var StoryModify = func(ctx *gin.Context) {
 	var param logic.StoryModify
