@@ -14,7 +14,7 @@ import (
 func main() {
 	//getToken()
 	//getCurrentPath()
-	addMessage()
+	test()
 }
 
 func getToken() {
@@ -53,4 +53,24 @@ func addMessage() {
 	}
 
 	m.Add()
+}
+
+func test() {
+	a := add()
+	fmt.Println(a)
+}
+
+func add() (a int) {
+	a = 3
+
+	defer func() {
+		fmt.Println(a)
+		a = 4
+	}()
+
+	a = 5
+
+	fmt.Println(a)
+
+	return
 }

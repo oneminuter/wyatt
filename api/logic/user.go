@@ -42,8 +42,8 @@ type UserAccountModify struct {
 }
 
 type UserPasswordModify struct {
-	OldPassword string `json:"oldPassword"` //老密码
-	NewPassword string `json:"newPassword"` //新密码
+	OldPassword string `json:"oldPassword" form:"oldPassword" binding:"required"` //老密码
+	NewPassword string `json:"newPassword" form:"newPassword" binding:"required"` //新密码
 }
 
 //用户信息

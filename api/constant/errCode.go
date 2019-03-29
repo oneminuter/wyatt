@@ -84,6 +84,6 @@ var ErrMap = map[int]string{
 	MustLogin:                          "你还没有登录，请先登录",
 	CanModifyOneTime:                   "账号只能修改一次",
 	TempUserNntCanModify:               "临时用户不能修改",
-	PasswordErr:                        "PasswordErr",
+	PasswordErr:                        "密码错误",
 	UnmarshalContentErr:                "解析内容失败",
 }
