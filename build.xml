@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="du" default="deploy">
+
+    <!-- Target: config 设置变量，控制部署到不同环境-->
+    <target name="config">
+        <fail unless="deploy_env" message="Specify deploy_env with: -Ddeploy_env="/>
+        <fail unless="revision" message="Specify revision with: -Drevision="/>
+        <if>
+            <!-- 研发组开发环境 -->
+            <equals arg1="${deploy_env}" arg2="dev"/>
+            <then>
+                <property name="project_home" value="/opt/go"/>
+                <property name="web_servers" value="39.106.199.151"/>
+                <property name="web_port" value="22"/>
+                <property name="web_server_user" value="du"/>
+                <property name="privkey_file" value="/home/du/.ssh/id_rsa"/>
+                <property name="pub_file" value="/home/du/.ssh/id_rsa.pub"/>
+            </then>
+        </if>
+        <if>
+            <!-- 正式环境 -->
+            <equals arg1="${deploy_env}" arg2="prod"/>
+            <then>
+                <property name="project_home" value="/opt"/>
+                <property name="web_servers" value="172.17.147.23,172.17.146.245"/>
+                <property name="web_port" value="22"/>
+                <property name="web_server_user" value="du"/>
+                <property name="privkey_file" value="/home/du/.ssh/id_rsa"/>
+                <property name="pub_file" value="/home/du/.ssh/id_rsa.pub"/>
+            </then>
+        </if>
+    </target>
+
+    <!-- Traget 3.0新jenkins使用  -->
+    <target name="deploy" depends="config">
+        <echo msg="Creating archive..." />
+        <tar destFile="./dist.tar.gz" compression="gzip">
+            <fileset dir="./" defaultexcludes="true">
+                <include name="du_vm_detection_srv" />
+                <include name="srv/config/**" />
+            </fileset>
+        </tar>
+        <foreach list="${web_servers}" param="web_server" target="deploy_one" />
+        <delete file="./dist.tar.gz" />
+    </target>
+
+    <target name="deploy_one">
+        <scp username="${web_server_user}" host="${web_server}" port="${web_port}" privkeyfile="${privkey_file}" pubkeyfile="${pub_file}"
+             todir="${project_home}" file="./dist.tar.gz"/>
+        <!--注意每次必须重建-->
+        <ssh username="${web_server_user}" host="${web_server}" port="${web_port}" privkeyfile="${privkey_file}" pubkeyfile="${pub_file}"
+             command="cd ${project_home};
+                mkdir -p revs/rev_${revision};
+                tar zxf dist.tar.gz -C revs/rev_${revision}/;
+                rm -f dist.tar.gz;
+                rm -f ${project_home}/du_vm_detection_srv;
+                rm -f ${project_home}/srv;
+                ln -s ${project_home}/revs/rev_${revision}/du_vm_detection_srv ${project_home}/du_vm_detection_srv;
+                ln -s ${project_home}/revs/rev_${revision}/srv ${project_home}/srv;
+            "/>
+    </target>
+    <!-- 回滚  -->
+    <target name="rollback" depends="config">
+        <echo msg="rollback archive..." />
+        <foreach list="${web_servers}" param="web_server" target="rollback_one" />
+    </target>
+    <target name="rollback_one">
+        <!--注意每次必须重建-->
+        <ssh username="${web_server_user}" host="${web_server}" port="${web_port}" privkeyfile="${privkey_file}" pubkeyfile="${pub_file}"
+             command="cd ${project_home};
+                rm -f ${project_home}/du_vm_detection_srv;
+                rm -f ${project_home}/srv;
+                ln -s ${project_home}/revs/rev_${revision}/du_vm_detection_srv ${project_home}/du_vm_detection_srv;
+                ln -s ${project_home}/revs/rev_${revision}/srv ${project_home}/srv;
+                "/>
+    </target>
+</project>
