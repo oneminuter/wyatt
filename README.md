@@ -1,2 +1,1 @@
-# wyatt
 wyatt
